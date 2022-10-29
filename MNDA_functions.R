@@ -7,8 +7,8 @@
 library(igraph)
 library(keras)
 
-WeightdRandomWalk = function(Graph, startNode, maxStep = 5, node_names = FALSE){
-  A = as.matrix(as_adj(Graph, attr = "weight"))
+WeightdRandomWalk = function(graph, startNode, maxStep = 5, node_names = FALSE){
+  A = as.matrix(as_adj(graph, attr = "weight"))
   N_node = ncol(A)
   outputNodes = rep(NA, maxStep)
   nextStep = startNode
@@ -31,16 +31,16 @@ WeightdRandomWalk = function(Graph, startNode, maxStep = 5, node_names = FALSE){
   return(outputNodes)
 }
 
-RandomWalkRestart = function(G, Nrep = 10, Nstep = 5, weighted_walk = TRUE){
-  # Fixed-length [weighted] random walk algorithm
+RepRandomWalk = function(graph, Nrep = 10, Nstep = 5, weighted_walk = TRUE){
+  # Repetitive Fixed-length [weighted] random walk algorithm
   
-  N = length(V(G))
+  N = length(V(graph))
   X = matrix(0, N, N)
   Y = matrix(0, N, N)
   
   i = 0
-  for (node in V(G)){
-    Neighbors = c(node,neighbors(G,node))
+  for (node in V(graph)){
+    Neighbors = c(node,neighbors(graph,node))
     NeighborsOneHot = rep(0,N)
     NeighborsOneHot[Neighbors] = 1
     
@@ -51,9 +51,9 @@ RandomWalkRestart = function(G, Nrep = 10, Nstep = 5, weighted_walk = TRUE){
     for (rep in 1:Nrep){
       
       if (weighted_walk)
-        RW_steps = WeightdRandomWalk(G, startNode = node, maxStep = Nstep)
+        RW_steps = WeightdRandomWalk(graph, startNode = node, maxStep = Nstep)
       else
-        RW_steps = random_walk(G, start = node, steps = Nstep)
+        RW_steps = random_walk(graph, start = node, steps = Nstep)
       
       WalkRep[rep,RW_steps] = 1
     }
@@ -65,9 +65,9 @@ RandomWalkRestart = function(G, Nrep = 10, Nstep = 5, weighted_walk = TRUE){
   P[P>1] = 1
   diag(P) = 1
   
-  colnames(X) = V(G)$names
-  colnames(Y) = V(G)$names
-  colnames(P) = V(G)$names
+  colnames(X) = V(graph)$names
+  colnames(Y) = V(graph)$names
+  colnames(P) = V(graph)$names
   
   Result = list()
   Result[["X"]] = X
@@ -125,7 +125,11 @@ Distance = function(x, y, method = "cosine"){
   dist = switch(method,
     "cosine" = 1- ((x %*% y) / sqrt((sum(x^2))*(sum(y^2)) + .000000001)),
     "dot.prod" = 1/(x %*% y),
-    "euclidian" = sum((x - y)^2)
+    "euclidian" = sum((x - y)^2),
+    "manhattan" = sum(abs(x - y)),
+    "chebyshev" = max(abs(x-y)),
+    "coassociation" = 1 - coassociation_sim(x,y)
   )
   return(dist)
 }
+
