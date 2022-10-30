@@ -1,7 +1,10 @@
 ## Multiplex Graph Representation Learning and
-## multiplex netwoek differential analysis
-## Graph Representation Learning
+## multiplex network differential analysis
 ## By: Behnam Yousefi
+
+## The aim of the current script:
+## perform MNDA on two networks with different outcomes 
+## (i.e. case-control, time point1-time point2, etc.)
 
 rm(list = ls())
 setwd("~/Desktop/R_Root/MNDA/")
@@ -12,54 +15,51 @@ library(MASS)
 library(data.table)
 
 ### Step1) Read Graph Data ###
-# Two graph data is needed for each set (case-control, time point1-time point2, etc.)
-# The graph format is a node list as a two-row matrix;
-# [optional] the edge weights can be added as the 3rd row to the imput matrix.
-# Graph 1
-data = data.frame(fread(file="Data/Resulting_net_notNULL_MAGMACONF6M.txt",sep = " " ))
-NodeList = graph[1:2,]
-EdgeWeight = graph[3,]
-graph1 = graph(NodeList, directed = FALSE)
-graph1 = simplify(set.edge.attribute(graph1, "weight", index=E(graph1), EdgeWeight))
+# The graph format is a data.frame:
+# column 1 and 2 consisting of the edge list (undirected)
+# column 3 and 4 consisting the edge weights corresponding to each graph, respectively.
+outcome = a
+data = data.frame(fread(file="Data/Resulting_net_notNULL_MAGMACONF6M.txt",sep = " "))
+NodeList = data[,1:3]
+EdgeWeights = data[,3:4]
+graph = graph(t(NodeList), directed = FALSE)
 
-# Graph 2
-data = data.frame(fread(file="Data/Resulting_net_notNULL_MAGMACONF6M.txt",sep = " " ))
-NodeList = graph[1:2,]
-EdgeWeight = graph[3,]
-graph2 = graph(NodeList, directed = FALSE)
-graph2 = simplify(set.edge.attribute(graph2, "weight", index=E(graph2), EdgeWeight)) 
-
-assertthat::assert_that(length(V(graph1)) == length(V(graph2)))
 N_nodes = length(V(graph1))
+N_graph = ncol(EdgeWeights)
 
-# Graph weight thresholding if needed
+### Step2) Preparing the input and output of the EDNN for all the graphs ###
 Threshold = 0
-graph1 = delete_edges(graph1, E(graph1)[E(graph1)$weight < Threshold])
-graph2 = delete_edges(graph2, E(graph2)[E(graph2)$weight < Threshold])
+X = c()
+Y = c()
+outcome_node = c()
 
-### Step2) Preparing the input and output of the EDNN  ###
-## Step2.1) Input: Adjacency matrix calculation
-A1 = as.matrix(as_adj(graph1,  attr = "weight"))
-A2 = as.matrix(as_adj(graph2,  attr = "weight"))
+for (i in N_graph){
+  ## Set layer-specific weights for each graph and
+  ## [optional] perform a thresholding if needed
+  W_i = EdgeWeights[,i]
+  graph_i = simplify(set.edge.attribute(graph, "weight", index=E(graph), W_i))
+  graph_i = delete_edges(graph_i, E(graph_i)[E(graph_i)$weight < Threshold])
+  
+  ## Step2.1) Input: Adjacency matrix calculation
+  Adj_i = as.matrix(as_adj(graph_i,  attr = "weight"))
 
-## Step2.2) Output: Perform the fixed-length random walk 
-## and calculating the node visit probabilities.
-# Two options exist:
-# 1.repetitive simple random walks
-# 2.repetitive weighted random walks (specific to weighted graphs)
-RW1 = RepRandomWalk (graph1, Nrep = 100, Nstep = 5, weighted_walk = TRUE)
-RW2 = RepRandomWalk (graph2, Nrep = 100, Nstep = 5, weighted_walk = TRUE)
+  ## Step2.2) Output: Perform the fixed-length random walk 
+  ## and calculating the node visit probabilities.
+  # Two options exist:
+  # 1.repetitive simple random walks
+  # 2.repetitive weighted random walks (specific to weighted graphs)
+  RW = RepRandomWalk (graph_i, Nrep = 100, Nstep = 5, weighted_walk = TRUE)
 
-# Summary
-X = rbind(A1, A2)
+  ## Step2.3) Make it multilayer for EDNN
+  X = rbind(X, Adj_i)
+  Y = rbind(Y, RW$P)
+  
+  outcome_node = c(outcome_node, rep(outcome[i], nrow(N_nodes)))
+}
 X = X / (apply(X, 1, sum) + .000000001)
-Y = rbind(RW1$P, RW2$P)
 
 colnames(X) = paste0("V",as.character(1:ncol(X)))
 colnames(Y) = paste0("V",as.character(1:ncol(Y)))
-
-individual_no = rep(1:nrow(X)/2, 2)
-set = c(rep(1, nrow(X)/2), rep(2, nrow(X)/2))
 
 ### Step3) EDNN training and calculating the distance of node pairs ###
 ## Process:
@@ -77,8 +77,8 @@ for (rep in 1:Rep){
   
   # plot(latentSpace[,1:2],pch = 20, cex = .1)
   
-  latentSpace_1 = latentSpace[set==1, ]
-  latentSpace_2 = latentSpace[set==2, ]
+  latentSpace_1 = latentSpace[outcome_node==1, ]
+  latentSpace_2 = latentSpace[outcome_node==2, ]
   for (i in 1:N)
     Dist[rep,i] = Distance (latentSpace_1[i,], latentSpace_2[i,], method = "cosine")
 }

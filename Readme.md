@@ -1,0 +1,13 @@
+# Readme
+
+We aim at unifying the MNDA pipeline for differnt problems
+
+## 1) two-layer network case
+
+# 2) multi-layer network case each layer with different condition
+
+# 3) multi-layer network case some as case 1 and some as case 2 ...
+
+# In all cases, the code will be similar until the distance calculation
+
+Note: The network structures are the same but their weights are different
