@@ -18,13 +18,13 @@ library(data.table)
 # The graph format is a data.frame:
 # column 1 and 2 consisting of the edge list (undirected)
 # column 3 and 4 consisting the edge weights corresponding to each graph, respectively.
-outcome = a
-data = data.frame(fread(file="Data/Resulting_net_notNULL_MAGMACONF6M.txt",sep = " "))
-NodeList = data[,1:3]
+outcome = c(1,0)                # 1: responder, 0: nonresponder
+data = readRDS("Data/MNDA-drug/CD_TNF_w14_Global.rds")
+NodeList = data[,1:2]
 EdgeWeights = data[,3:4]
 graph = graph(t(NodeList), directed = FALSE)
 
-N_nodes = length(V(graph1))
+N_nodes = length(V(graph))
 N_graph = ncol(EdgeWeights)
 
 ### Step2) Preparing the input and output of the EDNN for all the graphs ###
@@ -33,10 +33,10 @@ X = c()
 Y = c()
 outcome_node = c()
 
-for (i in N_graph){
+for (i in 1:N_graph){
   ## Set layer-specific weights for each graph and
   ## [optional] perform a thresholding if needed
-  W_i = EdgeWeights[,i]
+  W_i = as.numeric(EdgeWeights[,i])
   graph_i = simplify(set.edge.attribute(graph, "weight", index=E(graph), W_i))
   graph_i = delete_edges(graph_i, E(graph_i)[E(graph_i)$weight < Threshold])
   
@@ -54,7 +54,7 @@ for (i in N_graph){
   X = rbind(X, Adj_i)
   Y = rbind(Y, RW$P)
   
-  outcome_node = c(outcome_node, rep(outcome[i], nrow(N_nodes)))
+  outcome_node = c(outcome_node, rep(outcome[i], N_nodes))
 }
 X = X / (apply(X, 1, sum) + .000000001)
 
@@ -70,25 +70,34 @@ colnames(Y) = paste0("V",as.character(1:ncol(Y)))
 ## which results in several distance vectors
 
 Rep = 30
-Dist = matrix(0, Rep, N)
+Dist = matrix(0, Rep, N_nodes)
 for (rep in 1:Rep){
-  # latentSpace = EDNN(X, Y, Xtest = X, latentSize = 2, epochs = 10, batch_size = 100)
-  latentSpace = EDNN(X ,Y, Xtest = X, latentSize = 10, epochs = 50, batch_size = 5, l2reg = .0001)
+
+  latentSpace = EDNN(X ,Y, Xtest = X, latentSize = 5, epochs = 20, batch_size = 5, l2reg = .0001)
   
-  # plot(latentSpace[,1:2],pch = 20, cex = .1)
+  # plot(latentSpace[,1:2], pch = 20, cex = .5, col = outcome_node+1)
   
   latentSpace_1 = latentSpace[outcome_node==1, ]
-  latentSpace_2 = latentSpace[outcome_node==2, ]
-  for (i in 1:N)
-    Dist[rep,i] = Distance (latentSpace_1[i,], latentSpace_2[i,], method = "cosine")
+  latentSpace_2 = latentSpace[outcome_node==0, ]
+  for (i in 1:N_nodes)
+    Dist[rep,i] = Distance(latentSpace_1[i,], latentSpace_2[i,], method = "cosine")
 }
+
+hist(Dist[,], 20)
 
 ### Step4) Find the highly and lowly variant nodes using
 ### a rank sum-based method
 
-Rank_Dist = matrix(0, Rep, N)
-for (rep in 1:Rep){
-  Dist[rep,]
-}
+Rank_dist = matrix(0, Rep, N_nodes)
+for (rep in 1:Rep)
+  Rank_dist[rep,] = Rank(Dist[rep,], decreasing = FALSE)
 
+Rank_sum_dist = apply(Rank_dist, 2, sum) 
+plot(sort(Rank_sum_dist), pch = 20)
+abline(h = 3810, col = "red")
+high_var_nodes = order(Rank_sum_dist, decreasing = TRUE)[1:9]
+print(high_var_nodes)
+
+a = c(131, 136, 130, 40, 134, 124, 99, 112, 104)
+b = c(131, 130, 40, 124, 115, 136, 104, 134, 135)
 

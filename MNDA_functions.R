@@ -133,3 +133,23 @@ Distance = function(x, y, method = "cosine"){
   return(dist)
 }
 
+Rank = function(x, decreasing = FALSE) {
+  # hint: What is the difference between Order and Rank
+  # Order: [the index of the greatest number, ..., the index of the smallest number]
+  # Rank: [the rank of the 1st number, ..., the rank of the last number]
+  # In Rank, the order of the numbers remains constant,so can be used for ranksum.
+  # ex) > a = c(10, 20, 50, 30, 40)
+  #     > order(a)
+  #     [1] 1 2 4 5 3
+  #     > Rank(a)
+  #     [1] 1 2 5 3 4
+  
+  Order = order(x, decreasing = decreasing)
+  
+  Rank = rep(0,length(Order))
+  for(i in 1:length(Order))
+    Rank[Order[i]] = i
+  
+  return(Rank)
+}
+
