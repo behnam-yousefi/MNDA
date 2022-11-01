@@ -58,6 +58,9 @@ for (i in 1:N_graph){
 }
 X = X / (apply(X, 1, sum) + .000000001)
 
+colnames(X) = paste0("V",as.character(1:ncol(X)))
+colnames(Y) = paste0("V",as.character(1:ncol(Y)))
+
 ### Step3) EDNN training and calculating the distance of node pairs ###
 ## Process:
 ## 1. Train EDNN
@@ -66,9 +69,8 @@ X = X / (apply(X, 1, sum) + .000000001)
 ## To have a stable measure, we repeat the process several times,
 ## which results in several distance vectors
 
-Rep = 2
+Rep = 30
 Dist = matrix(0, Rep, N_nodes)
-colnames(Dist) = names(V(graph))
 for (rep in 1:Rep){
 
   latentSpace = EDNN(X ,Y, Xtest = X, latentSize = 5, epochs = 20, batch_size = 5, l2reg = .0001)
@@ -87,31 +89,15 @@ hist(Dist[,], 20)
 ### a rank sum-based method
 
 Rank_dist = matrix(0, Rep, N_nodes)
-colnames(Rank_dist) = names(V(graph))
 for (rep in 1:Rep)
   Rank_dist[rep,] = Rank(Dist[rep,], decreasing = FALSE)
 
-Rank_sum_dist = apply(Rank_dist, 2, sum)
-
+Rank_sum_dist = apply(Rank_dist, 2, sum) 
 plot(sort(Rank_sum_dist), pch = 20)
 abline(h = 3810, col = "red")
 high_var_nodes = order(Rank_sum_dist, decreasing = TRUE)[1:9]
-
 print(high_var_nodes)
-print(names(Rank_sum_dist)[high_var_nodes])
-Node_set = names(Rank_sum_dist)[high_var_nodes]
 
 a = c(131, 136, 130, 40, 134, 124, 99, 112, 104)
 b = c(131, 130, 40, 124, 115, 136, 104, 134, 135)
-
-### Plot subgraph limited to the high-var nodes ###
-
-W = as.numeric(EdgeWeights[,1]) - as.numeric(EdgeWeights[,2]) 
-Threshold = 0
-graph_plot = simplify(set.edge.attribute(graph, "weight", index=E(graph), W))
-graph_plot = delete_edges(graph_plot, E(graph_plot)[abs(E(graph_plot)$weight) < Threshold])
-Labels = names(Rank_sum_dist)
-names(Labels) = names(Rank_sum_dist)
-
-subgraph_plot(graph_plot, Node_set, Labels)
 

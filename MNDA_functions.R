@@ -65,9 +65,9 @@ RepRandomWalk = function(graph, Nrep = 10, Nstep = 5, weighted_walk = TRUE){
   P[P>1] = 1
   diag(P) = 1
   
-  colnames(X) = V(graph)$names
-  colnames(Y) = V(graph)$names
-  colnames(P) = V(graph)$names
+  colnames(X) = names(V(graph))
+  colnames(Y) = names(V(graph))
+  colnames(P) = names(V(graph))
   
   Result = list()
   Result[["X"]] = X
