@@ -8,11 +8,11 @@
 
 rm(list = ls())
 setwd("~/Desktop/R_Root/MNDA/")
-source('~/Desktop/R_Root/MNDA/MNDA_functions.R')
+source('MNDA_functions.R')
+source('Figure_subgraph_func.R')
 
 library(igraph)
 library(MASS)
-library(data.table)
 
 ### Step1) Read Graph Data ###
 # The graph format is a data.frame:
@@ -52,38 +52,49 @@ for (i in 1:N_graph){
 
   ## Step2.3) Make it multilayer for EDNN
   X = rbind(X, Adj_i)
-  Y = rbind(Y, RW$P)
+  Y = rbind(Y, RW$Probabilities)
   
   outcome_node = c(outcome_node, rep(outcome[i], N_nodes))
 }
 X = X / (apply(X, 1, sum) + .000000001)
 
-### Step3) EDNN training and calculating the distance of node pairs ###
+### Step3) EDNN training ###
 ## Process:
 ## 1. Train EDNN
 ## 2. Calculate the embedding space
-## 3. Calculate the distance between the node pairs
 ## To have a stable measure, we repeat the process several times,
-## which results in several distance vectors
+## which results in several distance vectors in the next step
 
-Rep = 2
+Rep = 10
+embeddingSpaceList = list()
+for (rep in 1:Rep)
+  embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X, latentSize = 5, 
+                                   epochs = 20, batch_size = 5, l2reg = .0001)
+
+# Plot 
+embeddingSpace = embeddingSpaceList[[1]]
+plot(embeddingSpace[,1:2], pch = 20, cex = .5, col = outcome_node+1)
+
+# embeddingSpaceList[["outcome"]] = outcome_node
+# saveRDS(embeddingSpaceList, "Data/Embedding_Space/Embedding_Space_1.rds")
+# embeddingSpaceList = readRDS("Data/Embedding_Space/Embedding_Space_1.rds")
+
+### Step4) Calculating the distance of node pairs in the embedding space ###
+## To find the highly variable nodes in a 2-layer-network, the distance between the corresponding
+## nodes between the two layers is calculated.
 Dist = matrix(0, Rep, N_nodes)
 colnames(Dist) = names(V(graph))
 for (rep in 1:Rep){
-
-  latentSpace = EDNN(X ,Y, Xtest = X, latentSize = 5, epochs = 20, batch_size = 5, l2reg = .0001)
-  
-  # plot(latentSpace[,1:2], pch = 20, cex = .5, col = outcome_node+1)
-  
-  latentSpace_1 = latentSpace[outcome_node==1, ]
-  latentSpace_2 = latentSpace[outcome_node==0, ]
+  embeddingSpace = embeddingSpaceList[[rep]]
+  embeddingSpace_1 = embeddingSpace[outcome_node==1, ]
+  embeddingSpace_2 = embeddingSpace[outcome_node==0, ]
   for (i in 1:N_nodes)
-    Dist[rep,i] = Distance(latentSpace_1[i,], latentSpace_2[i,], method = "cosine")
+    Dist[rep,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
 }
 
 hist(Dist[,], 20)
 
-### Step4) Find the highly and lowly variant nodes using
+### Step5) Find the highly and lowly variant nodes using
 ### a rank sum-based method
 
 Rank_dist = matrix(0, Rep, N_nodes)
@@ -104,8 +115,7 @@ Node_set = names(Rank_sum_dist)[high_var_nodes]
 a = c(131, 136, 130, 40, 134, 124, 99, 112, 104)
 b = c(131, 130, 40, 124, 115, 136, 104, 134, 135)
 
-### Plot subgraph limited to the high-var nodes ###
-
+### Step6) Plot subgraph limited to the high-var nodes ###
 W = as.numeric(EdgeWeights[,1]) - as.numeric(EdgeWeights[,2]) 
 Threshold = 0
 graph_plot = simplify(set.edge.attribute(graph, "weight", index=E(graph), W))

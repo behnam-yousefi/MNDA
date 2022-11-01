@@ -1,13 +1,18 @@
 ## Multiplex Graph Representation Learning and
 ## multiplex network differential analysis
-## All ISNs in one embedding
-## Graph Representation Learning
 ## By: Behnam Yousefi
 
 library(igraph)
 library(keras)
 
+### Weighted Random Walk algorithm
 WeightdRandomWalk = function(graph, startNode, maxStep = 5, node_names = FALSE){
+  # graph: An igraph object
+  # startNode: the starting node can be name or index.
+  # node_names ???
+  
+  # output value: The set of nodes passed by the random walker.
+  
   A = as.matrix(as_adj(graph, attr = "weight"))
   N_node = ncol(A)
   outputNodes = rep(NA, maxStep)
@@ -31,52 +36,58 @@ WeightdRandomWalk = function(graph, startNode, maxStep = 5, node_names = FALSE){
   return(outputNodes)
 }
 
+
+### Repetitive Fixed-length [weighted] random walk algorithm
 RepRandomWalk = function(graph, Nrep = 10, Nstep = 5, weighted_walk = TRUE){
-  # Repetitive Fixed-length [weighted] random walk algorithm
+  # graph: An igraph object
+  
+  # output values:
+  # Steps (S): The total number of times a node is visited starting from the corresponding node in the row.
+  # Probabilities (P): The node visit probabilities starting from the corresponding node in the row.
   
   N = length(V(graph))
-  X = matrix(0, N, N)
-  Y = matrix(0, N, N)
+  S = matrix(0, N, N)
   
   i = 0
   for (node in V(graph)){
-    Neighbors = c(node,neighbors(graph,node))
+    i = i+1
+    
+    Neighbors = c(node, neighbors(graph,node))
     NeighborsOneHot = rep(0,N)
     NeighborsOneHot[Neighbors] = 1
-    
-    i = i+1
-    X[i,] = NeighborsOneHot
     
     WalkRep = matrix(0, Nrep, N)
     for (rep in 1:Nrep){
       
       if (weighted_walk)
+        # use WeightdRandomWalk() written in the current script.
         RW_steps = WeightdRandomWalk(graph, startNode = node, maxStep = Nstep)
       else
+        # use igraph::random_walk
         RW_steps = random_walk(graph, start = node, steps = Nstep)
       
       WalkRep[rep,RW_steps] = 1
     }
     
-    Y[i,] = apply(WalkRep, 2, sum)
+    S[i,] = apply(WalkRep, 2, sum)
   }
   
-  P = Y / Nrep
+  P = S / Nrep
   P[P>1] = 1
   diag(P) = 1
   
-  colnames(X) = names(V(graph))
-  colnames(Y) = names(V(graph))
+  colnames(S) = names(V(graph))
   colnames(P) = names(V(graph))
   
   Result = list()
-  Result[["X"]] = X
-  Result[["Y"]] = Y
-  Result[["P"]] = P
+  Result[["Steps"]] = S
+  Result[["Probabilities"]] = P
   
   return(Result)
 }
 
+
+### Encoder decoder neural network (EDNN) function
 EDNN = function(X, Y, Xtest, latentSize = 2, epochs = 10, batch_size = 100, l2reg = 0){
 
   Nnode = ncol(X)
@@ -121,6 +132,8 @@ EDNN = function(X, Y, Xtest, latentSize = 2, epochs = 10, batch_size = 100, l2re
   return(latentSpace)
 }
 
+
+### function to calculate distance between two vectors
 Distance = function(x, y, method = "cosine"){
   dist = switch(method,
     "cosine" = 1- ((x %*% y) / sqrt((sum(x^2))*(sum(y^2)) + .000000001)),
@@ -133,6 +146,7 @@ Distance = function(x, y, method = "cosine"){
   return(dist)
 }
 
+### function to calculate rank
 Rank = function(x, decreasing = FALSE) {
   # hint: What is the difference between Order and Rank
   # Order: [the index of the greatest number, ..., the index of the smallest number]
