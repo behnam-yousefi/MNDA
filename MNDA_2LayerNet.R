@@ -100,13 +100,15 @@ hist(Dist[,], 20)
 Rank_dist = matrix(0, Rep, N_nodes)
 colnames(Rank_dist) = names(V(graph))
 for (rep in 1:Rep)
-  Rank_dist[rep,] = Rank(Dist[rep,], decreasing = FALSE)
+  Rank_dist[rep,] = Rank(Dist[rep,], decreasing = TRUE)
 
 Rank_sum_dist = apply(Rank_dist, 2, sum)
 
 plot(sort(Rank_sum_dist), pch = 20)
 abline(h = 3810, col = "red")
-high_var_nodes = order(Rank_sum_dist, decreasing = TRUE)[1:9]
+high_var_nodes = order(Rank_sum_dist, decreasing = FALSE)[1:9]
+low_var_nodes = order(Rank_sum_dist, decreasing = TRUE)[1:9]
+
 
 print(high_var_nodes)
 print(names(Rank_sum_dist)[high_var_nodes])
