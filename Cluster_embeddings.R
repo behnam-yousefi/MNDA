@@ -19,14 +19,28 @@ source("~/Desktop/R_Root/ConsensusClustering/CC_functions.R")
 # we can perform a multivitamin clustering:
 Clusters = multiview_kmeans(embeddingSpaceList_temp, rep = 50, 
                             range.k = c(5,40), method = "random")
-Adj = coCluster_matrix(Clusters)
-pheatmap::pheatmap(Adj)
+
+# The co-association similarity can be calculated as
+CS = coCluster_matrix(Clusters)
+pheatmap::pheatmap(CS)
+
+# Then a PCC clustering approach can be used for clustering along with obtaining the 
+# number of clusters
+CM = consensus_matrix(CS, max.cluster = 5, resample.ratio = 0.7, 
+                      max.itter = 50, clustering.method = "pam")
+Scores = CC_cluster_count(CM)
+RobScore = Scores[["LogitScore"]]
+plot(RobScore, pch = 20, type = "b", ylab = "robustness score", xlab = "number of clusters")
+
+Kopt = Scores[["Kopt_LogitScore"]]
+clusters = PamClustFromAdjMat (CM[[Kopt]], k = 2, alpha = 1, adj.conv = FALSE)
+
 
 ## Co-association similarity measure between the corresponding nodes (in a 2-layer network case)
-N_nodes = ncol(Adj)/2
+N_nodes = ncol(CS)/2
 Sim_crsp_nd = c()
 for (i in 1:N_nodes)
-  Sim_crsp_nd = c(Dist_crsp_nd, Adj[N_nodes + i])
+  Sim_crsp_nd = c(Dist_crsp_nd, CS[N_nodes + i])
 
 high_var_nodes = order(Sim_crsp_nd, decreasing = FALSE)[1:9]
 
