@@ -42,6 +42,7 @@ Sim_crsp_nd = c()
 for (i in 1:N_nodes)
   Sim_crsp_nd = c(Dist_crsp_nd, CS[N_nodes + i])
 
+plot(sort(Sim_crsp_nd), pch = 20)
 high_var_nodes = order(Sim_crsp_nd, decreasing = FALSE)[1:9]
 
 
