@@ -3,8 +3,18 @@
 ## By: Behnam Yousefi
 
 ## The aim of the current script:
-## Perform MNDA on two networks with different outcomes 
-## (i.e. case-control, time point1-time point2, etc.)
+## perform MNDA on a set of ISNs (e.g. LIONESS - Kuijjer et al. 2019)
+## Two conditions we have:
+## 1) Paired ISNs: for each condition we have the same individuals (e.g. time-based analysis)
+## 2) Unpaired ISNs: individuals are different between conditions (e.g. case-control)
+##  To find the variable nodes in the Paired ISNs case, we can calculate distances between 
+## corresponding nodes and compare which results in a set of distances for each node.
+## A Wilcoxon test can be then be used to find the significant nodes.
+##  For the Unpaired case, such a distance cannot be calculated. The only method in this case
+## would be to use the embedding space of the nodes as input features of a predictive ML model
+## y = wX, X [individual by features], |features| = N_nodes by N_dim. A leave-one-out CV can
+## be used to train and test the model. Since this analysis is context dependent, we do not 
+## provide any standard pipeline for the Unpaired ISNs case.
 
 rm(list = ls())
 setwd("~/Desktop/R_Root/MNDA/")
@@ -18,10 +28,10 @@ library(MASS)
 ## The graph format is a data.frame:
 ## column 1 and 2 consisting of the edge list (undirected)
 ## column 3 and 4 consisting the edge weights corresponding to each graph, respectively.
-outcome = c(1,0)                # 1: responder, 0: nonresponder
-data = readRDS("Data/MNDA-drug/CD_TNF_w14_Global.rds")
+outcome = readRDS("Data/MNDA-drug/CD_TNF_w14_outcome.rds")$response
+data = readRDS("Data/MNDA-drug/CD_TNF_w14_ISN.rds")
 NodeList = data[,1:2]
-EdgeWeights = data[,3:4]
+EdgeWeights = data[,3:ncol(data)]
 graph = graph(t(NodeList), directed = FALSE)
 
 N_nodes = length(V(graph))
@@ -32,6 +42,7 @@ Threshold = 0
 X = c()
 Y = c()
 outcome_node = c()
+individual_node = c()
 
 for (i in 1:N_graph){
   ## Set layer-specific weights for each graph and
@@ -55,6 +66,7 @@ for (i in 1:N_graph){
   Y = rbind(Y, RW$Probabilities)
   
   outcome_node = c(outcome_node, rep(outcome[i], N_nodes))
+  individual_node = c(individual_node, rep(i, N_nodes))
 }
 X = X / (apply(X, 1, sum) + .000000001)
 
@@ -69,7 +81,7 @@ Rep = 10
 embeddingSpaceList = list()
 for (rep in 1:Rep)
   embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X, latentSize = 5, 
-                                   epochs = 20, batch_size = 5, l2reg = .0001)
+                                   epochs = 20, batch_size = 5, l2reg = 0)
 
 # Plot 
 embeddingSpace = embeddingSpaceList[[1]]
@@ -78,52 +90,3 @@ plot(embeddingSpace[,1:2], pch = 20, cex = .5, col = outcome_node+1)
 # embeddingSpaceList[["outcome"]] = outcome_node
 # saveRDS(embeddingSpaceList, "Data/Embedding_Space/Embedding_Space_1.rds")
 # embeddingSpaceList = readRDS("Data/Embedding_Space/Embedding_Space_1.rds")
-
-### Step4) Calculating the distance of node pairs in the embedding space ###
-## To find the highly variable nodes in a 2-layer-network, the distance between 
-## the corresponding nodes between the two layers is calculated.
-Dist = matrix(0, Rep, N_nodes)
-colnames(Dist) = names(V(graph))
-for (rep in 1:Rep){
-  embeddingSpace = embeddingSpaceList[[rep]]
-  embeddingSpace_1 = embeddingSpace[outcome_node==1, ]
-  embeddingSpace_2 = embeddingSpace[outcome_node==0, ]
-  for (i in 1:N_nodes)
-    Dist[rep,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
-}
-
-hist(Dist[,], 20)
-
-### Step5) Find the highly and lowly variant nodes using
-### a rank sum-based method
-
-Rank_dist = matrix(0, Rep, N_nodes)
-colnames(Rank_dist) = names(V(graph))
-for (rep in 1:Rep)
-  Rank_dist[rep,] = Rank(Dist[rep,], decreasing = TRUE)
-
-Rank_sum_dist = apply(Rank_dist, 2, sum)
-
-plot(sort(Rank_sum_dist), pch = 20)
-abline(h = 3810, col = "red")
-high_var_nodes = order(Rank_sum_dist, decreasing = FALSE)[1:9]
-low_var_nodes = order(Rank_sum_dist, decreasing = TRUE)[1:9]
-
-
-print(high_var_nodes)
-print(names(Rank_sum_dist)[high_var_nodes])
-Node_set = names(Rank_sum_dist)[high_var_nodes]
-
-a = c(131, 136, 130, 40, 134, 124, 99, 112, 104)
-b = c(131, 130, 40, 124, 115, 136, 104, 134, 135)
-
-### Step6) Plot subgraph limited to the high-var nodes ###
-W = as.numeric(EdgeWeights[,1]) - as.numeric(EdgeWeights[,2]) 
-Threshold = 0
-graph_plot = simplify(set.edge.attribute(graph, "weight", index=E(graph), W))
-graph_plot = delete_edges(graph_plot, E(graph_plot)[abs(E(graph_plot)$weight) < Threshold])
-Labels = names(Rank_sum_dist)
-names(Labels) = names(Rank_sum_dist)
-
-subgraph_plot(graph_plot, Node_set, Labels)
-

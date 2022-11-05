@@ -3,7 +3,7 @@
 ## By: Behnam Yousefi
 
 ## The aim of the current script:
-## perform MNDA on two networks with different outcomes 
+## Perform MNDA on two networks with different outcomes 
 ## (i.e. case-control, time point1-time point2, etc.)
 ## and test whether the distances are significant.
 #
@@ -25,7 +25,7 @@ library(aggregation)
 ## The graph format is a data.frame:
 ## column 1 and 2 consisting of the edge list (undirected)
 ## column 3 and 4 consisting the edge weights corresponding to each graph, respectively.
-outcome = c(1,0,2,3)              # 1: responder, 0: nonresponder, 2: permited resp., 3: perm. nonr.
+outcome = c(1,0,2,3) # 1: responder, 0: nonresponder, 2: permuted resp., 3: perm. nonr.
 data = readRDS("Data/MNDA-drug/CD_TNF_w14_Global.rds")
 NodeList = data[,1:2]
 EdgeWeights = data[,3:4]
@@ -114,7 +114,8 @@ for (rep in 1:Rep){
     Dist_null[rep,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
   
   for (i in 1:N_nodes)
-    P_value[rep,i] = wilcox.test(Dist_null[rep,], y = Dist[rep,i], alternative = "less")$p.value
+    P_value[rep,i] = wilcox.test(Dist_null[rep,], y = Dist[rep,i], 
+                                 alternative = "less")$p.value
 }
 
 hist(Dist[,], 20)
@@ -151,9 +152,7 @@ print(high_var_nodes)
 print(names(Rank_sum_dist)[high_var_nodes])
 Node_set = names(Rank_sum_dist)[high_var_nodes]
 
-a = c(131, 136, 130, 40, 134, 124, 99, 112, 104)
-b = c(131, 130, 40, 124, 115, 136, 104, 134, 135)
-c = c(130, 124, 131, 136, 104, 115, 135,  99, 134, 112,  40)
+a = c(130, 124, 131, 136, 104, 115, 135,  99, 134, 112, 40)
 
 ### Step6) Plot subgraph limited to the high-var nodes ###
 W = as.numeric(EdgeWeights[,1]) - as.numeric(EdgeWeights[,2]) 
