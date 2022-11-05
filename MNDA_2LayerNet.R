@@ -15,9 +15,9 @@ library(igraph)
 library(MASS)
 
 ### Step1) Read Graph Data ###
-# The graph format is a data.frame:
-# column 1 and 2 consisting of the edge list (undirected)
-# column 3 and 4 consisting the edge weights corresponding to each graph, respectively.
+## The graph format is a data.frame:
+## column 1 and 2 consisting of the edge list (undirected)
+## column 3 and 4 consisting the edge weights corresponding to each graph, respectively.
 outcome = c(1,0)                # 1: responder, 0: nonresponder
 data = readRDS("Data/MNDA-drug/CD_TNF_w14_Global.rds")
 NodeList = data[,1:2]
