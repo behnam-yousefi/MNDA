@@ -149,8 +149,8 @@ low_var_nodes = order(Rank_sum_dist, decreasing = FALSE)[1:11]
 
 
 print(high_var_nodes)
-print(names(Rank_sum_dist)[high_var_nodes])
-Node_set = names(Rank_sum_dist)[high_var_nodes]
+print(names(V(graph))[high_var_nodes])
+Node_set = names(V(graph))[high_var_nodes]
 
 a = c(130, 124, 131, 136, 104, 115, 135,  99, 134, 112, 40)
 
@@ -159,8 +159,7 @@ W = as.numeric(EdgeWeights[,1]) - as.numeric(EdgeWeights[,2])
 Threshold = 0
 graph_plot = simplify(set.edge.attribute(graph, "weight", index=E(graph), W))
 graph_plot = delete_edges(graph_plot, E(graph_plot)[abs(E(graph_plot)$weight) < Threshold])
-Labels = names(Rank_sum_dist)
-names(Labels) = names(Rank_sum_dist)
+Labels = names(V(graph))
 
-subgraph_plot(graph_plot, Node_set, Labels)
+subgraph_plot(graph_plot, Node_set, Tab$Labels, margin = 5)
 

@@ -5,15 +5,18 @@
 library(igraph)
 library(ggraph)
 
-subgraph_plot = function(graph, node_set, labels=NULL){
+subgraph_plot = function(graph, node_set, labels=NULL, margin=2.5){
   # graph: An igraph object
   # node_set: The names or indices of the nodes around which the subgroup is plotted.
   # labels: The labels of the nodes to be indicated. labels should be named if the node_set 
   # consists of the node names.
+  # margin: the figure margin.
   
   if (is.null(labels)){
     labels = names(V(graph))
     names(labels) = labels
+  }else if (is.null(names(labels))){
+    names(labels) = names(V(graph))
   }
   
   # obtain the neighbors of the input node_set
@@ -65,7 +68,7 @@ subgraph_plot = function(graph, node_set, labels=NULL){
     scale_edge_width_continuous(range = c(.0001, 3)) + 
     theme_void() +
     theme(legend.position="none") + 
-    expand_limits(x = c(-2.5, 2.5), y = c(-2.5, 2.5))
+    expand_limits(x = c(-margin, margin), y = c(-margin, margin))
   
   
 }
