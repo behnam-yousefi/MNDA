@@ -147,12 +147,9 @@ abline(h = 3810, col = "red")
 high_var_nodes = order(Rank_sum_dist, decreasing = TRUE)[1:11]
 low_var_nodes = order(Rank_sum_dist, decreasing = FALSE)[1:11]
 
-
 print(high_var_nodes)
 print(names(V(graph))[high_var_nodes])
 Node_set = names(V(graph))[high_var_nodes]
-
-a = c(130, 124, 131, 136, 104, 115, 135,  99, 134, 112, 40)
 
 ### Step6) Plot subgraph limited to the high-var nodes ###
 W = as.numeric(EdgeWeights[,1]) - as.numeric(EdgeWeights[,2]) 
@@ -161,5 +158,5 @@ graph_plot = simplify(set.edge.attribute(graph, "weight", index=E(graph), W))
 graph_plot = delete_edges(graph_plot, E(graph_plot)[abs(E(graph_plot)$weight) < Threshold])
 Labels = names(V(graph))
 
-subgraph_plot(graph_plot, Node_set, Tab$Labels, margin = 5)
+subgraph_plot(graph_plot, Node_set, Labels, font_size = 4, margin = 2.5)
 

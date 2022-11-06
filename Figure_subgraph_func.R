@@ -5,7 +5,8 @@
 library(igraph)
 library(ggraph)
 
-subgraph_plot = function(graph, node_set, labels=NULL, margin=2.5){
+subgraph_plot = function(graph, node_set, labels=NULL, 
+                         node_size=5, font_size=4, max_edge_width=4, margin=2.5){
   # graph: An igraph object
   # node_set: The names or indices of the nodes around which the subgroup is plotted.
   # labels: The labels of the nodes to be indicated. labels should be named if the node_set 
@@ -46,8 +47,8 @@ subgraph_plot = function(graph, node_set, labels=NULL, margin=2.5){
   TxtColor[1:N_node_set] = "black"
   FontFace = rep("plain", length(Nodes))
   FontFace[1:N_node_set] = "plain"
-  FontSize = rep(4, length(Nodes))
-  FontSize[1:N_node_set] = 4
+  FontSize = rep(font_size, length(Nodes))
+  FontSize[1:N_node_set] = font_size
   
   # parameters used to account for the circulatory text problem
   a = floor(180 / (360 / N_nodes))
@@ -56,7 +57,7 @@ subgraph_plot = function(graph, node_set, labels=NULL, margin=2.5){
   # final plot
   ggraph(graph_sub, layout = 'linear', circular = TRUE) +
     geom_edge_arc(aes(color = EdgeColor, edge_width = abs(W)^1), edge_alpha = .7) +
-    geom_node_point(aes(x = x, y = y), size = 5, fill = NodeColor, 
+    geom_node_point(aes(x = x, y = y), size = node_size, fill = NodeColor, 
                     shape = 21, colour = "black", stroke = .4) +
     geom_node_text(aes(x = x*1.12, y = y*1.12, 
                   angle = -((-node_angle(x, y)+90)%%180)+90, hjust = c(rep(0,a), rep(1,b))), 
@@ -65,7 +66,7 @@ subgraph_plot = function(graph, node_set, labels=NULL, margin=2.5){
                   size = FontSize, 
                   color = TxtColor) +
     scale_size_identity() +
-    scale_edge_width_continuous(range = c(.0001, 3)) + 
+    scale_edge_width_continuous(range = c(.0001, max_edge_width)) + 
     theme_void() +
     theme(legend.position="none") + 
     expand_limits(x = c(-margin, margin), y = c(-margin, margin))

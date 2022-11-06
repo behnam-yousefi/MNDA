@@ -114,9 +114,6 @@ print(high_var_nodes)
 print(names(Rank_sum_dist)[high_var_nodes])
 Node_set = names(Rank_sum_dist)[high_var_nodes]
 
-a = c(131, 136, 130, 40, 134, 124, 99, 112, 104)
-b = c(131, 130, 40, 124, 115, 136, 104, 134, 135)
-
 ### Step6) Plot subgraph limited to the high-var nodes ###
 W = as.numeric(EdgeWeights[,1]) - as.numeric(EdgeWeights[,2]) 
 Threshold = 0
