@@ -86,7 +86,7 @@ for (rep in 1:Rep)
 
 # Plot 
 embeddingSpace = embeddingSpaceList[[1]]
-plot(embeddingSpace[,1:2], pch = 20, cex = .5, col = outcome_node+1)
+plot(embeddingSpace[,4:5], pch = 20, cex = .5, col = outcome_node+1)
 
 # embeddingSpaceList[["outcome"]] = outcome_node
 # saveRDS(embeddingSpaceList, "Data/Embedding_Space/Embedding_Space_2.rds")
@@ -125,12 +125,11 @@ abline(v = .05, col = "red")
 P_value_aggr = apply(P_value, 2, fisher)
 hist(P_value_aggr, 50)
 abline(v = .05, col = "red")
-which(P_value_aggr<.01)
+which(P_value_aggr<.05)
 
 
 ### Step5) Find the highly and lowly variant nodes using
 ### a rank sum-based method
-
 Rank_dist = matrix(0, Rep, N_nodes)
 colnames(Rank_dist) = names(V(graph))
 for (rep in 1:Rep)
@@ -144,7 +143,7 @@ abline(v = 6000, col = "red")
 
 plot(sort(Rank_sum_dist), pch = 20)
 abline(h = 3810, col = "red")
-high_var_nodes = order(Rank_sum_dist, decreasing = TRUE)[1:11]
+high_var_nodes = order(Rank_sum_dist, decreasing = TRUE)[1:5]
 low_var_nodes = order(Rank_sum_dist, decreasing = FALSE)[1:11]
 
 print(high_var_nodes)
