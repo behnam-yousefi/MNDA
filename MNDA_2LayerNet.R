@@ -68,7 +68,7 @@ X = X / (apply(X, 1, sum) + .000000001)
 Rep = 10
 embeddingSpaceList = list()
 for (rep in 1:Rep)
-  embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X, latentSize = 5, 
+  embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X, embedding_size = 5, 
                                    epochs = 20, batch_size = 5, l2reg = .0001)
 
 # Plot 

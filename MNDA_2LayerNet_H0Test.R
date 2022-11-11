@@ -81,12 +81,12 @@ X = X / (apply(X, 1, sum) + .000000001)
 Rep = 50
 embeddingSpaceList = list()
 for (rep in 1:Rep)
-  embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X, latentSize = 5, 
-                                   epochs = 10, batch_size = 5, l2reg = .0001)
+  embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X, embedding_size = 5, 
+                                   epochs = 10, batch_size = 5, l2reg = .00001)
 
 # Plot 
 embeddingSpace = embeddingSpaceList[[1]]
-plot(embeddingSpace[,4:5], pch = 20, cex = .5, col = outcome_node+1)
+plot(embeddingSpace[,4:3], pch = 20, cex = .5, col = outcome_node+1)
 
 # embeddingSpaceList[["outcome"]] = outcome_node
 # saveRDS(embeddingSpaceList, "Data/Embedding_Space/Embedding_Space_2.rds")
@@ -138,6 +138,7 @@ for (rep in 1:Rep)
 Rank_sum_dist = apply(Rank_dist, 2, sum)
 
 plot(Rank_sum_dist, -log10(P_value_aggr))
+
 abline(h = -log10(.01), col = "red")
 abline(v = 6000, col = "red")
 

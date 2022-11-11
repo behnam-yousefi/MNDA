@@ -88,7 +88,7 @@ RepRandomWalk = function(graph, Nrep = 10, Nstep = 5, weighted_walk = TRUE){
 
 
 ### Encoder decoder neural network (EDNN) function
-EDNN = function(X, Y, Xtest, latentSize = 2, epochs = 10, batch_size = 100, l2reg = 0){
+EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 100, l2reg = 0){
 
   Nnode = ncol(X)
   inputSize = ncol(X)
@@ -97,13 +97,13 @@ EDNN = function(X, Y, Xtest, latentSize = 2, epochs = 10, batch_size = 100, l2re
   # Define Encoder
   enc_input = layer_input(shape = inputSize)
   enc_output = enc_input %>% 
-    layer_dense(units=latentSize, activation = "relu",
+    layer_dense(units=embedding_size, activation = "relu",
                 kernel_regularizer = regularizer_l2(l2reg))
   
   encoder = keras_model(enc_input, enc_output)
   
   # Define decoder
-  dec_input = layer_input(shape = latentSize)
+  dec_input = layer_input(shape = embedding_size)
   dec_output = dec_input %>% 
     layer_dense(units = outputSize, activation = "sigmoid")
   

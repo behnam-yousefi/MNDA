@@ -7,7 +7,7 @@ setwd("~/Desktop/R_Root/MNDA/")
 
 N_nodes = 100
 N_var_nodes = 5
-noise_sd = .001
+noise_sd = .1
 N_var_nei = 90
 
 Adj1 = matrix(runif(N_nodes^2), N_nodes)
@@ -34,4 +34,4 @@ NodeList = data.frame(V1 = rep(1:N_nodes, times = N_nodes),
                       V2 = rep(1:N_nodes, each = N_nodes))
 EdgeWeights = data.frame(W1 = as.numeric(Adj1),
                          W2 = as.numeric(Adj2))
-
+print(var_node_set)
