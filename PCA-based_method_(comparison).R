@@ -1,3 +1,5 @@
+library(igraph)
+
 
 graph = graph(t(NodeList), directed = FALSE)
 
@@ -6,6 +8,9 @@ W_2 = as.numeric(EdgeWeights[,2])
 
 graph_1 = simplify(set.edge.attribute(graph, "weight", index=E(graph), W_1))
 graph_2 = simplify(set.edge.attribute(graph, "weight", index=E(graph), W_2))
+
+A1 = as.matrix(as_adj(graph_1,  attr = "weight"))
+A2 = as.matrix(as_adj(graph_2,  attr = "weight"))
 
 L1 = as.matrix(laplacian_matrix(graph_1, normalized = TRUE))
 L2 = as.matrix(laplacian_matrix(graph_2, normalized = TRUE))
@@ -19,6 +24,15 @@ for (i in 1:N_nodes)
 
 plot(sort(Dist_LapMat))
 order(Dist_LapMat, decreasing = FALSE)[1:5]
+
+## Centrality
+Dist_Cent = rep(0,N_nodes)
+for (i in 1:N_nodes)
+  # Dist_Cent[i] = abs(sum(A1[i,]) - sum(A2[i,]))
+  Dist_Cent[i] = abs((sum(A1[i,])/max(A1[i,])) - (sum(A2[i,])/max(A2[i,])))
+
+plot(sort(Dist_Cent))
+order(Dist_Cent, decreasing = TRUE)[1:5]
 
 ## PCA-based distance
 PCA = prcomp(L1, scale. = FALSE)
