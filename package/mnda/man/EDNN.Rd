@@ -28,6 +28,13 @@ The embedding space for Xtest.
 Encoder decoder neural network (EDNN) function
 }
 \examples{
-embeddingSpace = EDNN(X = Adj, Y = Prob, Xtest = Adj)
+myNet = network_gen(N_nodes = 100)
+graphData = myNet[["data_graph"]]
+edge.list = graphData[,1:2]
+edge.weight = graphData[,3:4]
+XY = ednn_IOprepare(edge.list, edge.weight)
+X = XY[["X"]]
+Y = XY[["Y"]]
+embeddingSpace = EDNN(X = X, Y = Y, Xtest = X)
 
 }

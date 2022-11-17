@@ -21,6 +21,8 @@
 #' @param epochs maximum number of pocks. An early stopping callback with a patience of 5 has been set inside the function (default = 10).
 #' @param batch.size batch size for learning (default = 5).
 #' @param l2reg the coefficient of L2 regularization for the input layer (default = 0).
+#' @param walk.rep number of repeats for the random walk (default: 100).
+#' @param n.steps number of the random walk steps (default: 5).
 #'
 #' @return a list of embedding spaces for each node.
 #' @export
@@ -29,14 +31,17 @@
 #' embeddingSpaceList = mnda_embedding_2layer(graph.data)
 #'
 mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
-                       embedding.size=5, epochs=10, batch.size=5, l2reg=0){
+                       embedding.size=5, epochs=10, batch.size=5, l2reg=0,
+                       walk.rep = 100, n.steps = 5){
+
+  assertthat::assert_that(train.rep >= 2)
 
   ### Step1) Read Graph Data ###
   ## The graph.data format is a data.frame:
   ## column 1 and 2 consisting of the edge list (undirected)
   ## column 3 and 4 consisting the edge weights corresponding to each graph, respectively.
-  EdgeList = data[,1:2]
-  EdgeWeights = data[,3:4]
+  EdgeList = graph.data[,1:2]
+  EdgeWeights = graph.data[,3:4]
   outcome = colnames(EdgeWeights)
 
   ## generate the two null graphs by permuting edge weights of the original graphs:
@@ -47,9 +52,10 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
 
   ### Step2) Preparing the input and output of the EDNN for all the graphs ###
   XY = ednn_IOprepare(edge.list = EdgeList, edge.weight = EdgeWeights,
-                        outcome = outcome, edge.threshold = edge.threshold)
-  X = XY["X"]
-  Y = XY["Y"]
+                      walk.rep = walk.rep, n.steps = n.steps,
+                      outcome = outcome, edge.threshold = edge.threshold)
+  X = XY[["X"]]
+  Y = XY[["Y"]]
 
   ### Step3) EDNN training ###
   ## Process:
@@ -58,7 +64,6 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
   ## To have a stable measure, we repeat the process several times,
   ## which results in several distance vectors in the next step
 
-  train.rep = 50
   embeddingSpaceList = list()
   for (rep in 1:train.rep)
     embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X,

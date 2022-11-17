@@ -9,7 +9,7 @@ ednn_IOprepare(
   edge.weight,
   outcome = NULL,
   edge.threshold = 0,
-  walk.rep = 100,
+  walk.rep = 10,
   n.steps = 5
 )
 }
