@@ -3,7 +3,7 @@
 ## By: Behnam Yousefi
 
 ## The aim of the current script:
-## Perform MNDA on two networks with different outcomes 
+## Perform MNDA on two networks with different outcomes
 ## (i.e. case-control, time point1-time point2, etc.)
 ## and test whether the distances are significant.
 #
@@ -31,7 +31,7 @@ NodeList = data[,1:2]
 EdgeWeights = data[,3:4]
 
 ## generate the two null graphs by permuting edge weights of the original graphs:
-EdgeWeights = cbind(EdgeWeights, 
+EdgeWeights = cbind(EdgeWeights,
                     sample(EdgeWeights[,1], nrow(EdgeWeights), replace = TRUE),
                     sample(EdgeWeights[,2], nrow(EdgeWeights), replace = TRUE))
 
@@ -52,11 +52,11 @@ for (i in 1:N_graph){
   W_i = as.numeric(EdgeWeights[,i])
   graph_i = simplify(set.edge.attribute(graph, "weight", index=E(graph), W_i))
   graph_i = delete_edges(graph_i, E(graph_i)[E(graph_i)$weight < Threshold])
-  
+
   ## Step2.1) Input: Adjacency matrix calculation
   Adj_i = as.matrix(as_adj(graph_i,  attr = "weight"))
 
-  ## Step2.2) Output: Perform the fixed-length random walk 
+  ## Step2.2) Output: Perform the fixed-length random walk
   ## and calculating the node visit probabilities.
   # Two options exist:
   # 1.repetitive simple random walks
@@ -66,7 +66,7 @@ for (i in 1:N_graph){
   ## Step2.3) Make it multilayer for EDNN
   X = rbind(X, Adj_i)
   Y = rbind(Y, RW$Probabilities)
-  
+
   outcome_node = c(outcome_node, rep(outcome[i], N_nodes))
 }
 X = X / (apply(X, 1, sum) + .000000001)
@@ -81,10 +81,10 @@ X = X / (apply(X, 1, sum) + .000000001)
 Rep = 50
 embeddingSpaceList = list()
 for (rep in 1:Rep)
-  embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X, embedding_size = 5, 
+  embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X, embedding_size = 5,
                                    epochs = 10, batch_size = 5, l2reg = .00001)
 
-# Plot 
+# Plot
 embeddingSpace = embeddingSpaceList[[1]]
 plot(embeddingSpace[,4:3], pch = 20, cex = .5, col = outcome_node+1)
 
@@ -93,7 +93,7 @@ plot(embeddingSpace[,4:3], pch = 20, cex = .5, col = outcome_node+1)
 # embeddingSpaceList = readRDS("Data/Embedding_Space/Embedding_Space_2.rds")
 
 ### Step4) Calculating the distance of node pairs in the embedding space ###
-## To find the significantly varying nodes in the 2-layer-network, the distance between 
+## To find the significantly varying nodes in the 2-layer-network, the distance between
 ## the corresponding nodes are calculated along with the null distribution.
 ## The null distribution is obtained based on the pairwise distances on null graphs.
 Dist = matrix(0, Rep, N_nodes)
@@ -106,15 +106,15 @@ for (rep in 1:Rep){
   embeddingSpace_2 = embeddingSpace[outcome_node==0, ]
   for (i in 1:N_nodes)
     Dist[rep,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
-  
+
   ## Null distribution:
   embeddingSpace_1 = embeddingSpace[outcome_node==2, ]
   embeddingSpace_2 = embeddingSpace[outcome_node==3, ]
   for (i in 1:N_nodes)
     Dist_null[rep,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
-  
+
   for (i in 1:N_nodes)
-    P_value[rep,i] = wilcox.test(Dist_null[rep,], y = Dist[rep,i], 
+    P_value[rep,i] = wilcox.test(Dist_null[rep,], y = Dist[rep,i],
                                  alternative = "less")$p.value
 }
 
@@ -152,7 +152,7 @@ print(names(V(graph))[high_var_nodes])
 Node_set = names(V(graph))[high_var_nodes]
 
 ### Step6) Plot subgraph limited to the high-var nodes ###
-W = as.numeric(EdgeWeights[,1]) - as.numeric(EdgeWeights[,2]) 
+W = as.numeric(EdgeWeights[,1]) - as.numeric(EdgeWeights[,2])
 Threshold = 0
 graph_plot = simplify(set.edge.attribute(graph, "weight", index=E(graph), W))
 graph_plot = delete_edges(graph_plot, E(graph_plot)[abs(E(graph_plot)$weight) < Threshold])

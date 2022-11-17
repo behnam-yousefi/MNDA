@@ -4,6 +4,10 @@
 Data/
 My_model_temp/
 
+*.tar.gz
+*.Rcheck
+
 *.RDATA
 *.rds
 *.pdf
+.Rproj.user
