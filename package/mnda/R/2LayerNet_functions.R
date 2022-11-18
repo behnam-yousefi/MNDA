@@ -56,6 +56,7 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
                       outcome = outcome, edge.threshold = edge.threshold)
   X = XY[["X"]]
   Y = XY[["Y"]]
+  outcome_node = XY[["outcome_node"]]
 
   ### Step3) EDNN training ###
   ## Process:
