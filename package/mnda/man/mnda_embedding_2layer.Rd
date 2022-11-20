@@ -11,7 +11,9 @@ mnda_embedding_2layer(
   embedding.size = 5,
   epochs = 10,
   batch.size = 5,
-  l2reg = 0
+  l2reg = 0,
+  walk.rep = 100,
+  n.steps = 5
 )
 }
 \arguments{
@@ -30,6 +32,10 @@ column 3 and 4 consisting the edge weights corresponding to each graph, respecti
 \item{batch.size}{batch size for learning (default = 5).}
 
 \item{l2reg}{the coefficient of L2 regularization for the input layer (default = 0).}
+
+\item{walk.rep}{number of repeats for the random walk (default: 100).}
+
+\item{n.steps}{number of the random walk steps (default: 5).}
 }
 \value{
 a list of embedding spaces for each node.

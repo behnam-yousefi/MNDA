@@ -4,16 +4,40 @@
 \alias{mnda_node_detection_2layer}
 \title{Detecting the nodes whose local neighbors change bweteen the two conditions.}
 \usage{
-mnda_node_detection_2layer(embeddingSpaceList)
+mnda_node_detection_2layer(
+  embeddingSpaceList,
+  p.adjust.method = "none",
+  alpha = 0.05,
+  rank.prc = 0.1,
+  volcano.plot = TRUE,
+  ranksum.sort.plot = FALSE
+)
 }
 \arguments{
 \item{embeddingSpaceList}{a list obtained by the \code{mnda_embedding_2layer()} function.}
+
+\item{p.adjust.method}{method for adjusting p-value (including methods on \code{p.adjust.methods}).
+If set to "none" (default), no adjustment will be performed.}
+
+\item{alpha}{numeric value of significance level (default: 0.05)}
+
+\item{rank.prc}{numeric value of the rank percentage threshold (default: 0.1)}
+
+\item{volcano.plot}{boolean value for generating the Volcano plot (default: TRUE)}
+
+\item{ranksum.sort.plot}{boolean value for generating the sorted rank sum plot (default: FALSE)}
 }
 \value{
-the highly varibale nodes
+the highly variable nodes
 }
 \description{
 Detecting the nodes whose local neighbors change bweteen the two conditions.
+}
+\details{
+Calculating the distance of node pairs in the embedding space and check their significance.
+To find the significantly varying nodes in the 2-layer-network, the distance between
+the corresponding nodes are calculated along with the null distribution.
+The null distribution is obtained based on the pairwise distances on null graphs.
 }
 \examples{
 embeddingSpaceList = mnda_embedding_2layer(graph.data)

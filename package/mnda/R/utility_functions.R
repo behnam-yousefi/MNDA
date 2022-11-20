@@ -100,4 +100,6 @@ as.mnda.graph = function(adj.list, outcome = NULL){
 
   ## set mnda graph data
   data_graph = cbind(EdgeList,EdgeWeights)
+
+  return(data_graph)
 }
