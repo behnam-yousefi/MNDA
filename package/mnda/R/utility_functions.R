@@ -65,4 +65,39 @@ Rank = function(x, decreasing = FALSE) {
   return(Rank)
 }
 
+#' Convert adjacency matrix to mnda.graph data
+#'
+#' @param L list of adjacency matrices with matching nodes
+#' @param outcome graph outcomes or graph labels. If NULL, \code{outcome = 1:N_graphs}.
+#'
+#' @return mnda.graph data
+#' @export
+#'
+#' @examples
+#' graph.data = as.mnda.graph(adj.list)
+#'
+as.mnda.graph = function(adj.list, outcome = NULL){
 
+  N_graphs = length(adj.list)
+  N_nodes = ncol(adj.list[[1]])
+
+  if (is.null(outcome))
+    outcome = 1:N_graphs
+
+  node_labels = rownames(adj.list[[1]])
+  if (is.null(node_labels))
+    node_labels = 1:N_nodes
+
+  ## Set edge list
+  EdgeList = data.frame(V1 = rep(node_labels, times = N_nodes),
+                        V2 = rep(node_labels, each = N_nodes))
+
+  ## Set edge weight
+  EdgeWeights = c()
+  for (i in 1:N_graphs)
+    EdgeWeights = cbind(EdgeWeights, as.numeric(adj.list[[i]]))
+  colnames(EdgeWeights) = outcome
+
+  ## set mnda graph data
+  data_graph = cbind(EdgeList,EdgeWeights)
+}

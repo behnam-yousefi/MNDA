@@ -7,4 +7,11 @@ graphData = myNet[["data_graph"]]
 edge_list = graphData[,1:2]
 edge_weight = graphData[,3:4]
 
-embeddingList = mnda_embedding_2layer(graphData, train.rep = 2, walk.rep=10)
+embeddingSpaceList = mnda_embedding_2layer(graphData, train.rep = 50, walk.rep=100)
+
+Results = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "none")
+
+myNet$var_nodes
+Results$significant_nodes_index
+Results$high_ranked_nodes_index
+Results$high_var_nodes_index

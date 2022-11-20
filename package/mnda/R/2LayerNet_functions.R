@@ -71,35 +71,56 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
                                      embedding.size, epochs, batch.size, l2reg)
 
   embeddingSpaceList[["outcome"]] = outcome_node
+  embeddingSpaceList[["node_labels"]] = colnames(X)
   return(embeddingSpaceList)
 }
 
-  ### Step4) Calculating the distance of node pairs in the embedding space ###
-  ## To find the significantly varying nodes in the 2-layer-network, the distance between
-  ## the corresponding nodes are calculated along with the null distribution.
-  ## The null distribution is obtained based on the pairwise distances on null graphs.
 
 #' Detecting the nodes whose local neighbors change bweteen the two conditions.
 #'
 #' @param embeddingSpaceList a list obtained by the \code{mnda_embedding_2layer()} function.
+#' @param p.adjust.method method for adjusting p-value (including methods on \code{p.adjust.methods}).
+#' If set to "none" (default), no adjustment will be performed.
+#' @param alpha numeric value of significance level (default: 0.05)
+#' @param rank.prc numeric value of the rank percentage threshold (default: 0.1)
+#' @param volcano.plot boolean value for generating the Volcano plot (default: TRUE)
+#' @param ranksum.sort.plot boolean value for generating the sorted rank sum plot (default: FALSE)
 #'
-#' @return the highly varibale nodes
+#' @return the highly variable nodes
 #' @export
+#'
+#' @details
+#' Calculating the distance of node pairs in the embedding space and check their significance.
+#' To find the significantly varying nodes in the 2-layer-network, the distance between
+#' the corresponding nodes are calculated along with the null distribution.
+#' The null distribution is obtained based on the pairwise distances on null graphs.
 #'
 #' @examples
 #' embeddingSpaceList = mnda_embedding_2layer(graph.data)
 #' Nodes = mnda_node_detection_2layer(embeddingSpaceList)
 #'
-mnda_node_detection_2layer = function(embeddingSpaceList){
+mnda_node_detection_2layer = function(embeddingSpaceList, p.adjust.method = "none",
+                                      alpha = 0.05, rank.prc = .1,
+                                      volcano.plot = TRUE, ranksum.sort.plot = FALSE){
+
+  node_labels = embeddingSpaceList[["node_labels"]]
 
   outcome_node = embeddingSpaceList[["outcome"]]
   outcome = unique(outcome_node)
 
-  Rep = length(embeddingSpaceList)-1
+  assertthat::assert_that(length(outcome) == 4)
+  N_nodes = nrow(embeddingSpaceList[[1]]) / 4
+
+
+  Rep = length(embeddingSpaceList)-2     #the "embeddingSpaceList" consists of two extra elements
   Dist = matrix(0, Rep, N_nodes)
   Dist_null = matrix(0, Rep, N_nodes)
+  colnames(Dist) = node_labels
+
+  ### P-value analysis
+  ### Calculate significancy p-values of distances in comparison with the null modele
+  ### and aggregate p-values across different repeats
   P_value = matrix(0, Rep, N_nodes)
-  colnames(Dist) = names(V(graph))
   for (rep in 1:Rep){
     embeddingSpace = embeddingSpaceList[[rep]]
     embeddingSpace_1 = embeddingSpace[outcome_node==outcome[1], ]
@@ -118,36 +139,61 @@ mnda_node_detection_2layer = function(embeddingSpaceList){
                                    alternative = "less")$p.value
   }
 
-  hist(Dist[,], 20)
-  hist(P_value[,6], 50, xlim = c(.01,1))
-  abline(v = .05, col = "red")
-
   P_value_aggr = apply(P_value, 2, fisher)
-  hist(P_value_aggr, 50)
-  abline(v = .05, col = "red")
-  which(P_value_aggr<.05)
+  Q_value_aggr = p.adjust(P_value_aggr, method = p.adjust.method)
 
+  significant_nodes_index = which(Q_value_aggr < alpha)
+  significant_nodes = node_labels[significant_nodes_index]
 
-  ### Step5) Find the highly and lowly variant nodes using
-  ### a rank sum-based method
+  Q_value_aggr_log = -log(Q_value_aggr)
+  alpha_log = -log(alpha)
+
+  ### Distance rank sum analysis
+  ### Rank node distances and calculate the rank sum across different repeats
+  ### Here the "decreasing = FALSE", which means that higher distances correspond to
+  ### higher ranks.
   Rank_dist = matrix(0, Rep, N_nodes)
-  colnames(Rank_dist) = names(V(graph))
+  colnames(Rank_dist) = node_labels
   for (rep in 1:Rep)
     Rank_dist[rep,] = Rank(Dist[rep,], decreasing = FALSE)
 
   Rank_sum_dist = apply(Rank_dist, 2, sum)
 
-  plot(Rank_sum_dist, -log10(P_value_aggr))
+  max_rank_sum_dist = Rep*N_nodes
+  rank_threshold = max_rank_sum_dist - rank.prc*max_rank_sum_dist
 
-  abline(h = -log10(.01), col = "red")
-  abline(v = 6000, col = "red")
+  high_ranked_nodes_index = which(Rank_sum_dist > rank_threshold)
+  high_ranked_nodes = node_labels[high_ranked_nodes_index]
 
-  plot(sort(Rank_sum_dist), pch = 20)
-  abline(h = 3810, col = "red")
-  high_var_nodes = order(Rank_sum_dist, decreasing = TRUE)[1:5]
-  low_var_nodes = order(Rank_sum_dist, decreasing = FALSE)[1:11]
+  ### Volcano Plot
+  if (volcano.plot){
+    plot(Rank_sum_dist, Q_value_aggr_log, pch =  20,
+         xlab = "Distance rank sum", ylab = "-log(p.values)")
+    abline(h = alpha_log, col = "red")
+    abline(v = rank_threshold, col = "red")
+  }
 
-  print(high_var_nodes)
-  print(names(V(graph))[high_var_nodes])
-  Node_set = names(V(graph))[high_var_nodes]
+  if (ranksum.sort.plot){
+    colours = rep("grey", N_nodes)
+    colours[N_nodes:(N_nodes-length(highRanked_nodes_index))] = "red"
+    plot(sort(Rank_sum_dist), pch = 20, col = colours)
+  }
+
+  high_var_nodes_index = intersect(significant_nodes_index, high_ranked_nodes_index)
+  high_var_nodes = node_labels[high_var_nodes_index]
+
+  Results = list()
+  Results[["node_labels"]] = node_labels
+  Results[["p_values"]] = Q_value_aggr
+  Results[["rank_sum_dist"]] =   Rank_sum_dist
+
+  Results[["significant_nodes_index"]] = significant_nodes_index
+  Results[["high_ranked_nodes_index"]] = high_ranked_nodes_index
+  Results[["high_var_nodes_index"]] = high_var_nodes_index
+
+  Results[["significant_nodes"]] = significant_nodes
+  Results[["high_ranked_nodes"]] = high_ranked_nodes
+  Results[["high_var_nodes"]] = high_var_nodes
+
+  return(Results)
 }

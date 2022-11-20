@@ -27,7 +27,7 @@ library(aggregation)
 ## column 3 and 4 consisting the edge weights corresponding to each graph, respectively.
 outcome = c(1,0,2,3) # 1: responder, 0: nonresponder, 2: permuted resp., 3: perm. nonr.
 data = readRDS("Data/MNDA-drug/CD_TNF_w14_Global.rds")
-NodeList = data[,1:2]
+EdgeList = data[,1:2]
 EdgeWeights = data[,3:4]
 
 ## generate the two null graphs by permuting edge weights of the original graphs:
@@ -35,7 +35,7 @@ EdgeWeights = cbind(EdgeWeights,
                     sample(EdgeWeights[,1], nrow(EdgeWeights), replace = TRUE),
                     sample(EdgeWeights[,2], nrow(EdgeWeights), replace = TRUE))
 
-graph = graph(t(NodeList), directed = FALSE)
+graph = graph(t(EdgeList), directed = FALSE)
 
 N_nodes = length(V(graph))
 N_graph = ncol(EdgeWeights)

@@ -131,5 +131,6 @@ ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, edge.threshold=0
   Result[["X"]] = X
   Result[["Y"]] = Y
   Result[["outcome_node"]] = outcome_node
+  Result[["node_labels"]] = 0
   return(Result)
 }
