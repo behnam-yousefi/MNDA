@@ -7,9 +7,9 @@
 as.mnda.graph(adj.list, outcome = NULL)
 }
 \arguments{
-\item{outcome}{graph outcomes or graph labels. If NULL, \code{outcome = 1:N_graphs}.}
+\item{adj.list}{list of adjacency matrices with matching nodes}
 
-\item{L}{list of adjacency matrices with matching nodes}
+\item{outcome}{graph outcomes or graph labels. If NULL, \code{outcome = 1:N_graphs}.}
 }
 \value{
 mnda.graph data

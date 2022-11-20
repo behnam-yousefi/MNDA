@@ -67,7 +67,7 @@ Rank = function(x, decreasing = FALSE) {
 
 #' Convert adjacency matrix to mnda.graph data
 #'
-#' @param L list of adjacency matrices with matching nodes
+#' @param adj.list list of adjacency matrices with matching nodes
 #' @param outcome graph outcomes or graph labels. If NULL, \code{outcome = 1:N_graphs}.
 #'
 #' @return mnda.graph data
