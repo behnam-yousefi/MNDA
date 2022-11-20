@@ -13,3 +13,7 @@ We aim at unifying the MNDA pipeline for differnt problems
 In all cases, the code will be similar until the distance calculation
 
 Note: The network structures are the same but their weights are different
+
+
+Install:
+devtools::install_github("behnam-yousefi/MNDA/package/mnda")
