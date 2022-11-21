@@ -75,6 +75,7 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 #' @param edge.threshold numeric value to set edge weights below the threshold to zero (default: 0). the greater edge weights do not change.
 #' @param walk.rep number of repeats for the random walk (default: 100).
 #' @param n.steps number of the random walk steps (default: 5).
+#' @param random.walk boolean value to enable the random walk algorithm (default: TRUE).
 #'
 #' @return the input and output required to train the EDNN
 #' @export
@@ -84,7 +85,7 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 #' embedding = EDNN(X = XY["X"] ,Y = XY["Y"], Xtest = XY["X"])
 #'
 ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, edge.threshold=0,
-                          walk.rep=10, n.steps=5){
+                          walk.rep=10, n.steps=5, random.walk = TRUE){
 
   library(igraph)
   library(Matrix)
@@ -117,11 +118,16 @@ ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, edge.threshold=0
     # Two options exist:
     # 1.repetitive simple random walks
     # 2.repetitive weighted random walks (specific to weighted graphs)
-    RW = RepRandomWalk (graph_i, Nrep = walk.rep, Nstep = n.steps, weighted_walk = TRUE)
+    if (random.walk){
+      RW = RepRandomWalk (graph_i, Nrep = walk.rep, Nstep = n.steps, weighted_walk = TRUE)
 
-    ## Step 3) Make it multilayer for EDNN
-    X = rbind(X, Adj_i)
-    Y = rbind(Y, RW$Probabilities)
+      ## Step 3) Make it multilayer for EDNN
+      X = rbind(X, Adj_i)
+      Y = rbind(Y, RW$Probabilities)
+    }else{
+      X = rbind(X, Adj_i)
+      Y = rbind(Y, Adj_i)
+    }
 
     outcome_node = c(outcome_node, rep(outcome[i], N_nodes))
   }

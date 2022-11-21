@@ -13,7 +13,8 @@ mnda_embedding_2layer(
   batch.size = 5,
   l2reg = 0,
   walk.rep = 100,
-  n.steps = 5
+  n.steps = 5,
+  random.walk = TRUE
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ column 3 and 4 consisting the edge weights corresponding to each graph, respecti
 \item{walk.rep}{number of repeats for the random walk (default: 100).}
 
 \item{n.steps}{number of the random walk steps (default: 5).}
+
+\item{random.walk}{boolean value to enable the random walk algorithm (default: TRUE).}
 }
 \value{
 a list of embedding spaces for each node.

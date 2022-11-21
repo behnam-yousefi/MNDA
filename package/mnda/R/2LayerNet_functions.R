@@ -23,6 +23,7 @@
 #' @param l2reg the coefficient of L2 regularization for the input layer (default = 0).
 #' @param walk.rep number of repeats for the random walk (default: 100).
 #' @param n.steps number of the random walk steps (default: 5).
+#' @param random.walk boolean value to enable the random walk algorithm (default: TRUE).
 #'
 #' @return a list of embedding spaces for each node.
 #' @export
@@ -32,7 +33,7 @@
 #'
 mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
                        embedding.size=5, epochs=10, batch.size=5, l2reg=0,
-                       walk.rep = 100, n.steps = 5){
+                       walk.rep = 100, n.steps = 5, random.walk=TRUE){
 
   assertthat::assert_that(train.rep >= 2)
 
@@ -52,7 +53,7 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
 
   ### Step2) Preparing the input and output of the EDNN for all the graphs ###
   XY = ednn_IOprepare(edge.list = EdgeList, edge.weight = EdgeWeights,
-                      walk.rep = walk.rep, n.steps = n.steps,
+                      walk.rep = walk.rep, n.steps = n.steps, random.walk = random.walk,
                       outcome = outcome, edge.threshold = edge.threshold)
   X = XY[["X"]]
   Y = XY[["Y"]]

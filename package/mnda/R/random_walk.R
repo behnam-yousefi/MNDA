@@ -58,6 +58,8 @@ RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE){
 
   N = length(V(graph))
   S = matrix(0, N, N)
+  print("Limmited length random walk algorithm ...")
+  pb = txtProgressBar(min = 0, max = N, style = 3)
 
   i = 0
   for (node in V(graph)){
@@ -81,7 +83,10 @@ RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE){
     }
 
     S[i,] = apply(WalkRep, 2, sum)
+    setTxtProgressBar(pb, i)
   }
+
+  close(pb)
 
   P = S / Nrep
   P[P>1] = 1

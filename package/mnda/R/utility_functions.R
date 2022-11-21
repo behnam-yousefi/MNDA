@@ -1,7 +1,5 @@
 ## Multiplex Graph Representation Learning and
 ## multiplex network differential analysis
-## By: Behnam Yousefi
-
 
 #' Function to calculate distance between two vectors
 #'
