@@ -14,7 +14,8 @@ mnda_embedding_2layer(
   l2reg = 0,
   walk.rep = 100,
   n.steps = 5,
-  random.walk = TRUE
+  random.walk = TRUE,
+  null.perm = TRUE
 )
 }
 \arguments{
@@ -39,6 +40,8 @@ column 3 and 4 consisting the edge weights corresponding to each graph, respecti
 \item{n.steps}{number of the random walk steps (default: 5).}
 
 \item{random.walk}{boolean value to enable the random walk algorithm (default: TRUE).}
+
+\item{null.perm}{boolean to enable permuting two random graphs and embed them, along with the main two graphs, for the null distribution (default: TRUE).}
 }
 \value{
 a list of embedding spaces for each node.

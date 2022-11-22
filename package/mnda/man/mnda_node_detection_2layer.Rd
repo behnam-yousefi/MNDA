@@ -38,6 +38,9 @@ Calculating the distance of node pairs in the embedding space and check their si
 To find the significantly varying nodes in the 2-layer-network, the distance between
 the corresponding nodes are calculated along with the null distribution.
 The null distribution is obtained based on the pairwise distances on null graphs.
+if in \code{mnda_embedding_2layer} function \code{null.perm=FALSE}, the multiplex network
+does not have the two randomly permuted graphs, thus the distances between all the nodes will
+be used for the null distribution.
 }
 \examples{
 embeddingSpaceList = mnda_embedding_2layer(graph.data)

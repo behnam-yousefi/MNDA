@@ -7,7 +7,8 @@ graphData = myNet[["data_graph"]]
 edge_list = graphData[,1:2]
 edge_weight = graphData[,3:4]
 
-embeddingSpaceList = mnda_embedding_2layer(graphData, train.rep=2, walk.rep=10, random.walk=TRUE)
+embeddingSpaceList = mnda_embedding_2layer(graphData, train.rep=50, walk.rep=100,
+                                           random.walk=TRUE, null.perm = TRUE)
 
 Results = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "none")
 

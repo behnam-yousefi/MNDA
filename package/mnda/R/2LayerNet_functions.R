@@ -24,6 +24,7 @@
 #' @param walk.rep number of repeats for the random walk (default: 100).
 #' @param n.steps number of the random walk steps (default: 5).
 #' @param random.walk boolean value to enable the random walk algorithm (default: TRUE).
+#' @param null.perm boolean to enable permuting two random graphs and embed them, along with the main two graphs, for the null distribution (default: TRUE).
 #'
 #' @return a list of embedding spaces for each node.
 #' @export
@@ -33,7 +34,7 @@
 #'
 mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
                        embedding.size=5, epochs=10, batch.size=5, l2reg=0,
-                       walk.rep = 100, n.steps = 5, random.walk=TRUE){
+                       walk.rep = 100, n.steps = 5, random.walk=TRUE, null.perm = TRUE){
 
   assertthat::assert_that(train.rep >= 2)
 
@@ -46,10 +47,12 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
   outcome = colnames(EdgeWeights)
 
   ## generate the two null graphs by permuting edge weights of the original graphs:
-  EdgeWeights = cbind(EdgeWeights,
-                      sample(EdgeWeights[,1], nrow(EdgeWeights), replace = TRUE),
-                      sample(EdgeWeights[,2], nrow(EdgeWeights), replace = TRUE))
-  outcome = c(outcome, paste0(outcome, "_perm"))
+  if (null.perm){
+    EdgeWeights = cbind(EdgeWeights,
+                        sample(EdgeWeights[,1], nrow(EdgeWeights), replace = TRUE),
+                        sample(EdgeWeights[,2], nrow(EdgeWeights), replace = TRUE))
+    outcome = c(outcome, paste0(outcome, "_perm"))
+  }
 
   ### Step2) Preparing the input and output of the EDNN for all the graphs ###
   XY = ednn_IOprepare(edge.list = EdgeList, edge.weight = EdgeWeights,
@@ -95,6 +98,9 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
 #' To find the significantly varying nodes in the 2-layer-network, the distance between
 #' the corresponding nodes are calculated along with the null distribution.
 #' The null distribution is obtained based on the pairwise distances on null graphs.
+#' if in \code{mnda_embedding_2layer} function \code{null.perm=FALSE}, the multiplex network
+#' does not have the two randomly permuted graphs, thus the distances between all the nodes will
+#' be used for the null distribution.
 #'
 #' @examples
 #' embeddingSpaceList = mnda_embedding_2layer(graph.data)
@@ -109,8 +115,13 @@ mnda_node_detection_2layer = function(embeddingSpaceList, p.adjust.method = "non
   outcome_node = embeddingSpaceList[["outcome"]]
   outcome = unique(outcome_node)
 
-  assertthat::assert_that(length(outcome) == 4)
-  N_nodes = nrow(embeddingSpaceList[[1]]) / 4
+  assertthat::assert_that(length(outcome) == 4 | length(outcome) == 2)
+  if (length(outcome) == 4)
+    mode = "null_perm"
+  else
+    mode = "null_simple"
+
+  N_nodes = nrow(embeddingSpaceList[[1]]) / length(outcome)
 
 
   Rep = length(embeddingSpaceList)-2     #the "embeddingSpaceList" consists of two extra elements
@@ -130,11 +141,19 @@ mnda_node_detection_2layer = function(embeddingSpaceList, p.adjust.method = "non
       Dist[rep,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
 
     ## Null distribution:
-    embeddingSpace_1 = embeddingSpace[outcome_node==outcome[3], ]
-    embeddingSpace_2 = embeddingSpace[outcome_node==outcome[4], ]
-    for (i in 1:N_nodes)
-      Dist_null[rep,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
-
+    if (mode == "null_perm"){
+      embeddingSpace_1 = embeddingSpace[outcome_node==outcome[3], ]
+      embeddingSpace_2 = embeddingSpace[outcome_node==outcome[4], ]
+      for (i in 1:N_nodes)
+        Dist_null[rep,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
+    }else if (mode == "null_simple"){
+      embeddingSpace_1 = embeddingSpace[outcome_node==outcome[1], ]
+      embeddingSpace_2 = embeddingSpace[outcome_node==outcome[2], ]
+      for (i in 1:N_nodes){
+        ii = sample(1:N_nodes, 2, replace = FALSE)
+        Dist_null[rep,i] = Distance(embeddingSpace_1[ii[1],], embeddingSpace_2[ii[2],], method = "cosine")
+      }
+    }
     for (i in 1:N_nodes)
       P_value[rep,i] = wilcox.test(Dist_null[rep,], y = Dist[rep,i],
                                    alternative = "less")$p.value
