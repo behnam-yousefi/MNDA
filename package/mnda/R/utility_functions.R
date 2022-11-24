@@ -63,7 +63,7 @@ Rank = function(x, decreasing = FALSE) {
   return(Rank)
 }
 
-#' Convert adjacency matrix to mnda.graph data
+#' Convert adjacency matrix to mnda graph data
 #'
 #' @param adj.list list of adjacency matrices with matching nodes
 #' @param outcome graph outcomes or graph labels. If NULL, \code{outcome = 1:N_graphs}.
@@ -100,4 +100,30 @@ as.mnda.graph = function(adj.list, outcome = NULL){
   data_graph = cbind(EdgeList,EdgeWeights)
 
   return(data_graph)
+}
+
+#' Convert mnda graph data to igraph
+#'
+#' @param mnda.graph mnda graph data
+#' @param edge.threshold numeric
+#'
+#' @return igraph object
+#' @export
+#'
+#' @examples
+#' graph = as.igraph(mnda.graph)
+#'
+as.igraph = function(mnda.graph, edge.threshold=0){
+
+  EdgeList = mnda.graph[,1:2]
+  EdgeWeights = as.numeric(mnda.graph[,3])
+
+  EdgeList = t(EdgeList)
+  graph = igraph::graph(EdgeList, directed = FALSE)
+
+  graph = simplify(set.edge.attribute(graph, "weight", index=E(graph), EdgeWeights))
+  graph = delete_edges(graph, E(graph)[abs(E(graph)$weight) < edge.threshold])
+
+  return(graph)
+
 }

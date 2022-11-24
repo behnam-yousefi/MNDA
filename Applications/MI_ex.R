@@ -7,32 +7,33 @@ library(ggplot2)
 library(ggraph)
 
 setwd("~/Desktop/R_Root/MNDA/Applications/")
-data = readRDS("Data/graph_data_lung_tamoxifen_2000genes.rds")
-X = data[[1]]
-y = data[[2]]
+data = read.table("~/Desktop/R_Root/SLEmap/Data/MI/NANOSTRING_7COND.database.txt", header = TRUE)
+Pheno = data[,c(1:7)]
+y = Pheno$STIMULUS_NAME
+X = as.matrix(data[,-c(1:7,568)])
 
-adj_res = abs(cor(X[y=="res",]))
-adj_nonres = abs(cor(X[y=="non_res",]))
+adj_cont = abs(cor(X[y=="Null",]))
+adj_case = abs(cor(X[y=="BCG",]))
 
-adj_list = list(adj_res, adj_nonres)
-graph_data = as.mnda.graph(adj_list, outcome = c("res","non_res"))
+adj_list = list(adj_cont, adj_case)
+graph_data = as.mnda.graph(adj_list, outcome = c("cont","case"))
 
 embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep=50, walk.rep=10,
-                                           epochs = 20, batch.size = 10,
+                                           epochs = 10, batch.size = 20,
                                            random.walk=FALSE, null.perm = FALSE)
 
 Results = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "BH")
-Nodes = Results$high_var_nodes
+Nodes = Results$significant_nodes
 # write.table(Nodes, "~/Desktop/nodes.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
 
-NodeSet = c("IL1RN", "CCND1", "HES1", "PTMS", "ACOT4", "KLF5")
+NodeSet = Nodes
 
 graph_to_plot = cbind(graph_data[,1:2], W = graph_data[,3] - graph_data[,4])
 hist(graph_to_plot$W)
 
-G = mnda::as.igraph(graph_to_plot, 1.15)
+G = mnda::as.igraph(graph_to_plot, 1.0)
 
-pdf("~/Desktop/cancer.pdf")
+pdf("~/Desktop/BCG.pdf")
 subgraph_plot(G, NodeSet)
 dev.off()
 

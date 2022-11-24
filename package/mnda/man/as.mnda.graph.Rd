@@ -2,7 +2,7 @@
 % Please edit documentation in R/utility_functions.R
 \name{as.mnda.graph}
 \alias{as.mnda.graph}
-\title{Convert adjacency matrix to mnda.graph data}
+\title{Convert adjacency matrix to mnda graph data}
 \usage{
 as.mnda.graph(adj.list, outcome = NULL)
 }
@@ -15,7 +15,7 @@ as.mnda.graph(adj.list, outcome = NULL)
 mnda.graph data
 }
 \description{
-Convert adjacency matrix to mnda.graph data
+Convert adjacency matrix to mnda graph data
 }
 \examples{
 graph.data = as.mnda.graph(adj.list)
