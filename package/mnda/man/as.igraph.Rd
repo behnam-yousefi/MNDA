@@ -18,6 +18,7 @@ igraph object
 Convert mnda graph data to igraph
 }
 \examples{
-graph = as.igraph(mnda.graph = mnda_graph_example)
+data = example_data()
+graph = as.igraph(mnda.graph = data[["mnda_graph_example"]])
 
 }

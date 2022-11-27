@@ -10,6 +10,9 @@
 #' @return The embedding space for Xtest.
 #' @export
 #'
+#' @Import keras
+#' @ImportFrom usethis use_pipe()
+#'
 #' @examples
 #' myNet = network_gen(N_nodes = 100)
 #' graphData = myNet[["data_graph"]]
@@ -22,7 +25,8 @@
 #'
 EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0){
 
-  library(keras)
+  # requireNamespace("keras")
+  # usethis::use_pipe()
 
   Nnode = ncol(X)
   inputSize = ncol(X)

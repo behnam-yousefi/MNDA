@@ -72,7 +72,8 @@ Rank = function(x, decreasing = FALSE) {
 #' @export
 #'
 #' @examples
-#' adj.list = list(Adj_mat_example, Adj_mat_example)
+#' data = example_data()
+#' adj.list = list(data[["adj_mat_example"]], data[["adj_mat_example"]])
 #' graph.data = as.mnda.graph(adj.list)
 #'
 as.mnda.graph = function(adj.list, outcome = NULL){
@@ -112,7 +113,8 @@ as.mnda.graph = function(adj.list, outcome = NULL){
 #' @export
 #'
 #' @examples
-#' graph = as.igraph(mnda.graph = mnda_graph_example)
+#' data = example_data()
+#' graph = as.igraph(mnda.graph = data[["mnda_graph_example"]])
 #'
 as.igraph = function(mnda.graph, edge.threshold=0){
 

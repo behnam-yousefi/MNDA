@@ -17,7 +17,8 @@
 #' (e.g. highly variable nodes) around which the subgroup is calculated.
 #'
 #' @examples
-#'subgraph_plot(graph = igraph_example, node_set = "a")
+#' data = example_data()
+#'subgraph_plot(graph = data[["igraph_example"]], node_set = "a")
 #'
 subgraph_plot = function(graph, node_set, labels=NULL,
                          node_size=5, font_size=4, max_edge_width=4, margin=2.5){
@@ -64,8 +65,8 @@ subgraph_plot = function(graph, node_set, labels=NULL,
   b = N_nodes - a
 
   # final plot
-  requireNamespace(ggplot2)
-  requireNamespace(ggraph)
+  requireNamespace("ggplot2")
+  requireNamespace("ggraph")
   ggraph(graph_sub, layout = 'linear', circular = TRUE) +
     geom_edge_arc(aes(color = EdgeColor, edge_width = abs(W)^1), edge_alpha = .7) +
     geom_node_point(aes(x = x, y = y), size = node_size, fill = NodeColor,

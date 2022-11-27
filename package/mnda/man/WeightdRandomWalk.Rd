@@ -22,6 +22,7 @@ The set of nodes passed by the random walker.
 Weighted Random Walk algorithm
 }
 \examples{
-nodePath = WeightdRandomWalk(graph = igraph_example, startNode = 1)
+data = example_data()
+nodePath = WeightdRandomWalk(graph = data[["igraph_example"]], startNode = 1)
 
 }

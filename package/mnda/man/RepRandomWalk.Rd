@@ -23,7 +23,8 @@ Probabilities (P): The node visit probabilities starting from the corresponding 
 Repetitive Fixed-length (weighted) random walk algorithm
 }
 \examples{
-RW = RepRandomWalk(graph = igraph_example)
+data = example_data()
+RW = RepRandomWalk(graph = data[["igraph_example"]])
 Steps = RW[["Steps"]]
 Probabilities = RW[["Probabilities"]]
 

@@ -41,6 +41,7 @@ the main inputs to the function are: a graph (as an igraph object) and a set of 
 (e.g. highly variable nodes) around which the subgroup is calculated.
 }
 \examples{
-subgraph_plot(graph = igraph_example, node_set = "a")
+data = example_data()
+subgraph_plot(graph = data[["igraph_example"]], node_set = "a")
 
 }

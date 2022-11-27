@@ -9,7 +9,8 @@
 #' @export
 #'
 #' @examples
-#' nodePath = WeightdRandomWalk(graph = igraph_example, startNode = 1)
+#' data = example_data()
+#' nodePath = WeightdRandomWalk(graph = data[["igraph_example"]], startNode = 1)
 #'
 WeightdRandomWalk = function(graph, startNode, maxStep = 5, node_names = FALSE){
 
@@ -50,7 +51,8 @@ WeightdRandomWalk = function(graph, startNode, maxStep = 5, node_names = FALSE){
 #' @export
 #'
 #' @examples
-#' RW = RepRandomWalk(graph = igraph_example)
+#' data = example_data()
+#' RW = RepRandomWalk(graph = data[["igraph_example"]])
 #' Steps = RW[["Steps"]]
 #' Probabilities = RW[["Probabilities"]]
 #'
@@ -59,7 +61,7 @@ RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE){
   N = length(igraph::V(graph))
   S = matrix(0, N, N)
   print("Limmited length random walk algorithm ...")
-  pb = txtProgressBar(min = 0, max = N, style = 3)
+  pb = utils::txtProgressBar(min = 0, max = N, style = 3)
 
   i = 0
   for (node in igraph::V(graph)){
@@ -83,7 +85,7 @@ RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE){
     }
 
     S[i,] = apply(WalkRep, 2, sum)
-    setTxtProgressBar(pb, i)
+    utils::setTxtProgressBar(pb, i)
   }
 
   close(pb)

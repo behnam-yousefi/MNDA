@@ -18,7 +18,8 @@ mnda.graph data
 Convert adjacency matrix to mnda graph data
 }
 \examples{
-adj.list = list(Adj_mat_example, Adj_mat_example)
+data = example_data()
+adj.list = list(data[["adj_mat_example"]], data[["adj_mat_example"]])
 graph.data = as.mnda.graph(adj.list)
 
 }

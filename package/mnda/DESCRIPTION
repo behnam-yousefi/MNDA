@@ -13,15 +13,16 @@ Imports:
     assertthat,
     igraph,
     Matrix,
-    MASS,
-    ggraph,
     keras,
     kerasR,
     tensorflow,
     reticulate,
-    ggraph,
     MASS,
+    ggraph,
     ggplot2,
-    aggregation
+    aggregation,
+    usethis,
+    magrittr
     
+
 
