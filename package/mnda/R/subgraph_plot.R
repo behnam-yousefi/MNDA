@@ -17,23 +17,22 @@
 #' (e.g. highly variable nodes) around which the subgroup is calculated.
 #'
 #' @examples
-#'Labels = names(V(graph))
-#'subgraph_plot(graph_plot, Node_set, Labels)
+#'subgraph_plot(graph = igraph_example, node_set = "a")
 #'
 subgraph_plot = function(graph, node_set, labels=NULL,
                          node_size=5, font_size=4, max_edge_width=4, margin=2.5){
 
   if (is.null(labels)){
-    labels = names(V(graph))
+    labels = names(igraph::V(graph))
     names(labels) = labels
   }else if (is.null(names(labels))){
-    names(labels) = names(V(graph))
+    names(labels) = names(igraph::V(graph))
   }
 
   # obtain the neighbors of the input node_set
   node_set_neigh = c()
   for (n in node_set)
-    node_set_neigh = c(node_set_neigh, names(neighbors(graph, n)))
+    node_set_neigh = c(node_set_neigh, names(igraph::neighbors(graph, n)))
   Nodes = unique(c(node_set, node_set_neigh))
 
   N_node_set = length(node_set)
@@ -43,9 +42,9 @@ subgraph_plot = function(graph, node_set, labels=NULL,
   # to obtain the subgraph:
   # [i] calculate the the adjacency matrix of the subgraph
   # [ii] then build the subgraph object
-  Adj_mat = as.matrix(as_adj(graph,  attr = "weight"))
+  Adj_mat = as.matrix(igraph::as_adj(graph,  attr = "weight"))
   Adj_mat_sub = Adj_mat[Nodes, Nodes]
-  graph_sub = graph_from_adjacency_matrix(Adj_mat_sub, weighted = TRUE, mode = "undirected")
+  graph_sub = igraph::graph_from_adjacency_matrix(Adj_mat_sub, weighted = TRUE, mode = "undirected")
   W = E(graph_sub)$weight
   labels = labels[Nodes]
 
@@ -65,6 +64,8 @@ subgraph_plot = function(graph, node_set, labels=NULL,
   b = N_nodes - a
 
   # final plot
+  # library(ggplot2)
+  # library(ggraph)
   ggraph(graph_sub, layout = 'linear', circular = TRUE) +
     geom_edge_arc(aes(color = EdgeColor, edge_width = abs(W)^1), edge_alpha = .7) +
     geom_node_point(aes(x = x, y = y), size = node_size, fill = NodeColor,

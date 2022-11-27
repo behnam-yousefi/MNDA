@@ -72,6 +72,7 @@ Rank = function(x, decreasing = FALSE) {
 #' @export
 #'
 #' @examples
+#' adj.list = list(Adj_mat_example, Adj_mat_example)
 #' graph.data = as.mnda.graph(adj.list)
 #'
 as.mnda.graph = function(adj.list, outcome = NULL){
@@ -111,7 +112,7 @@ as.mnda.graph = function(adj.list, outcome = NULL){
 #' @export
 #'
 #' @examples
-#' graph = as.igraph(mnda.graph)
+#' graph = as.igraph(mnda.graph = mnda_graph_example)
 #'
 as.igraph = function(mnda.graph, edge.threshold=0){
 
@@ -121,8 +122,8 @@ as.igraph = function(mnda.graph, edge.threshold=0){
   EdgeList = t(EdgeList)
   graph = igraph::graph(EdgeList, directed = FALSE)
 
-  graph = simplify(set.edge.attribute(graph, "weight", index=E(graph), EdgeWeights))
-  graph = delete_edges(graph, E(graph)[abs(E(graph)$weight) < edge.threshold])
+  graph = igraph::simplify(igraph::set.edge.attribute(graph, "weight", index=igraph::E(graph), EdgeWeights))
+  graph = igraph::delete_edges(graph, igraph::E(graph)[abs(igraph::E(graph)$weight) < edge.threshold])
 
   return(graph)
 

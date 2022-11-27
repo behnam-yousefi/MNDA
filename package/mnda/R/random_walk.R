@@ -9,11 +9,11 @@
 #' @export
 #'
 #' @examples
-#' nodePath = WeightdRandomWalk(graph, 1)
+#' nodePath = WeightdRandomWalk(graph = igraph_example, startNode = 1)
 #'
 WeightdRandomWalk = function(graph, startNode, maxStep = 5, node_names = FALSE){
 
-  A = as.matrix(as_adj(graph, attr = "weight"))
+  A = as.matrix(igraph::as_adj(graph, attr = "weight"))
   N_node = ncol(A)
   outputNodes = rep(NA, maxStep)
   nextStep = startNode
@@ -50,22 +50,22 @@ WeightdRandomWalk = function(graph, startNode, maxStep = 5, node_names = FALSE){
 #' @export
 #'
 #' @examples
-#' RW = RepRandomWalk(graph)
+#' RW = RepRandomWalk(graph = igraph_example)
 #' Steps = RW[["Steps"]]
 #' Probabilities = RW[["Probabilities"]]
 #'
 RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE){
 
-  N = length(V(graph))
+  N = length(igraph::V(graph))
   S = matrix(0, N, N)
   print("Limmited length random walk algorithm ...")
   pb = txtProgressBar(min = 0, max = N, style = 3)
 
   i = 0
-  for (node in V(graph)){
+  for (node in igraph::V(graph)){
     i = i+1
 
-    Neighbors = c(node, neighbors(graph,node))
+    Neighbors = c(node, igraph::neighbors(graph,node))
     NeighborsOneHot = rep(0,N)
     NeighborsOneHot[Neighbors] = 1
 
@@ -77,7 +77,7 @@ RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE){
         RW_steps = WeightdRandomWalk(graph, startNode = node, maxStep = Nstep)
       else
         # use igraph::random_walk
-        RW_steps = random_walk(graph, start = node, steps = Nstep)
+        RW_steps = igraph::random_walk(graph, start = node, steps = Nstep)
 
       WalkRep[rep,RW_steps] = 1
     }
@@ -92,8 +92,8 @@ RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE){
   P[P>1] = 1
   diag(P) = 1
 
-  colnames(S) = names(V(graph))
-  colnames(P) = names(V(graph))
+  colnames(S) = names(igraph::V(graph))
+  colnames(P) = names(igraph::V(graph))
 
   Result = list()
   Result[["Steps"]] = S

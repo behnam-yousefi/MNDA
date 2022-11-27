@@ -41,7 +41,6 @@ the main inputs to the function are: a graph (as an igraph object) and a set of 
 (e.g. highly variable nodes) around which the subgroup is calculated.
 }
 \examples{
-Labels = names(V(graph))
-subgraph_plot(graph_plot, Node_set, Labels)
+subgraph_plot(graph = igraph_example, node_set = "a")
 
 }

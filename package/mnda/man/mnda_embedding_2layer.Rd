@@ -50,6 +50,8 @@ a list of embedding spaces for each node.
 Calculate the embedding space for a two layer multiplex network
 }
 \examples{
-embeddingSpaceList = mnda_embedding_2layer(graph.data)
+myNet = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+graph_data = myNet[["data_graph"]]
+embeddingSpaceList = mnda_embedding_2layer(graph.data=graph_data, train.rep=5, walk.rep=5)
 
 }

@@ -1,5 +1,4 @@
 #' Encoder decoder neural network (EDNN) function
-#'
 #' @param X concatenated adjacency matrices for different layers containing the nodes in training phase
 #' @param Y concatenated random walk probability matrices for different layers containing the nodes in training phase
 #' @param Xtest concatenated adjacency matrices for different layers containing the nodes in test phase. Can be = \emph{X} for transductive inference.
@@ -23,40 +22,42 @@
 #'
 EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0){
 
+  library(keras)
+
   Nnode = ncol(X)
   inputSize = ncol(X)
   outputSize = ncol(Y)
 
   # Define Encoder
-  enc_input = layer_input(shape = inputSize)
+  enc_input = keras::layer_input(shape = inputSize)
   enc_output = enc_input %>%
-    layer_dense(units=embedding_size, activation = "relu",
-                kernel_regularizer = regularizer_l2(l2reg))
+    keras::layer_dense(units=embedding_size, activation = "relu",
+                kernel_regularizer = keras::regularizer_l2(l2reg))
 
-  encoder = keras_model(enc_input, enc_output)
+  encoder = keras::keras_model(enc_input, enc_output)
 
   # Define decoder
-  dec_input = layer_input(shape = embedding_size)
+  dec_input = keras::layer_input(shape = embedding_size)
   dec_output = dec_input %>%
-    layer_dense(units = outputSize, activation = "sigmoid")
+    keras::layer_dense(units = outputSize, activation = "sigmoid")
 
-  decoder = keras_model(dec_input, dec_output)
+  decoder = keras::keras_model(dec_input, dec_output)
 
   # Define Auto-Encoder
-  aen_input = layer_input(shape = inputSize)
+  aen_input = keras::layer_input(shape = inputSize)
   aen_output = aen_input %>%
     encoder() %>%
     decoder()
 
-  autoencoder = keras_model(aen_input, aen_output)
+  autoencoder = keras::keras_model(aen_input, aen_output)
 
   # Training configuration
-  autoencoder %>% compile(loss = "mse", optimizer = 'adam')
-  checkpoint <- callback_model_checkpoint(filepath = "My_model_temp", save_best_only = TRUE, verbose = 0)
-  early_stopping <- callback_early_stopping(patience = 5)
+  autoencoder %>% keras::compile(loss = "mse", optimizer = 'adam')
+  checkpoint <- keras::callback_model_checkpoint(filepath = "My_model_temp", save_best_only = TRUE, verbose = 0)
+  early_stopping <- keras::callback_early_stopping(patience = 5)
 
   # Fit the model and save in history
-  history <- autoencoder %>% fit(X, Y, validation_data = list(X, Y), loss = "mse",
+  history <- autoencoder %>% keras::fit(X, Y, validation_data = list(X, Y), loss = "mse",
                                  epochs = epochs, batch_size = batch_size, callbacks = list(checkpoint, early_stopping))
 
 
@@ -64,8 +65,6 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
   embeddingSpace = encoder %>% predict(Xtest)
   return(embeddingSpace)
 }
-
-
 
 #' Preparing the input and output of the EDNN for a multiplex graph
 #'
@@ -81,14 +80,17 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 #' @export
 #'
 #' @examples
+#' myNet = network_gen(N_nodes = 100)
+#' graphData = myNet[["data_graph"]]
+#' edge.list = graphData[,1:2]
+#' edge.weight = graphData[,3:4]
 #' XY = ednn_IOprepare(edge.list, edge.weight)
-#' embedding = EDNN(X = XY["X"] ,Y = XY["Y"], Xtest = XY["X"])
+#' X = XY[["X"]]
+#' Y = XY[["Y"]]
+#' embeddingSpace = EDNN(X = X, Y = Y, Xtest = X)
 #'
 ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, edge.threshold=0,
                           walk.rep=10, n.steps=5, random.walk = TRUE){
-
-  library(igraph)
-  library(Matrix)
 
   if (is.null(outcome))
     outcome = colnames(edge.weight)
@@ -96,7 +98,7 @@ ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, edge.threshold=0
   edge.list = t(edge.list)
   graph = igraph::graph(edge.list, directed = FALSE)
 
-  N_nodes = length(V(graph))
+  N_nodes = length(igraph::V(graph))
   N_graph = ncol(edge.weight)
 
   X = c()
@@ -107,11 +109,11 @@ ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, edge.threshold=0
     ## Set layer-specific weights for each graph and
     ## [optional] perform a thresholding if needed
     W_i = as.numeric(edge.weight[,i])
-    graph_i = simplify(set.edge.attribute(graph, "weight", index=E(graph), W_i))
-    graph_i = delete_edges(graph_i, E(graph_i)[E(graph_i)$weight < edge.threshold])
+    graph_i = igraph::simplify(igraph::set.edge.attribute(graph, "weight", index=igraph::E(graph), W_i))
+    graph_i = igraph::delete_edges(graph_i, igraph::E(graph_i)[igraph::E(graph_i)$weight < edge.threshold])
 
     ## Step 1) Input: Adjacency matrix calculation
-    Adj_i = as.matrix(as_adj(graph_i,  attr = "weight"))
+    Adj_i = as.matrix(igraph::as_adj(graph_i,  attr = "weight"))
 
     ## Step 2) Output: Perform the fixed-length random walk
     ## and calculating the node visit probabilities.
