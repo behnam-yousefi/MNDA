@@ -45,7 +45,7 @@ subgraph_plot = function(graph, node_set, labels=NULL,
   Adj_mat = as.matrix(igraph::as_adj(graph,  attr = "weight"))
   Adj_mat_sub = Adj_mat[Nodes, Nodes]
   graph_sub = igraph::graph_from_adjacency_matrix(Adj_mat_sub, weighted = TRUE, mode = "undirected")
-  W = E(graph_sub)$weight
+  W = igraph::E(graph_sub)$weight
   labels = labels[Nodes]
 
   # set colors and fonts
@@ -64,8 +64,8 @@ subgraph_plot = function(graph, node_set, labels=NULL,
   b = N_nodes - a
 
   # final plot
-  # library(ggplot2)
-  # library(ggraph)
+  requireNamespace(ggplot2)
+  requireNamespace(ggraph)
   ggraph(graph_sub, layout = 'linear', circular = TRUE) +
     geom_edge_arc(aes(color = EdgeColor, edge_width = abs(W)^1), edge_alpha = .7) +
     geom_node_point(aes(x = x, y = y), size = node_size, fill = NodeColor,
