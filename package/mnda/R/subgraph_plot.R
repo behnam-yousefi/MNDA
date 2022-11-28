@@ -65,23 +65,23 @@ subgraph_plot = function(graph, node_set, labels=NULL,
   b = N_nodes - a
 
   # final plot
-  requireNamespace("ggplot2")
-  requireNamespace("ggraph")
-  ggraph(graph_sub, layout = 'linear', circular = TRUE) +
-    geom_edge_arc(aes(color = EdgeColor, edge_width = abs(W)^1), edge_alpha = .7) +
-    geom_node_point(aes(x = x, y = y), size = node_size, fill = NodeColor,
+  # requireNamespace("ggplot2")
+  # requireNamespace("ggraph")
+  ggraph::ggraph(graph_sub, layout = 'linear', circular = TRUE) +
+    ggraph::geom_edge_arc(ggplot2::aes(color = EdgeColor, edge_width = abs(W)^1), edge_alpha = .7) +
+    ggraph::geom_node_point(ggplot2::aes(x = x, y = y), size = node_size, fill = NodeColor,
                     shape = 21, colour = "black", stroke = .4) +
-    geom_node_text(aes(x = x*1.12, y = y*1.12,
-                       angle = -((-node_angle(x, y)+90)%%180)+90, hjust = c(rep(0,a), rep(1,b))),
+    ggraph::geom_node_text(ggplot2::aes(x = x*1.12, y = y*1.12,
+                       angle = -((-ggraph::node_angle(x, y)+90)%%180)+90, hjust = c(rep(0,a), rep(1,b))),
                    label = labels,
                    fontface = FontFace,
                    size = FontSize,
                    color = TxtColor) +
-    scale_size_identity() +
-    scale_edge_width_continuous(range = c(.0001, max_edge_width)) +
-    theme_void() +
-    theme(legend.position="none") +
-    expand_limits(x = c(-margin, margin), y = c(-margin, margin))
+    ggraph::scale_edge_width_continuous(range = c(.0001, max_edge_width)) +
+    ggplot2::scale_size_identity() +
+    ggplot2::theme_void() +
+    ggplot2::theme(legend.position="none") +
+    ggplot2::expand_limits(x = c(-margin, margin), y = c(-margin, margin))
 
 
 }

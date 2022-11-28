@@ -10,9 +10,6 @@
 #' @return The embedding space for Xtest.
 #' @export
 #'
-#' @Import keras
-#' @ImportFrom usethis use_pipe()
-#'
 #' @examples
 #' myNet = network_gen(N_nodes = 100)
 #' graphData = myNet[["data_graph"]]
@@ -25,8 +22,7 @@
 #'
 EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0){
 
-  # requireNamespace("keras")
-  # usethis::use_pipe()
+  # library(keras)
 
   Nnode = ncol(X)
   inputSize = ncol(X)
@@ -34,39 +30,41 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 
   # Define Encoder
   enc_input = keras::layer_input(shape = inputSize)
-  enc_output = enc_input %>%
-    keras::layer_dense(units=embedding_size, activation = "relu",
+  enc_output = # enc_input %>%
+    keras::layer_dense(enc_input, units=embedding_size, activation = "relu",
                 kernel_regularizer = keras::regularizer_l2(l2reg))
 
   encoder = keras::keras_model(enc_input, enc_output)
 
   # Define decoder
   dec_input = keras::layer_input(shape = embedding_size)
-  dec_output = dec_input %>%
-    keras::layer_dense(units = outputSize, activation = "sigmoid")
+  dec_output = # dec_input %>%
+    keras::layer_dense(dec_input, units = outputSize, activation = "sigmoid")
 
   decoder = keras::keras_model(dec_input, dec_output)
 
   # Define Auto-Encoder
   aen_input = keras::layer_input(shape = inputSize)
-  aen_output = aen_input %>%
-    encoder() %>%
-    decoder()
+  aen_output = # aen_input %>%
+    # encoder() %>%
+    decoder(encoder(aen_input))
 
   autoencoder = keras::keras_model(aen_input, aen_output)
 
   # Training configuration
-  autoencoder %>% keras::compile(loss = "mse", optimizer = 'adam')
+  # autoencoder %>% keras::compile(loss = "mse", optimizer = 'adam')
+  keras::compile(autoencoder, loss = "mse", optimizer = 'adam')
   checkpoint <- keras::callback_model_checkpoint(filepath = "My_model_temp", save_best_only = TRUE, verbose = 0)
   early_stopping <- keras::callback_early_stopping(patience = 5)
 
   # Fit the model and save in history
-  history <- autoencoder %>% keras::fit(X, Y, validation_data = list(X, Y), loss = "mse",
+  history <- # autoencoder %>%
+    keras::fit(autoencoder, X, Y, validation_data = list(X, Y), loss = "mse",
                                  epochs = epochs, batch_size = batch_size, callbacks = list(checkpoint, early_stopping))
 
 
   # Final embeding
-  embeddingSpace = encoder %>% predict(Xtest)
+  embeddingSpace = predict(encoder, Xtest)
   return(embeddingSpace)
 }
 
