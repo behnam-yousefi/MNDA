@@ -159,12 +159,12 @@ mnda_node_detection_2layer = function(embeddingSpaceList, p.adjust.method = "non
       }
     }
     for (i in 1:N_nodes)
-      P_value[rep,i] = wilcox.test(Dist_null[rep,], y = Dist[rep,i],
+      P_value[rep,i] = stats::wilcox.test(Dist_null[rep,], y = Dist[rep,i],
                                    alternative = "less")$p.value
   }
 
   P_value_aggr = apply(P_value, 2, aggregation::fisher)
-  Q_value_aggr = p.adjust(P_value_aggr, method = p.adjust.method)
+  Q_value_aggr = stats::p.adjust(P_value_aggr, method = p.adjust.method)
 
   significant_nodes_index = which(Q_value_aggr < alpha)
   significant_nodes = node_labels[significant_nodes_index]
@@ -193,13 +193,13 @@ mnda_node_detection_2layer = function(embeddingSpaceList, p.adjust.method = "non
   if (volcano.plot){
     plot(Rank_sum_dist, Q_value_aggr_log, pch =  20,
          xlab = "Distance rank sum", ylab = "-log(p.values)")
-    abline(h = alpha_log, col = "red")
-    abline(v = rank_threshold, col = "red")
+    graphics::abline(h = alpha_log, col = "red")
+    graphics::abline(v = rank_threshold, col = "red")
   }
 
   if (ranksum.sort.plot){
     colours = rep("grey", N_nodes)
-    colours[N_nodes:(N_nodes-length(highRanked_nodes_index))] = "red"
+    colours[N_nodes:(N_nodes-length(high_ranked_nodes_index))] = "red"
     plot(sort(Rank_sum_dist), pch = 20, col = colours)
   }
 

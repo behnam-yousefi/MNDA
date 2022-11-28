@@ -22,7 +22,7 @@ Distance = function(x, y, method = "cosine"){
                 "euclidian" = sum((x - y)^2),
                 "manhattan" = sum(abs(x - y)),
                 "chebyshev" = max(abs(x-y)),
-                "coassociation" = 1 - coassociation_sim(x,y)
+                # "coassociation" = 1 - coassociation_sim(x,y)
   )
   return(dist)
 }

@@ -23,18 +23,18 @@ network_gen = function(N_nodes=100, N_var_nodes=5, N_var_nei=90, noise_sd=.1){
   if (N_var_nei >= N_nodes)
     N_var_nei = N_nodes - 1
 
-  Adj1 = matrix(runif(N_nodes^2), N_nodes)
+  Adj1 = matrix(stats::runif(N_nodes^2), N_nodes)
   Adj2 = Adj1
 
   var_node_set = sample(N_nodes, N_var_nodes, replace = FALSE)
   for (node in var_node_set){
     var_nei_set = sample((1:N_nodes)[-node], N_var_nei, replace = FALSE)
-    new_edge_weights = runif(N_var_nei)
+    new_edge_weights = stats::runif(N_var_nei)
     Adj2[node, var_nei_set] = new_edge_weights
     Adj2[var_nei_set, node] = Adj2[node, var_nei_set]
   }
 
-  noise = abs(matrix(rnorm(N_nodes^2, 0, noise_sd), N_nodes))
+  noise = abs(matrix(stats::rnorm(N_nodes^2, 0, noise_sd), N_nodes))
   Adj2 = Adj2 + noise
 
   diag(Adj1) = 0
