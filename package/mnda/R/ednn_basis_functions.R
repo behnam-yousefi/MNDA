@@ -64,7 +64,7 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 
 
   # Final embeding
-  embeddingSpace = predict(encoder, Xtest)
+  embeddingSpace = stats::predict(encoder, Xtest)
   return(embeddingSpace)
 }
 
