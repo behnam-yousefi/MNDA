@@ -73,6 +73,7 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 #' @param edge.list edge list as a dataframe with two columns.
 #' @param edge.weight edge weights as a dataframe. Each column corresponds to a graph. By default, the \code{colnames} are considered as outcomes unless indicated in \code{outcome} argument.
 #' @param outcome clinical outcomes for each graph. If not mentioned, the \code{colnames(edge.weight)} are considered by default.
+#' @param indv.index the index of individual networks.
 #' @param edge.threshold numeric value to set edge weights below the threshold to zero (default: 0). the greater edge weights do not change.
 #' @param walk.rep number of repeats for the random walk (default: 100).
 #' @param n.steps number of the random walk steps (default: 5).
@@ -91,8 +92,9 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 #' Y = XY[["Y"]]
 #' embeddingSpace = EDNN(X = X, Y = Y, Xtest = X)
 #'
-ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, edge.threshold=0,
-                          walk.rep=10, n.steps=5, random.walk = TRUE){
+ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, indv.index = NULL,
+                          edge.threshold=0, walk.rep=10, n.steps=5,
+                          random.walk = TRUE){
 
   if (is.null(outcome))
     outcome = colnames(edge.weight)
@@ -102,6 +104,9 @@ ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, edge.threshold=0
 
   N_nodes = length(igraph::V(graph))
   N_graph = ncol(edge.weight)
+
+  if (is.null(indv.index))
+    indv.index = 1:N_graph
 
   X = c()
   Y = c()
@@ -135,7 +140,7 @@ ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, edge.threshold=0
     }
 
     outcome_node = c(outcome_node, rep(outcome[i], N_nodes))
-    individual_node = c(individual_node, rep(i, N_nodes))
+    individual_node = c(individual_node, rep(indv.index[i], N_nodes))
   }
 
   X = X / (apply(X, 1, sum) + .000000001)

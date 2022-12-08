@@ -1,7 +1,7 @@
 ## Pipeline for multiplex network differential analysis
 ## The aim of the current functions:
 ## Perform MNDA on two networks with different outcomes
-## (i.e. case-control, time point1-time point2, etc.)
+## (e.g. case-control, time point1-time point2, etc.)
 ## and test whether the distances are significant.
 ## Example of the usage is provided in ???
 
