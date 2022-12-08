@@ -106,6 +106,7 @@ ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, edge.threshold=0
   X = c()
   Y = c()
   outcome_node = c()
+  individual_node = c()
 
   for (i in 1:N_graph){
     ## Set layer-specific weights for each graph and
@@ -134,13 +135,15 @@ ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, edge.threshold=0
     }
 
     outcome_node = c(outcome_node, rep(outcome[i], N_nodes))
+    individual_node = c(individual_node, rep(i, N_nodes))
   }
+
   X = X / (apply(X, 1, sum) + .000000001)
 
   Result = list()
   Result[["X"]] = X
   Result[["Y"]] = Y
   Result[["outcome_node"]] = outcome_node
-  Result[["node_labels"]] = 0
+  Result[["individual_node"]] = individual_node
   return(Result)
 }

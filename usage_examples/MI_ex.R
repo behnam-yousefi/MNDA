@@ -1,11 +1,5 @@
 rm(list=ls())
 
-library(mnda)
-library(keras)
-library(aggregation)
-library(ggplot2)
-library(ggraph)
-
 setwd("~/Desktop/R_Root/MNDA/Applications/")
 data = read.table("~/Desktop/R_Root/SLEmap/Data/MI/NANOSTRING_7COND.database.txt", header = TRUE)
 Pheno = data[,c(1:7)]

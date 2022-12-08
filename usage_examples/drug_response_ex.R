@@ -1,13 +1,9 @@
 rm(list=ls())
 
 library(mnda)
-library(keras)
-library(aggregation)
-library(ggplot2)
-library(ggraph)
 
-setwd("~/Desktop/R_Root/MNDA/Applications/")
-data = readRDS("Data/graph_data_lung_tamoxifen_2000genes.rds")
+setwd("~/Desktop/R_Root/MNDA/usage_examples/")
+data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_1000genes.rds")
 X = data[[1]]
 y = data[[2]]
 
