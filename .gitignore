@@ -2,6 +2,7 @@
 .Rhistory
 
 Data/
+temp/
 My_model_temp/
 
 *.tar.gz
