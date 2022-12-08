@@ -8,6 +8,7 @@ ednn_IOprepare(
   edge.list,
   edge.weight,
   outcome = NULL,
+  indv.index = NULL,
   edge.threshold = 0,
   walk.rep = 10,
   n.steps = 5,
@@ -20,6 +21,8 @@ ednn_IOprepare(
 \item{edge.weight}{edge weights as a dataframe. Each column corresponds to a graph. By default, the \code{colnames} are considered as outcomes unless indicated in \code{outcome} argument.}
 
 \item{outcome}{clinical outcomes for each graph. If not mentioned, the \code{colnames(edge.weight)} are considered by default.}
+
+\item{indv.index}{the index of individual networks.}
 
 \item{edge.threshold}{numeric value to set edge weights below the threshold to zero (default: 0). the greater edge weights do not change.}
 
