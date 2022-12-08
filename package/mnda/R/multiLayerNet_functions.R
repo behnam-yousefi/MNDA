@@ -101,6 +101,8 @@ mnda_embedding = function(graph.data, outcome, indv.index = NULL,
 #'
 mnda_node_distance = function(embeddingSpaceList){
 
+  node_labels = embeddingSpaceList[["node_labels"]]
+
   outcome_node = embeddingSpaceList[["outcome"]]
   outcome = unique(outcome_node)
   assertthat::assert_that(length(outcome) == 2)
@@ -110,7 +112,7 @@ mnda_node_distance = function(embeddingSpaceList){
 
   N_nodes = nrow(embeddingSpaceList[[1]]) / (length(outcome)*N_indv)
 
-  Rep = length(embeddingSpaceList)-2     #the "embeddingSpaceList" consists of two extra elements
+  Rep = length(embeddingSpaceList)-3     #the "embeddingSpaceList" consists of three extra elements
   Dist_list = list()
 
   ### P-value analysis
