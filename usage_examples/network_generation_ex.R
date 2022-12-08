@@ -1,9 +1,6 @@
 rm(list=ls())
 
 library(mnda)
-library(keras)
-library(aggregation)
-
 
 ## Generate graph
 myNet = network_gen(N_nodes = 100, N_var_nodes = 5, N_var_nei = 90, noise_sd = .01)

@@ -159,8 +159,9 @@ mnda_node_detection_2layer = function(embeddingSpaceList, p.adjust.method = "non
       }
     }
     for (i in 1:N_nodes)
-      P_value[rep,i] = stats::wilcox.test(Dist_null[rep,], y = Dist[rep,i],
-                                   alternative = "less")$p.value
+      # P_value[rep,i] = stats::wilcox.test(Dist_null[rep,], y = Dist[rep,i], alternative = "less")$p.value
+      P_value[rep,i] = p_val_rank(x = Dist[rep,i], null.pdf = Dist_null[rep,],
+                                  alternative = "greater")
   }
 
   P_value_aggr = apply(P_value, 2, aggregation::fisher)
