@@ -1,8 +1,8 @@
 .DS_Store
 .Rhistory
 
-Data/
-temp/
+./Data/
+./temp/
 My_model_temp/
 
 *.tar.gz
