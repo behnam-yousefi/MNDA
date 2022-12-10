@@ -1,11 +1,16 @@
-# Multiplex Network Differential Analysis (MNDA) <img width="150" alt="image" src="https://user-images.githubusercontent.com/46751569/206549575-eb1e298d-bfe9-4f15-af29-e243063f929d.png">
+# Multiplex Network Differential Analysis (MNDA) <img width="100" alt="image" src="https://github.com/behnam-yousefi/MNDA/blob/master/Figures/MNDA_logo.png?raw=true">
 
 Interactions between different biological elements are crucial for the function of biological systems and are usually represented as networks. The dysregulation of these networks can be associated with different clinical conditions such as diseases and response to treatments. In this work,  we propose an R package, called multiplex network differential analysis (MNDA) to quantify and test the variations in the local neighborhood of nodes between the two given conditions (e.g. case-control). We further show examples of finding important subnetworks in gene co-expression networks for response to treatment as well as an use case for individual specific networks (ISNs).
 
-The core of the MNDA tool consists of three steps:
+The core of the MNDA tool consists of three steps (Figure 1):
 1. representing the nodes of all networks layers into a common embedding space (using EDNN);
 2. calculate the distance between the nodes corresponding to the same element (e.g. gene);
 3. detect the nodes whose neighborhood varies significantly based on statistical testing (using permuted graphs).
+
+<img width="800" alt="image" src="https://github.com/behnam-yousefi/MNDA/blob/master/Figures/Figure_1.png?raw=true">
+
+**Figure 2.** The schematic representation of the MNDA workflow. All the nodes of all the layers along with the permuted networks are represented into a common embedding space. The distances between all the pairs  of the permitted network are used to construct a null probability distribution fiction (PDF), based on which statistical testing is performed to detect the nodes whose neighborhood significantly changes.
+
 
 The current MNDA pipeline is desined for two conditions:
 a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease);
