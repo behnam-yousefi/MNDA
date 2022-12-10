@@ -60,17 +60,15 @@ The generated multiplex network and the set of the randomly selected nodes are a
 graph_data = myNet$data_graph
 var_nodes = myNet$var_nodes
 `````
-We then feed ```graph_data``` to the MNDA pipleline specialized for a two-layer multiplex network (condition *"a"*), which is composed of two lines of codes:
+We then feed ```graph_data``` to the MNDA pipleline specialized for a two-layer multiplex network (condition *"a"*), which is composed of two commands:
 `````{R}
-embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50, walk.rep = 100,
-                                           random.walk = TRUE, null.perm = TRUE)
+embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50, walk.rep = 100, random.walk = TRUE, null.perm = TRUE)
 
 Results = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "none")
 print(Results$high_var_nodes_index)
 `````
 the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1).
-the ```mnda_node_detection_2layer()``` duncrion calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3
-).
+the ```mnda_node_detection_2layer()``` duncrion calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3).
 
 ## Usage Example 1: drug response  
 
