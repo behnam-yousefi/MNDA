@@ -52,7 +52,7 @@ myNet = network_gen(N_nodes = 100, N_var_nodes = 5, N_var_nei = 90, noise_sd = .
 `````
 The process is described as the following:
 1. two identical fully connected networks with ```N_nodes``` number of nodes and uniform random edge weights is generated.
-2. a number of ```N_var_nodes``` nodes are randomly selected to have different edge weights with ```N_var_nei``` number of nodes (```N_var_nei``` < ```N_nodes``` - 1) between the two networks.
+2. a number of ```N_var_nodes``` nodes are randomly selected to have different edge weights with ```N_var_nei``` number of nodes (```N_var_nei``` $<$ ```N_nodes``` $- 1$) between the two networks.
 3. a set of random Gaussian noise with zero mean and sd = ```noise_sd``` is generated and added to all of the edge weights.
 
 The generated multiplex network and the set of the randomly selected nodes are accessible by the following lines, respectively.
@@ -68,7 +68,7 @@ embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50, walk.rep 
 Results = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "none")
 print(Results$high_var_nodes_index)
 `````
-the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step1).
+the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1).
 the ```mnda_node_detection_2layer()``` duncrion calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3
 ).
 
