@@ -7,10 +7,11 @@ The core of the MNDA tool consists of three steps (Figure 1):
 2. calculate the distance between the nodes corresponding to the same element (e.g. gene);
 3. detect the nodes whose neighborhood varies significantly based on statistical testing (using permuted graphs).
 
+___
 <img width="800" alt="image" src="https://github.com/behnam-yousefi/MNDA/blob/master/Figures/Figure_1.png?raw=true">
 
 **Figure 2.** The schematic representation of the MNDA workflow. All the nodes of all the layers along with the permuted networks are represented into a common embedding space. The distances between all the pairs  of the permitted network are used to construct a null probability distribution fiction (PDF), based on which statistical testing is performed to detect the nodes whose neighborhood significantly changes.
-
+___
 
 The current MNDA pipeline is desined for two conditions:
 a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease);
@@ -62,14 +63,13 @@ var_nodes = myNet$var_nodes
 `````
 We then feed ```graph_data``` to the MNDA pipleline specialized for a two-layer multiplex network (condition *"a"*), which is composed of two commands:
 `````{R}
-embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50, walk.rep = 100, random.walk = TRUE, null.perm = TRUE)
-
-Results = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "none")
-print(Results$high_var_nodes_index)
+embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50)
+mnda_output = mnda_node_detection_2layer(embeddingSpaceList)
+print(mnda_output$high_var_nodes_index)
 `````
-the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1).
-the ```mnda_node_detection_2layer()``` duncrion calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3).
+the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` duncrion calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness.
 
 ## Usage Example 1: drug response  
+
 
 ## Usage Example 2: application on individual specific networks
