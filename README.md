@@ -13,7 +13,7 @@ ___
 **Figure 2.** The schematic representation of the MNDA workflow. All the nodes of all the layers along with the permuted networks are represented into a common embedding space. The distances between all the pairs  of the permitted network are used to construct a null probability distribution fiction (PDF), based on which statistical testing is performed to detect the nodes whose neighborhood significantly changes.
 ___
 
-The current MNDA pipeline is desined for two conditions:
+The current MNDA pipeline is designed for two conditions:
 a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease);
 b. multi-layer network case (e.g. ISNs) with two matched groups (e.g. before treatment-after treatment).
 
@@ -70,6 +70,35 @@ print(mnda_output$high_var_nodes_index)
 the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` duncrion calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness.
 
 ## Usage Example 1: drug response  
+*MNDA pipeline for condition "a"*
 
+In this example, we construct gene coexpression netwerks (GCNs) for drug responders and non-responders. In this example, we load gene expression profile of cell lines of lung cancer as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y```.
+`````{R}
+data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
+X = data[[1]]
+y = data[[2]]
+`````
+Next, we construc adjacency matrices of GCN for each condition,
+`````{R}
+adj_res = abs(cor(X[y=="res",]))
+adj_nonres = abs(cor(X[y=="non_res",]))
+diag(adj_res) = 0
+diag(adj_nonres) = 0
+`````
+and convert them to the ```mnda``` multiplex network format.
+`````{R}
+adj_list = list(adj_res, adj_nonres)
+graph_data = as.mnda.graph(adj_list, outcome = c("res","non_res"))
+`````
+Now we can call the MNDA pipeline as in the previous example
+`````{R}
+embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1, train.rep = 50, epochs = 20, batch.size = 10, random.walk = FALSE, null.perm = FALSE)
+mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni")
+Nodes = mnda_output$high_var_nodes
+`````
+**hints for large networks:** 
+* the random walk algorithm can be disabled by ```random.walk = FALSE``` for the sake of running time;
+* the network permutation and representation can be disabled by ```null.perm = FALSE``` for the sake of running time;
+* the calculated p-values can be adjusted by setting a method in the ```p.adjust.method``` argument.
 
 ## Usage Example 2: application on individual specific networks
