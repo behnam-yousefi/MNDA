@@ -7,12 +7,6 @@ The core of the MNDA tool consists of three steps (Figure 1):
 2. calculate the distance between the nodes corresponding to the same element (e.g. gene);
 3. detect the nodes whose neighborhood varies significantly based on statistical testing (using permuted graphs).
 
-___
-<img width="800" alt="image" src="https://github.com/behnam-yousefi/MNDA/blob/master/Figures/Figure_1.png?raw=true">
-
-**Figure 2.** The schematic representation of the MNDA workflow. All the nodes of all the layers along with the permuted networks are represented into a common embedding space. The distances between all the pairs  of the permitted network are used to construct a null probability distribution fiction (PDF), based on which statistical testing is performed to detect the nodes whose neighborhood significantly changes.
-___
-
 The current MNDA pipeline is designed for two conditions:
 a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease);
 b. multi-layer network case (e.g. ISNs) with two matched groups (e.g. before treatment-after treatment).
@@ -102,3 +96,15 @@ Nodes = mnda_output$high_var_nodes
 * the calculated p-values can be adjusted by setting a method in the ```p.adjust.method``` argument.
 
 ## Usage Example 2: application on individual specific networks
+
+## Outreach
+Any suggestions, collaboration and bug reports are welcome and appreciated.
+Contact me via
+
+Email: yousefi.bme@gmail.com,
+
+
+[LinedIn](https://www.linkedin.com/in/behnam-yousefi-bme) or
+[Twitter](https://twitter.com/behnam_bme)
+
+
