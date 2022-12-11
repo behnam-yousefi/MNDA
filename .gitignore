@@ -3,7 +3,9 @@
 
 /Data/
 temp/
+MI/
 My_model_temp/
+
 
 *.tar.gz
 *.Rcheck

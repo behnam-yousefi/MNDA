@@ -14,8 +14,9 @@
 #' @param graph.data dataframe of the graph data containing edge list and edge weights.
 #' column 1 and 2 consisting of the edge list (undirected).
 #' column 3 and 4 consisting the edge weights corresponding to each graph, respectively.
-#' @param edge.threshold numeric value to set edge weights below the threshold to zero (default: 0). the greater edge weights do not change.
+#' @param outcome a vector of outcomes for each network.
 #' @param indv.index the index of individual networks.
+#' @param edge.threshold numeric value to set edge weights below the threshold to zero (default: 0). the greater edge weights do not change.
 #' @param train.rep numeric value to set the number of EDNN training repeats (default: 50).
 #' @param embedding.size the dimension of embedding space, equal to the number of the bottleneck hidden nodes (default: 5).
 #' @param epochs maximum number of pocks. An early stopping callback with a patience of 5 has been set inside the function (default = 10).
