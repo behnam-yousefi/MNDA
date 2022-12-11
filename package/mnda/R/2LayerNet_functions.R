@@ -210,7 +210,7 @@ mnda_node_detection_2layer = function(embeddingSpaceList, p.adjust.method = "non
   Results = list()
   Results[["node_labels"]] = node_labels
   Results[["p_values"]] = Q_value_aggr
-  Results[["rank_sum_dist"]] =   Rank_sum_dist
+  Results[["rank_sum_dist"]] = Rank_sum_dist
 
   Results[["significant_nodes_index"]] = significant_nodes_index
   Results[["high_ranked_nodes_index"]] = high_ranked_nodes_index

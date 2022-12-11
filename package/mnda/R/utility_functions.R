@@ -124,7 +124,7 @@ as.igraph = function(mnda.graph, edge.threshold=0){
   EdgeList = t(EdgeList)
   graph = igraph::graph(EdgeList, directed = FALSE)
 
-  graph = igraph::simplify(igraph::set.edge.attribute(graph, "weight", index=igraph::E(graph), EdgeWeights))
+  graph = igraph::simplify(igraph::set.edge.attribute(graph, "weight", index=igraph::E(graph), EdgeWeights/2))   # EdgeWeights/2 is used due to the use of simplify() function
   graph = igraph::delete_edges(graph, igraph::E(graph)[abs(igraph::E(graph)$weight) < edge.threshold])
 
   return(graph)
