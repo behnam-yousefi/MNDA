@@ -6,7 +6,9 @@
 #' @param labels the labels of the nodes to be indicated. Labels should be a named vector if the \code{node_set} consists of the node names.
 #' @param node_size size of the nodes in plot (default: 5)
 #' @param font_size font size of labels if available (default: 4)
-#' @param max_edge_width maximum thickness of the edges in plot (default: 4)
+#' @param edge_width numeric value to adjust the thickness of the edges in plot.
+#' Two modes are defined: [i] two numbers indicating the min and max (default: c(0.5,4));
+#' or [ii] a single number that weights the min/max of original edge weights.
 #' @param margin the figure margin (default: 2.5)
 #'
 #' @return nothing to return
@@ -21,7 +23,7 @@
 #'subgraph_plot(graph = data[["igraph_example"]], node_set = "a")
 #'
 subgraph_plot = function(graph, node_set, labels=NULL,
-                         node_size=5, font_size=4, max_edge_width=4, margin=2.5){
+                         node_size=5, font_size=4, edge_width=c(.5,4), margin=2.5){
 
   if (is.null(labels)){
     labels = names(igraph::V(graph))
@@ -59,6 +61,10 @@ subgraph_plot = function(graph, node_set, labels=NULL,
   FontFace[1:N_node_set] = "plain"
   FontSize = rep(font_size, length(Nodes))
   FontSize[1:N_node_set] = font_size
+  if (length(edge_width)>1)
+    edgeWidth = edge_width
+  else
+    edgeWidth = c(min(abs(W)), max(abs(W))) * edge_width
 
   # parameters used to account for the circulatory text problem
   a = floor(180 / (360 / N_nodes))
@@ -68,7 +74,7 @@ subgraph_plot = function(graph, node_set, labels=NULL,
   # requireNamespace("ggplot2")
   # requireNamespace("ggraph")
   ggraph::ggraph(graph_sub, layout = 'linear', circular = TRUE) +
-    ggraph::geom_edge_arc(ggplot2::aes(color = EdgeColor, edge_width = abs(W)^1), edge_alpha = .7) +
+    ggraph::geom_edge_arc(ggplot2::aes(color = EdgeColor, edge_width = abs(W)), edge_alpha = .7) +
     ggraph::geom_node_point(ggplot2::aes(x = x, y = y), size = node_size, fill = NodeColor,
                     shape = 21, colour = "black", stroke = .4) +
     ggraph::geom_node_text(ggplot2::aes(x = x*1.12, y = y*1.12,
@@ -77,12 +83,10 @@ subgraph_plot = function(graph, node_set, labels=NULL,
                    fontface = FontFace,
                    size = FontSize,
                    color = TxtColor) +
-    ggraph::scale_edge_width_continuous(range = c(.0001, max_edge_width)) +
+    ggraph::scale_edge_width_continuous(range = edgeWidth) +
     ggplot2::scale_size_identity() +
     ggplot2::theme_void() +
     ggplot2::theme(legend.position="none") +
     ggplot2::expand_limits(x = c(-margin, margin), y = c(-margin, margin))
-
-
 }
 
