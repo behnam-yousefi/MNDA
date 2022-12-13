@@ -4,6 +4,8 @@
 #' @param graph an igraph object
 #' @param node_set the names or indices of the nodes around which the subgroup is plotted.
 #' @param labels the labels of the nodes to be indicated. Labels should be a named vector if the \code{node_set} consists of the node names.
+#' @param node.importance named numeric vector of the node importance to sort the nodes clockwise.
+#' @param n.nodes number of nodes to be displayed. If NULL, all the \code{node_set} and their neighbors are considered.
 #' @param node_size size of the nodes in plot (default: 5)
 #' @param font_size font size of labels if available (default: 4)
 #' @param edge_width numeric value to adjust the thickness of the edges in plot.
@@ -22,7 +24,7 @@
 #' data = example_data()
 #'subgraph_plot(graph = data[["igraph_example"]], node_set = "a")
 #'
-subgraph_plot = function(graph, node_set, labels=NULL,
+subgraph_plot = function(graph, node_set, labels=NULL, node.importance = NULL, n.nodes = NULL,
                          node_size=5, font_size=4, edge_width=c(.5,4), margin=2.5){
 
   if (is.null(labels)){
@@ -32,14 +34,20 @@ subgraph_plot = function(graph, node_set, labels=NULL,
     names(labels) = names(igraph::V(graph))
   }
 
+  if (is.null(n.nei))
+    n.nei = Inf
+
   # obtain the neighbors of the input node_set
   node_set_neigh = c()
   for (n in node_set)
     node_set_neigh = c(node_set_neigh, names(igraph::neighbors(graph, n)))
   Nodes = unique(c(node_set, node_set_neigh))
 
+  if (!is.null(node.importance))
+    Nodes = names(sort(node.importance[Nodes], decreasing = TRUE))[1:min(n.nodes, length(Nodes))]
+
   N_node_set = length(node_set)
-  N_node_neigh = length(node_set_neigh)
+  # N_node_neigh = length(node_set_neigh)
   N_nodes = length(Nodes)
 
   # to obtain the subgraph:
@@ -61,11 +69,11 @@ subgraph_plot = function(graph, node_set, labels=NULL,
   FontFace[1:N_node_set] = "plain"
   FontSize = rep(font_size, length(Nodes))
   FontSize[1:N_node_set] = font_size
-  if (length(edge_width)>1)
+  if (length(edge_width)>1){
     edgeWidth = edge_width
-  else
+  }else{
     edgeWidth = c(min(abs(W)), max(abs(W))) * edge_width
-
+  }
   # parameters used to account for the circulatory text problem
   a = floor(180 / (360 / N_nodes))
   b = N_nodes - a

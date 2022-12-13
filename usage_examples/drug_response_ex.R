@@ -37,4 +37,4 @@ G = mnda::as.igraph(graph_to_plot, diff.threshold)
 # hist(graph_to_plot$W)
 # hist(E(G)$weight)
 
-subgraph_plot(G, var_nodes)
+subgraph_plot(G, var_nodes, node.importance = mnda.output$rank_sum_dist, n.nodes = 30, edge_width = 2)

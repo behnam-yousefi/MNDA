@@ -8,9 +8,11 @@ subgraph_plot(
   graph,
   node_set,
   labels = NULL,
+  node.importance = NULL,
+  n.nodes = NULL,
   node_size = 5,
   font_size = 4,
-  max_edge_width = 4,
+  edge_width = c(0.5, 4),
   margin = 2.5
 )
 }
@@ -21,11 +23,17 @@ subgraph_plot(
 
 \item{labels}{the labels of the nodes to be indicated. Labels should be a named vector if the \code{node_set} consists of the node names.}
 
+\item{node.importance}{named numeric vector of the node importance to sort the nodes clockwise.}
+
+\item{n.nodes}{number of nodes to be displayed. If NULL, all the \code{node_set} and their neighbors are considered.}
+
 \item{node_size}{size of the nodes in plot (default: 5)}
 
 \item{font_size}{font size of labels if available (default: 4)}
 
-\item{max_edge_width}{maximum thickness of the edges in plot (default: 4)}
+\item{edge_width}{numeric value to adjust the thickness of the edges in plot.
+Two modes are defined: [i] two numbers indicating the min and max (default: c(0.5,4));
+or [ii] a single number that weights the min/max of original edge weights.}
 
 \item{margin}{the figure margin (default: 2.5)}
 }

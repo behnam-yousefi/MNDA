@@ -1,7 +1,7 @@
 Package: mnda
 Type: Package
 Title: Multiplex Network Differential Analysis (MNDA)
-Version: 0.7.5
+Version: 0.7.8
 Author: Behnam Yousefi, Farzaneh Firoozbakht
 Maintainer: Behnam Yousefi <yousefi.bme@gmail.com>
 Description: Detection of nodes in the graph whose neighbourhood varies significantly.

@@ -24,6 +24,8 @@ mnda_embedding(
 column 1 and 2 consisting of the edge list (undirected).
 column 3 and 4 consisting the edge weights corresponding to each graph, respectively.}
 
+\item{outcome}{a vector of outcomes for each network.}
+
 \item{indv.index}{the index of individual networks.}
 
 \item{edge.threshold}{numeric value to set edge weights below the threshold to zero (default: 0). the greater edge weights do not change.}
