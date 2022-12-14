@@ -26,15 +26,5 @@ mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "
 Nodes = mnda_output$high_var_nodes
 # write.table(Nodes, "~/Desktop/nodes2.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
 
-# subgraph_difference_plot = function(mnda.graph = graph_data, mnda.output = mnda_output, n.var.nodes = 5, n.neigh = 10, diff.threshold = 0)
-
-var_nodes = sort(mnda.output$rank_sum_dist, decreasing = TRUE)[1:n.var.nodes]
-var_nodes = names(var_nodes)
-
-graph_to_plot = cbind(mnda.graph[,1:2], W = mnda.graph[,3] - mnda.graph[,4])
-G = mnda::as.igraph(graph_to_plot, diff.threshold)
-
-# hist(graph_to_plot$W)
-# hist(E(G)$weight)
-
-subgraph_plot(G, var_nodes, node.importance = mnda.output$rank_sum_dist, n.nodes = 30, edge_width = 2)
+subgraph_difference_plot(mnda.graph = graph_data, node.importance = mnda_output$rank_sum_dist,
+                         n.var.nodes = 5, n.neigh = 10, diff.threshold = .1)

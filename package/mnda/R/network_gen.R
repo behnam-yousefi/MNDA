@@ -43,8 +43,8 @@ network_gen = function(N_nodes=100, N_var_nodes=5, N_var_nei=90, noise_sd=.1){
   Adj2[lower.tri(Adj2)] = t(Adj2)[lower.tri(Adj2)]
 
 
-  EdgeList = data.frame(V1 = rep(1:N_nodes, times = N_nodes),
-                        V2 = rep(1:N_nodes, each = N_nodes))
+  EdgeList = data.frame(V1 = as.character(rep(1:N_nodes, times = N_nodes)),
+                        V2 = as.character(rep(1:N_nodes, each = N_nodes)))
   EdgeWeights = data.frame(W1 = as.numeric(Adj1),
                            W2 = as.numeric(Adj2))
   data_graph = cbind(EdgeList,EdgeWeights)

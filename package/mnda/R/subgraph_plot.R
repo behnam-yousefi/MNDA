@@ -22,7 +22,7 @@
 #'
 #' @examples
 #' data = example_data()
-#'subgraph_plot(graph = data[["igraph_example"]], node_set = "a")
+#' subgraph_plot(graph = data[["igraph_example"]], node_set = "a")
 #'
 subgraph_plot = function(graph, node_set, labels=NULL, node.importance = NULL, n.nodes = NULL,
                          node_size=5, font_size=4, edge_width=c(.5,4), margin=2.5){
@@ -98,3 +98,42 @@ subgraph_plot = function(graph, node_set, labels=NULL, node.importance = NULL, n
     ggplot2::expand_limits(x = c(-margin, margin), y = c(-margin, margin))
 }
 
+
+
+#' Visualization of a difference subgroup using a circular graph
+#'
+#' @param mnda.graph mnda.graph data
+#' @param node.importance named numeric vector of the node importance to sort the nodes clockwise.
+#' @param n.var.nodes number of variable nodes to show
+#' @param n.neigh number of neighboring  nodes to show
+#' @param diff.threshold edge threshold
+#'
+#' @return nothing to return
+#' @export
+#'
+#'#' @details This function plots a difference sub-graph as circular plot.
+#' the main inputs to the function are: a graph multiplex (as an mnda.graph) and a vector of node importances.
+#'
+#' @examples
+#' myNet = network_gen(N_nodes = 100, N_var_nodes = 5, N_var_nei = 90, noise_sd = .01)
+#' graph_data = myNet[["data_graph"]]
+#' node_importance_dummy = 1:100
+#' names(node_importance_dummy) = 1:100
+#' subgraph_difference_plot(graph_data, node.importance = node_importance_dummy)
+#'
+subgraph_difference_plot = function(mnda.graph = graph_data, node.importance,
+                                    n.var.nodes = 5, n.neigh = 10, diff.threshold = 0){
+
+  var_nodes = sort(node.importance, decreasing = TRUE)[1:n.var.nodes]
+  var_nodes = names(var_nodes)
+
+  graph_to_plot = cbind(mnda.graph[,1:2], W = mnda.graph[,3] - mnda.graph[,4])
+  G = mnda::as.igraph(graph_to_plot, diff.threshold)
+
+  # hist(graph_to_plot$W)
+  # hist(E(G)$weight)
+
+  subgraph_plot(G, var_nodes, node.importance = node.importance,
+                n.nodes = (n.var.nodes + n.neigh))
+
+}
