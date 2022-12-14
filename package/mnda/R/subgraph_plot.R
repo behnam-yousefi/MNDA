@@ -34,8 +34,8 @@ subgraph_plot = function(graph, node_set, labels=NULL, node.importance = NULL, n
     names(labels) = names(igraph::V(graph))
   }
 
-  if (is.null(n.nei))
-    n.nei = Inf
+  if (is.null(n.nodes))
+    n.nodes = Inf
 
   # obtain the neighbors of the input node_set
   node_set_neigh = c()
