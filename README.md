@@ -18,7 +18,7 @@ d. multi-layer network case each layer with different condition (e.g. temporal n
 
 **Note:** the first step (EDNN) is the same for all the cases but they are different in step 2 and 3.
 
-**Note:** the network structures for different layers shoul be the same but different in weights.
+**Note:** the network structures for different layers should be the same but different in weights.
 
 Reference: [to be added]
 
