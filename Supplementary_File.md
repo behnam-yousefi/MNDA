@@ -8,7 +8,9 @@ Multiplex network differential analysis (MNDA) is a computational tool implement
 2. calculate the distance between the nodes corresponding to the same element (e.g. gene);
 3. detect the nodes whose neighborhood varies significantly based on statistical testing (using permuted graphs). 
 
+The EDNN is composed of shallow encoder-decoder neural networks with the number of inputs and outputs being equal to the number of nodes in one layer (the nodes are the same from one layer to the other). For each node, the encoder input is a vector of its connection weights with the other nodes. If no link exists between two nodes, the corresponding input is set to zero. The decoder output for each node is a vector of node visit probabilities calculated based on a fixed-length weighted random walk algorithm (see below). The bottleneck layer is finally used as the embedding space for all the nodes in both layers.
 
+Fixed-length weighted random walk algorithm. We define the node visit probabilities for the decoder output as the probability of a random walker passes node $j$ staring from node $i$, $P(i->j)$.
 
 
 
