@@ -7,14 +7,12 @@ The core of the MNDA tool consists of three steps (Figure 1):
 2. calculate the distance between the nodes corresponding to the same element (e.g. gene);
 3. detect the nodes whose neighborhood varies significantly based on statistical testing (using permuted graphs).
 
-The current MNDA pipeline is designed for two conditions:
-
-a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease);
+The current MNDA pipeline is designed for two conditions:\
+a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease);\
 b. multi-layer network case (e.g. ISNs) with two matched groups (e.g. before treatment-after treatment).
 
-The future features to be considered:
-
-c. multi-layer network case (e.g. ISNs) with two unmatched groups (e.g. healthy-disease);
+The future features to be considered:\
+c. multi-layer network case (e.g. ISNs) with two unmatched groups (e.g. healthy-disease);\
 d. multi-layer network case each layer with different condition (e.g. temporal networks).
 
 
