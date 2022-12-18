@@ -10,11 +10,18 @@ Multiplex network differential analysis (MNDA) is a computational tool implement
 
 The EDNN is composed of shallow encoder-decoder neural networks with the number of inputs and outputs being equal to the number of nodes in one layer (the nodes are the same from one layer to the other). For each node, the encoder input is a vector of its connection weights with the other nodes. If no link exists between two nodes, the corresponding input is set to zero. The decoder output for each node is a vector of node visit probabilities calculated based on a *repeated fixed-length weighted random walk algorithm (see below). The bottleneck layer is finally used as the embedding space for all the nodes in both layers.
 
-*Repeated fixed-length weighted random walk algorithm.* We define the node visit probabilities for the decoder output as the probability of a random walker passing node $j$ starting from node $i$, $P(i|j)$. This enables us to characterise the local structures of the networks. The implemented random walker has two properties: It is weighted and fixed-length. A weighted random walker considered the edge weights to choose each step. The probability of moving from node $i$ to node $j$ is proportional to the edge weight $w_(ij)$ linking node $i$ to node $j$:
+*Repeated fixed-length weighted random walk algorithm.* We define the node visit probabilities for the decoder output as the probability of a random walker passing node $j$ starting from node $i$, $P(i|j)$. This enables us to characterise the local structures of the networks. The implemented random walker has two properties: It is weighted and fixed-length. A weighted random walker considered the edge weights to choose each step. The probability of moving from node $i$ to node $j$ is proportional to the edge weight $w_{ij}$ linking node $i$ to node $j$:
 
-$$P(i\xrightarrow{}j)=\frac{w_{ij}}{\Sigma_{j\in{}\mathcal{N}_i}|w_{ij}|}$$
+$$ P(i\xrightarrow{}j)=\frac{w_{ij}}{\Sigma_{j\in{}\mathcal{N}_i}|w_{ij}|} $$
 
 The walk length is also set to a constant value to keep it local around the node queried node. The random walk process is repeated for several times to calculate the node visit probabilities. Although the idea of weighted random walks is not new, to our knowledge, no customized code was available for their use in our framework. Our implementation of the random walk algorithm is available for the users in the package. 
+
+After the EDNN is trained, the nodes are embedded into a low dimensional vector space, based on which we then calculate the distance between the corresponding node pairs, i.e nodes that correspond to the same object in two networks. By default, we use the *cosine* distance which is defined as
+
+$$ d_{cos}(A,B)=1-\frac{A.B}{|A|.|B|} $$
+
+For two vectors of $A$ and $B$. 
+
 
 
 ## 1.1. fixed-length weighted random walk algorithm
