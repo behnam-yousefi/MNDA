@@ -1,5 +1,17 @@
 # Supplementary File
 
+## 1 Methods overview
+
+Multiplex network differential analysis (MNDA) is a computational tool implemented for multiplex networks to detect nodes whose neighborhoods have significant variations. The core of the MNDA tool consists of three steps:
+
+1. representing the nodes of all networks layers into a common embedding space (using EDNN);
+2. calculate the distance between the nodes corresponding to the same element (e.g. gene);
+3. detect the nodes whose neighborhood varies significantly based on statistical testing (using permuted graphs). 
+
+
+
+
+
 ## 1.1. fixed-length weighted random walk algorithm
 
 ## 1.1. fixed-length weighted random walk algorithm
