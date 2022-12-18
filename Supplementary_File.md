@@ -24,10 +24,6 @@ For two vectors of $A$ and $B$. The distance between the corresponding node pair
 
 The final step is to assess the significance of the calculated distances. The current implementation of the MNDA considers two conditions: a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease); b. multi-layer network case (e.g. ISNs) with two matched groups (e.g. before treatment-after treatment). In the two-layer network case, each node pair corresponds to a distance measure and its significance is assessed on the basis of a null distribution. On the other hand, each node pair in the multi-layer network case corresponds to a set of distances across all the individuals, that are classified into two groups. Therefore, for each node pair, the distances can be classified into two sets and a two sample test (e.g. t-test of Wilcoxon-test) can be used for significance assessment. 
 
-## 1.1. fixed-length weighted random walk algorithm
-
-## 1.1. fixed-length weighted random walk algorithm
-
 ## 2. Implementation in R
 ### 2.1 Installation
 Inatall from CRAN
