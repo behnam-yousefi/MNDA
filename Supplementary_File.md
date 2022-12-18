@@ -16,13 +16,13 @@ $$ P(i\xrightarrow{}j)=\frac{w_{ij}}{\Sigma_{j\in{}\mathcal{N}_i}|w_{ij}|} $$
 
 The walk length is also set to a constant value to keep it local around the node queried node. The random walk process is repeated for several times to calculate the node visit probabilities. Although the idea of weighted random walks is not new, to our knowledge, no customized code was available for their use in our framework. Our implementation of the random walk algorithm is available for the users in the package. 
 
-After the EDNN is trained, the nodes are embedded into a low dimensional vector space, based on which we then calculate the distance between the corresponding node pairs, i.e nodes that correspond to the same object in two networks. By default, we use the *cosine* distance which is defined as
+After the EDNN is trained, the nodes are embedded into a low dimensional vector space, based on which we then calculate the distance between the corresponding node pairs, i.e nodes that correspond to the same element in two networks. By default, we use the *cosine* distance which is defined as
 
 $$ d_{cos}(A,B)=1-\frac{A.B}{|A|.|B|} $$
 
-For two vectors of $A$ and $B$. 
+For two vectors of $A$ and $B$. The distance between the corresponding node pairs is a measure of the variation of the local neighborhood in the networks.
 
-
+The final step is to assess the significance of the calculated distances. The current implementation of the MNDA considers two conditions: a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease); b. multi-layer network case (e.g. ISNs) with two matched groups (e.g. before treatment-after treatment). In the two-layer network case, each node pair corresponds to a distance measure and its significance is assessed on the basis of a null distribution. On the other hand, each node pair in the multi-layer network case corresponds to a set of distances across all the individuals, that are classified into two groups. Therefore, for each node pair, the distances can be classified into two sets and a two sample test (e.g. t-test of Wilcoxon-test) can be used for significance assessment. 
 
 ## 1.1. fixed-length weighted random walk algorithm
 
