@@ -66,7 +66,7 @@ the ```mnda_embedding_2layer()``` function represents all the nodes in a common 
 ## Usage Example 1: drug response  
 *MNDA pipeline for condition "a"*
 
-In this example, we construct gene coexpression netwerks (GCNs) for drug responders and non-responders. In this example, we load gene expression profile of cell lines of lung cancer as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y```.
+In this example, we construct gene coexpression netwerks (GCNs) for drug responders and non-responders. We load gene expression profile of cell lines of lung cancer as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y```.
 `````{R}
 data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
 X = data[[1]]
