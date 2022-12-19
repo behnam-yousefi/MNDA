@@ -69,7 +69,7 @@ the ```mnda_embedding_2layer()``` function represents all the nodes in a common 
 ## 2.3. Usage Example 1: drug response  
 *MNDA pipeline for condition "a"*
 
-In this example, we construct gene coexpression netwerks (GCNs) for drug responders and non-responders. To this end, we used PRISM dataset (ref), which .....To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected. We load gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y```.
+In this example, we construct gene coexpression netwerks (GCNs) for drug responders and non-responders. To this end, we use PRISM dataset (ref), which .....To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y``` can be loaded accordingly:
 `````{R}
 data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
 X = data[[1]]
@@ -103,7 +103,8 @@ The source code available at [usage_examples/drug_response_ex.R](https://github.
 ## 2.4. Usage Example 2: application on individual specific networks
 *MNDA pipeline for condition "b"*
 
-In this example we construct 
+In this example we used the data of Milieu Interieur project (ref). 
+In this example we construct ISNs of GCNs for 978 healthy samples.
 
 The source code available at []()
 
