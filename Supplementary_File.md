@@ -8,7 +8,7 @@ Multiplex network differential analysis (MNDA) is a computational tool implement
 2. calculate the distance between the nodes corresponding to the same element (e.g. gene);
 3. detect the nodes whose neighborhood varies significantly based on statistical testing (using permuted graphs). 
 
-The EDNN is composed of shallow encoder-decoder neural networks with the number of inputs and outputs being equal to the number of nodes in one layer (the nodes are the same from one layer to the other). For each node, the encoder input is a vector of its connection weights with the other nodes. If no link exists between two nodes, the corresponding input is set to zero. The decoder output for each node is a vector of node visit probabilities calculated based on a *repeated fixed-length weighted random walk algorithm (see below). The bottleneck layer is finally used as the embedding space for all the nodes in both layers.
+The EDNN is composed of shallow encoder-decoder neural networks with the number of inputs and outputs being equal to the number of nodes in one layer (the nodes are the same from one layer to the other). For each node, the encoder input is a vector of its connection weights with the other nodes. If no link exists between two nodes, the corresponding input is set to zero. The decoder output for each node is a vector of node visit probabilities calculated based on a *repeated fixed-length weighted random walk algorithm* (see below). The bottleneck layer is finally used as the embedding space for all the nodes in both layers.
 
 *Repeated fixed-length weighted random walk algorithm.* We define the node visit probabilities for the decoder output as the probability of a random walker passing node $j$ starting from node $i$, $P(i|j)$. This enables us to characterise the local structures of the networks. The implemented random walker has two properties: It is weighted and fixed-length. A weighted random walker considered the edge weights to choose each step. The probability of moving from node $i$ to node $j$ is proportional to the edge weight $w_{ij}$ linking node $i$ to node $j$:
 
@@ -69,7 +69,7 @@ the ```mnda_embedding_2layer()``` function represents all the nodes in a common 
 ## 2.3. Usage Example 1: drug response  
 *MNDA pipeline for condition "a"*
 
-In this example, we construct gene coexpression netwerks (GCNs) for drug responders and non-responders. In this example, we load gene expression profile of cell lines of lung cancer as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y```.
+In this example, we construct gene coexpression netwerks (GCNs) for drug responders and non-responders. To this end, we used PRISM dataset (ref), which .....To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected. We load gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y```.
 `````{R}
 data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
 X = data[[1]]
@@ -107,14 +107,6 @@ In this example we construct
 
 The source code available at []()
 
-## Outreach
-Any suggestions, collaboration and bug reports are welcome and appreciated.
-Contact me via
-
-Email: yousefi.bme@gmail.com,
-
-
-[LinedIn](https://www.linkedin.com/in/behnam-yousefi-bme) or
-[Twitter](https://twitter.com/behnam_bme)
+## References
 
 
