@@ -22,7 +22,7 @@ $$ d_{cos}(A,B)=1-\frac{A.B}{|A|.|B|} $$
 
 For two vectors of $A$ and $B$. The distance between the corresponding node pairs is a measure of the variation of the local neighborhood in the networks.
 
-The final step is to assess the significance of the calculated distances. The current implementation of the MNDA considers two conditions: a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease); b. multi-layer network case (e.g. ISNs) with two matched groups (e.g. before treatment-after treatment). In the two-layer network case, each node pair corresponds to a distance measure and its significance is assessed on the basis of a null distribution. On the other hand, each node pair in the multi-layer network case corresponds to a set of distances across all the individuals, that are classified into two groups. Therefore, for each node pair, the distances can be classified into two sets and a two sample test (e.g. t-test of Wilcoxon-test) can be used for significance assessment. 
+The final step is to assess the significance of the calculated distances. The current implementation of the MNDA considers two conditions: a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease); b. multi-layer network case (e.g. individual specific networks – ISNs) with two matched groups (e.g. before treatment-after treatment). In the two-layer network case, each node pair corresponds to a distance measure and its significance is assessed on the basis of a null distribution. On the other hand, each node pair in the multi-layer network case corresponds to a set of distances across all the individuals, that are classified into two groups. Therefore, for each node pair, the distances can be classified into two sets and a two sample test (e.g. t-test of Wilcoxon-test) can be used for significance assessment. 
 
 ## 2. Implementation in R
 ### 2.1 Installation
@@ -64,7 +64,7 @@ embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50)
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList)
 print(mnda_output$high_var_nodes_index)
 `````
-the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` duncrion calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness.
+the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` duncrion calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/network_generation_ex.R).
 
 ## 2.3. Usage Example 1: drug response  
 *MNDA pipeline for condition "a"*
@@ -98,8 +98,14 @@ Nodes = mnda_output$high_var_nodes
 * the network permutation and representation can be disabled by ```null.perm = FALSE``` for the sake of running time;
 * the calculated p-values can be adjusted by setting a method in the ```p.adjust.method``` argument.
 
-## 2.4. Usage Example 2: application on individual specific networks
+The source code available at [usage_examples/drug_response_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/drug_response_ex.R)
 
+## 2.4. Usage Example 2: application on individual specific networks
+*MNDA pipeline for condition "b"*
+
+In this example we construct 
+
+The source code available at []()
 
 ## Outreach
 Any suggestions, collaboration and bug reports are welcome and appreciated.
