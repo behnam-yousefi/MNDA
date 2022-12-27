@@ -35,8 +35,8 @@
 #' embeddingSpaceList = mnda_embedding_2layer(graph.data=graph_data, train.rep=5, walk.rep=5)
 #'
 mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
-                       embedding.size=5, epochs=10, batch.size=5, l2reg=0,
-                       walk.rep = 100, n.steps = 5, random.walk=TRUE, null.perm = TRUE){
+                       embedding.size=2, epochs=10, batch.size=5, l2reg=0,
+                       walk.rep=100, n.steps=5, random.walk=TRUE, null.perm=TRUE){
 
   assertthat::assert_that(train.rep >= 2)
 
@@ -76,8 +76,8 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
     embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X,
                                      embedding.size, epochs, batch.size, l2reg)
 
-  embeddingSpaceList[["outcome"]] = outcome_node
-  embeddingSpaceList[["node_labels"]] = colnames(X)
+  embeddingSpaceList[["outcome_node"]] = outcome_node
+  embeddingSpaceList[["label_node"]] = colnames(X)
   return(embeddingSpaceList)
 }
 
@@ -114,9 +114,9 @@ mnda_node_detection_2layer = function(embeddingSpaceList, p.adjust.method = "non
                                       alpha = 0.05, rank.prc = .1,
                                       volcano.plot = TRUE, ranksum.sort.plot = FALSE){
 
-  node_labels = embeddingSpaceList[["node_labels"]]
+  node_labels = embeddingSpaceList[["label_node"]]
 
-  outcome_node = embeddingSpaceList[["outcome"]]
+  outcome_node = embeddingSpaceList[["outcome_node"]]
   outcome = unique(outcome_node)
 
   assertthat::assert_that(length(outcome) == 4 | length(outcome) == 2)
@@ -159,7 +159,6 @@ mnda_node_detection_2layer = function(embeddingSpaceList, p.adjust.method = "non
       }
     }
     for (i in 1:N_nodes)
-      # P_value[rep,i] = stats::wilcox.test(Dist_null[rep,], y = Dist[rep,i], alternative = "less")$p.value
       P_value[rep,i] = p_val_rank(x = Dist[rep,i], null.pdf = Dist_null[rep,],
                                   alternative = "greater")
   }

@@ -10,7 +10,7 @@ mnda_embedding(
   indv.index = NULL,
   edge.threshold = 0,
   train.rep = 50,
-  embedding.size = 5,
+  embedding.size = 2,
   epochs = 10,
   batch.size = 5,
   l2reg = 0,

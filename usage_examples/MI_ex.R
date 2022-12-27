@@ -1,6 +1,6 @@
 rm(list=ls())
 
-setwd("~/Desktop/R_Root/MNDA/Applications/")
+setwd("~/Desktop/R_Root/MNDA/usage_examples/")
 data = read.table("~/Desktop/R_Root/SLEmap/Data/MI/NANOSTRING_7COND.database.txt", header = TRUE)
 Pheno = data[,c(1:7)]
 y = Pheno$STIMULUS_NAME

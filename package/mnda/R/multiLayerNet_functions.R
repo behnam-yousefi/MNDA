@@ -36,8 +36,8 @@
 #'
 mnda_embedding = function(graph.data, outcome, indv.index = NULL,
                           edge.threshold=0, train.rep=50,
-                          embedding.size=5, epochs=10, batch.size=5, l2reg=0,
-                          walk.rep = 100, n.steps = 5, random.walk=TRUE){
+                          embedding.size=2, epochs=10, batch.size=5, l2reg=0,
+                          walk.rep=100, n.steps=5, random.walk=TRUE){
 
   assertthat::assert_that(train.rep >= 2)
 
@@ -71,9 +71,9 @@ mnda_embedding = function(graph.data, outcome, indv.index = NULL,
     embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X,
                                      embedding.size, epochs, batch.size, l2reg)
 
-  embeddingSpaceList[["outcome"]] = outcome_node
+  embeddingSpaceList[["outcome_node"]] = outcome_node
   embeddingSpaceList[["individual_node"]] = individual_node
-  embeddingSpaceList[["node_labels"]] = colnames(X)
+  embeddingSpaceList[["label_node"]] = colnames(X)
   return(embeddingSpaceList)
 }
 
@@ -102,9 +102,9 @@ mnda_embedding = function(graph.data, outcome, indv.index = NULL,
 #'
 mnda_node_distance = function(embeddingSpaceList){
 
-  node_labels = embeddingSpaceList[["node_labels"]]
+  node_labels = embeddingSpaceList[["label_node"]]
 
-  outcome_node = embeddingSpaceList[["outcome"]]
+  outcome_node = embeddingSpaceList[["outcome_node"]]
   outcome = unique(outcome_node)
   assertthat::assert_that(length(outcome) == 2)
 

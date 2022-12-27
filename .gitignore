@@ -2,8 +2,9 @@
 .Rhistory
 
 /Data/
+data_prepare/
 temp/
-MI/
+Milieu_Interieur/
 My_model_temp/
 
 

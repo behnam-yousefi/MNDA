@@ -1,20 +1,19 @@
 Package: mnda
 Type: Package
 Title: Multiplex Network Differential Analysis (MNDA)
-Version: 0.8.0
+Version: 0.9.0
 Author: Behnam Yousefi, Farzaneh Firoozbakht
 Maintainer: Behnam Yousefi <yousefi.bme@gmail.com>
 Description: Detection of nodes in the graph whose neighbourhood varies significantly.
 License: GPL (>=3)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports:
     assertthat,
     igraph,
     Matrix,
     keras,
-    kerasR,
     tensorflow,
     reticulate,
     MASS,
@@ -25,6 +24,3 @@ Imports:
     magrittr,
     stats,
     graphics
-    
-
-
