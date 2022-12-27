@@ -103,15 +103,15 @@ mnda_embedding = function(graph.data, outcome, indv.index = NULL,
 mnda_node_distance = function(embeddingSpaceList){
 
   node_labels = embeddingSpaceList[["label_node"]]
+  N_nodes = length(node_labels)
 
   outcome_node = embeddingSpaceList[["outcome_node"]]
   outcome = unique(outcome_node)
   assertthat::assert_that(length(outcome) == 2)
 
   individual_node = embeddingSpaceList[["individual_node"]]
-  N_indv = max(individual_node)
-
-  N_nodes = nrow(embeddingSpaceList[[1]]) / (length(outcome)*N_indv)
+  individual = unique(individual_node)
+  N_indv = length(individual)
 
   Rep = length(embeddingSpaceList)-3     #the "embeddingSpaceList" consists of three extra elements
   Dist_list = list()
@@ -121,58 +121,77 @@ mnda_node_distance = function(embeddingSpaceList){
   ### and aggregate p-values across different repeats
   for (rep in 1:Rep){
     Dist = matrix(0, N_indv, N_nodes)
-    rownames(Dist) = 1:N_indv
+    rownames(Dist) = individual
     colnames(Dist) = node_labels
 
     embeddingSpace = embeddingSpaceList[[rep]]
 
     for (indv in 1:N_indv){
-      embeddingSpace_1 = embeddingSpace[individual_node==indv & outcome_node==outcome[1], ]
-      embeddingSpace_2 = embeddingSpace[individual_node==indv & outcome_node==outcome[2], ]
+      embeddingSpace_1 = embeddingSpace[individual_node==individual[indv] & outcome_node==outcome[1], ]
+      embeddingSpace_2 = embeddingSpace[individual_node==individual[indv] & outcome_node==outcome[2], ]
       for (i in 1:N_nodes)
         Dist[indv,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
     }
     Dist_list[[rep]] = Dist
   }
 
-  Results = list()
-  Results[["Dist"]] = Dist_list
-
-  return(Results)
+  return(Dist_list)
 }
 
-#' Detecting the nodes whose local neighbors change between the two conditions for ISNs.
+#' Test the embedding distances of local neighbors change between the two conditions for ISNs.
 #'
-#' @param embeddingSpaceList a list obtained by the \code{mnda_embedding_2layer()} function.
+#' @param distance a distance list obtained by the \code{mnda_node_distance()} function.
+#' @y vector with the length equal to the number of individuals.
 #' @param stat.test statistical test used to detect the nodes \code{c("t.test","wilcox.test")} (default: wilcox.test)
 #' @param p.adjust.method method for adjusting p-value (including methods on \code{p.adjust.methods}).
 #' If set to "none" (default), no adjustment will be performed.
 #' @param alpha numeric value of significance level (default: 0.05)
-#' @param rank.prc numeric value of the rank percentage threshold (default: 0.1)
-#' @param volcano.plot boolean value for generating the Volcano plot (default: TRUE)
-#' @param ranksum.sort.plot boolean value for generating the sorted rank sum plot (default: FALSE)
 #'
 #' @return the highly variable nodes
 #' @export
 #'
 #' @details
-#' Calculating the distance of node pairs in the embedding space and check their significance.
-#' To find the significantly varying nodes in the 2-layer-network, the distance between
-#' the corresponding nodes are calculated along with the null distribution.
-#' The null distribution is obtained based on the pairwise distances on null graphs.
-#' if in \code{mnda_embedding_2layer} function \code{null.perm=FALSE}, the multiplex network
-#' does not have the two randomly permuted graphs, thus the distances between all the nodes will
-#' be used for the null distribution.
+#' The adjusted pvalues for each node.
 #'
 #' @examples
 #' myNet = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
 #' graph_data = myNet[["data_graph"]]
 #' embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2), indv.index = c(1,1), train.rep=5, walk.rep=5)
 #' Dist = mnda_node_distance(embeddingSpaceList)
+#' Result = mnda_node_detection_isn(Dist, y = c(1,2))
 #'
-mnda_node_detection_isn  = function(embeddingSpaceList,
-                                    stat.test = "wilcox.test", p.adjust.method = "none",
-                                    alpha = 0.05, rank.prc = .1,
-                                    volcano.plot = TRUE, ranksum.sort.plot = FALSE){
+mnda_distance_test_isn  = function(Distance, y,
+                               stat.test = "wilcox.test", p.adjust.method = "none"){
 
+  Rep = length(Distance)
+  N_nodes = ncol(Distance[[1]])
+
+  y_unique = unique(y)
+  assertthat::assert_that(length(y_unique)==2)
+
+  P_value = matrix(0, Rep, N_nodes)
+
+  for (rep in 1:Rep){
+    Dist = Distance[[rep]]
+
+    for (i in 1:N_nodes){
+      x1 = Dist[y == y_unique[1],i]
+      x2 = Dist[y == y_unique[2],i]
+
+      if (stat.test == "wilcox.test")
+        p.val = wilcox.test(x1, x2)$p.val
+      else if (stat.test == "t.test")
+        p.val = t.test(x1, x2)$p.val
+      else
+        error("Not a valid stat.test value. Possible values: wilcox.test, t.test")
+
+      P_value[rep, i] = p.val
+    }
+  }
+
+  P_value_aggr = apply(P_value, 2, aggregation::fisher)
+  Q_value_aggr = stats::p.adjust(P_value_aggr, method = p.adjust.method)
+
+  names(Q_value_aggr) = colnames(Distance[[1]])
+  return(Q_value_aggr)
 }
