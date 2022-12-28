@@ -12,29 +12,31 @@ mnda_distance_test_isn(
 )
 }
 \arguments{
+\item{Distance}{a distance list obtained by the \code{mnda_node_distance()} function.}
+
+\item{y}{vector with the length equal to the number of individuals.}
+
 \item{stat.test}{statistical test used to detect the nodes \code{c("t.test","wilcox.test")} (default: wilcox.test)}
 
 \item{p.adjust.method}{method for adjusting p-value (including methods on \code{p.adjust.methods}).
 If set to "none" (default), no adjustment will be performed.}
-
-\item{distance}{a distance list obtained by the \code{mnda_node_distance()} function.}
-
-\item{alpha}{numeric value of significance level (default: 0.05)}
 }
 \value{
-the highly variable nodes
+The adjusted pvalues for each node.
 }
 \description{
 Test the embedding distances of local neighbors change between the two conditions for ISNs.
 }
 \details{
-The adjusted pvalues for each node.
+The adjusted p-values for each node is calculated based on their distance variation between
+the two conditions.
 }
 \examples{
-myNet = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
-graph_data = myNet[["data_graph"]]
-embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2), indv.index = c(1,1), train.rep=5, walk.rep=5)
+ISN1 = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+ISN2 = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+graph_data = cbind(ISN1[["data_graph"]], ISN1[["data_graph"]][,3:4])
+embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2,1,2), indv.index=c(1,1,2,2), train.rep=2, random.walk=FALSE)
 Dist = mnda_node_distance(embeddingSpaceList)
-Result = mnda_node_detection_isn(Dist, y = c(1,2))
+Result = mnda_distance_test_isn(Dist, y = c(1,2))
 
 }
