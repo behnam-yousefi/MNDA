@@ -104,10 +104,7 @@ The source code available at [usage_examples/drug_response_ex.R](https://github.
 *MNDA pipeline for condition "b"*
 
 In this example we use the data of Milieu Interieur project (ref).  In this example we construct ISNs of GCNs for 978 healthy samples.
-The aim would be to find genes whose neighbourhood variation, between the two condition stimulated and non-stimulated, is associated with sex. Following the MNDA pipeline, we first construct a set of paired ISNs for the two conditions, i.e before stimulation and after treatment using the *lionessR* R package. In each network, nodes represent genes and the edge weights demostrated the correlation of gene expressi. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```.
-
-
-In our example, we use the gene expression profile of blood samples before and after being stimulated with BCG vaccine and Ecoli. We then find genes whose neighbourhood changes (dynamics) has a significant association with their sex. To impute ISNs, we use *lionessR* R package. We first read the ISN data creat the node list.
+The aim would be to find genes whose neighbourhood variation, between the two condition stimulated and non-stimulated, is associated with sex. Following the MNDA pipeline, we first construct a set of paired ISNs for the two conditions, i.e before stimulation and after treatment using the *lionessR* R package. In each network, nodes represent genes and the edge weights demostrated the correlation of gene expressi. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
 `````{R}
 data = data.frame(readRDS("Data/ISN_net.rds"))
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
