@@ -106,7 +106,33 @@ The source code available at [usage_examples/drug_response_ex.R](https://github.
 In this example we used the data of Milieu Interieur project (ref). 
 In this example we construct ISNs of GCNs for 978 healthy samples.
 
-The source code available at []()
+*MNDA pipeline for condition "b"*
+
+In this analysis we consider a set of paired ISNs for two conditions (e.g. before treatment-after treatment) and a set of external variables for each individual (e.g. drug response and sex). The aim is to find nodes whose neighbourhood variation between the two conditions is associated with the external variables.
+
+In our example, we use the gene expression profile of blood samples before and after being stimulated with BCG vaccine and Ecoli. We then find genes whose neighbourhood changes (dynamics) has a significant association with their sex. To impute ISNs, we use *lionessR* R package. We first read the ISN data creat the node list.
+`````{R}
+data = data.frame(readRDS("Data/ISN_net.rds"))
+nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
+`````
+Next, we creat the individual variabele data frame with three columns: Individual IDs (indecis), stimulation condition, sex (F,M).
+`````{R}
+y = colnames(data)
+y = data.frame(t(data.frame(strsplit(y, "_"))))
+`````
+We then form the ```graph_data``` and call ```mnda_embedding()``` function to embed genes into the embedding space.
+`````{R}
+graph_data = cbind(nodeList, data)
+embeddingSpaceList = mnda_embedding(graph_data, outcome = y[,2], indv.index = y[,1],train.rep=2, walk.rep=10, epochs=5, batch.size=100,random.walk=FALSE)
+`````
+For each individual-gene pair, we calculate the embedding distance between the nodes corresponding to before and after stimulation using ```mnda_node_distance()```. This results in distance matrices of *individual-by-gene*. Finally, we test the association of sex with the distance of each gene using ```mnda_distance_test_isn()```.
+`````{R}
+Dist = mnda_node_distance(embeddingSpaceList)
+Pval = mnda_distance_test_isn(Dist, rep(c(1,2),25))
+`````
+
+The source code available at [usage_examples/ISN_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/ISN_ex.R)
+
 
 ## References
 
