@@ -9,6 +9,7 @@ My_model_temp/
 
 
 *.tar.gz
+*.tgz
 *.Rcheck
 
 *.RDATA
