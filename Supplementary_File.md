@@ -103,12 +103,7 @@ The source code available at [usage_examples/drug_response_ex.R](https://github.
 ## 2.4. Usage Example 2: application on individual specific networks
 *MNDA pipeline for condition "b"*
 
-In this example we use the data of Milieu Interieur project  (Thomas et al., 2015; Piasecka et al., 2018). 
-
-Here, we generated bacterial-, fungal-, and viral-induced immune tran- scriptional profiles in an age- and sex-balanced cohort of 1,000 healthy individuals and searched for the determinants of immune response variation. 
-
-In this example we construct ISNs of GCNs for 978 healthy samples.
-The aim would be to find genes whose neighbourhood variation, between the two condition stimulated and non-stimulated, is associated with sex. Following the MNDA pipeline, we first construct a set of paired ISNs for the two conditions, i.e before stimulation and after treatment using the *lionessR* R package (Marieke Lydia Kuijjer et al., 2019; Marieke L. Kuijjer et al., 2019). In each network, nodes represent genes and the edge weights demostrated the correlation of gene expressi. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
+In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral-induced blood samples in an age- and sex-balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighbourhood variation, between the two condition stimulated and non-stimulated, is associated with sex. Following the MNDA pipeline, we first construct a set of paired ISNs for the two conditions, i.e before stimulation and after treatment using the *lionessR* R package (Marieke Lydia Kuijjer et al., 2019; Marieke L. Kuijjer et al., 2019). In each network, nodes represent genes and the edge weights demostrated the correlation of gene expressi. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
 `````{R}
 data = data.frame(readRDS("Data/ISN_net.rds"))
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
