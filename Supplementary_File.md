@@ -69,7 +69,7 @@ the ```mnda_embedding_2layer()``` function represents all the nodes in a common 
 ## 2.3. Usage Example 1: drug response  
 *MNDA pipeline for condition "a"*
 
-In this example, we construct gene coexpression netwerks (GCNs) for drug responders and non-responders. To this end, we use PRISM dataset (ref), which .....To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y``` can be loaded accordingly:
+In this example, we construct gene coexpression netwerks (GCNs) for drug responders and non-responders. To this end, we use PRISM dataset (Corsello et al., 2020), which is a cell line-based drug screening dataset. To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y``` can be loaded accordingly:
 `````{R}
 data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
 X = data[[1]]
@@ -103,8 +103,12 @@ The source code available at [usage_examples/drug_response_ex.R](https://github.
 ## 2.4. Usage Example 2: application on individual specific networks
 *MNDA pipeline for condition "b"*
 
-In this example we use the data of Milieu Interieur project (ref).  In this example we construct ISNs of GCNs for 978 healthy samples.
-The aim would be to find genes whose neighbourhood variation, between the two condition stimulated and non-stimulated, is associated with sex. Following the MNDA pipeline, we first construct a set of paired ISNs for the two conditions, i.e before stimulation and after treatment using the *lionessR* R package. In each network, nodes represent genes and the edge weights demostrated the correlation of gene expressi. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
+In this example we use the data of Milieu Interieur project  (Thomas et al., 2015; Piasecka et al., 2018). 
+
+Here, we generated bacterial-, fungal-, and viral-induced immune tran- scriptional profiles in an age- and sex-balanced cohort of 1,000 healthy individuals and searched for the determinants of immune response variation. 
+
+In this example we construct ISNs of GCNs for 978 healthy samples.
+The aim would be to find genes whose neighbourhood variation, between the two condition stimulated and non-stimulated, is associated with sex. Following the MNDA pipeline, we first construct a set of paired ISNs for the two conditions, i.e before stimulation and after treatment using the *lionessR* R package (Marieke Lydia Kuijjer et al., 2019; Marieke L. Kuijjer et al., 2019). In each network, nodes represent genes and the edge weights demostrated the correlation of gene expressi. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
 `````{R}
 data = data.frame(readRDS("Data/ISN_net.rds"))
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
@@ -129,5 +133,10 @@ The source code available at [usage_examples/ISN_ex.R](https://github.com/behnam
 
 
 ## References
+Corsello,S.M. et al. (2020) Discovering the anticancer potential of non-oncology drugs by systematic viability profiling. Nature Cancer, 1, 235–248.\
+Kuijjer,M.L. et al. (2019) Estimating Sample-Specific Regulatory Networks. iScience, 14, 226–240.\
+Kuijjer,M.L. et al. (2019) lionessR: single sample network inference in R. BMC Cancer, 19, 1003.\
+Piasecka,B. et al. (2018) Distinctive roles of age, sex, and genetics in shaping transcriptional variation of human immune responses to microbial challenges. Proc. Natl. Acad. Sci. U. S. A., 115, E488–E497.\
+Thomas,S. et al. (2015) The Milieu Intérieur study—an integrative approach for study of human immunological variance. Clin. Immunol., 157, 277–293.
 
 
