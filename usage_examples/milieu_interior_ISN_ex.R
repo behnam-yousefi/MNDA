@@ -22,7 +22,7 @@ embeddingSpaceList = mnda_embedding(graph_data, outcome = y$Stim, indv.index = y
                                     random.walk=FALSE)
 
 # saveRDS(embeddingSpaceList, file = "Data/Embeddings/embeddingSpaceList_S.Aureus.rds")
-embeddingSpaceList = readRDS("Data/Embeddings/embeddingSpaceList_S.Aureus.rds")
+# embeddingSpaceList = readRDS("Data/Embeddings/embeddingSpaceList_S.Aureus.rds")
 
 ## 2. Calculate distances
 Dist = mnda_node_distance(embeddingSpaceList)
@@ -43,6 +43,6 @@ plt = subgraph_difference_plot(mnda.graph = graph_to_plot, node.importance = -lo
                                n.var.nodes=10, n.neigh=10, edge.width=c(.5,1))
 plt
 
-pdf("../Figures/subgraph_S.Aureus.pdf")
-plt
-dev.off()
+# pdf("../Figures/subgraph_S.Aureus.pdf")
+# plt
+# dev.off()
