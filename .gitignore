@@ -1,12 +1,12 @@
 .DS_Store
 .Rhistory
 
-/Data/
+Data/
 data_prepare/
 temp/
 Milieu_Interieur/
 My_model_temp/
-
+Embeddings/
 
 *.tar.gz
 *.tgz
