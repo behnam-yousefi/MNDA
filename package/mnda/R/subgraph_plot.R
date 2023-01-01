@@ -107,6 +107,9 @@ subgraph_plot = function(graph, node_set, labels=NULL, node.importance = NULL, n
 #' @param n.var.nodes number of variable nodes to show
 #' @param n.neigh number of neighboring  nodes to show
 #' @param diff.threshold edge threshold
+#' @param edge.width numeric value to adjust the thickness of the edges in plot.
+#' Two modes are defined: [i] two numbers indicating the min and max (default: c(0.5,4));
+#' or [ii] a single number that weights the min/max of original edge weights.
 #'
 #' @return nothing to return
 #' @export
@@ -122,7 +125,8 @@ subgraph_plot = function(graph, node_set, labels=NULL, node.importance = NULL, n
 #' subgraph_difference_plot(graph_data, node.importance = node_importance_dummy)
 #'
 subgraph_difference_plot = function(mnda.graph = graph_data, node.importance,
-                                    n.var.nodes = 5, n.neigh = 10, diff.threshold = 0){
+                                    n.var.nodes = 5, n.neigh = 10,
+                                    diff.threshold=0, edge.width=c(.5,4)){
 
   var_nodes = sort(node.importance, decreasing = TRUE)[1:n.var.nodes]
   var_nodes = names(var_nodes)
@@ -135,6 +139,6 @@ subgraph_difference_plot = function(mnda.graph = graph_data, node.importance,
   # hist(E(G)$weight)
 
   subgraph_plot(G, var_nodes, node.importance = node.importance,
-                n.nodes = (n.var.nodes + n.neigh))
+                n.nodes = (n.var.nodes + n.neigh), edge_width = edge.width)
 
 }

@@ -9,7 +9,8 @@ subgraph_difference_plot(
   node.importance,
   n.var.nodes = 5,
   n.neigh = 10,
-  diff.threshold = 0
+  diff.threshold = 0,
+  edge.width = c(0.5, 4)
 )
 }
 \arguments{
@@ -22,6 +23,10 @@ subgraph_difference_plot(
 \item{n.neigh}{number of neighboring  nodes to show}
 
 \item{diff.threshold}{edge threshold}
+
+\item{edge.width}{numeric value to adjust the thickness of the edges in plot.
+Two modes are defined: [i] two numbers indicating the min and max (default: c(0.5,4));
+or [ii] a single number that weights the min/max of original edge weights.}
 }
 \value{
 nothing to return

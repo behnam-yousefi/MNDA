@@ -30,7 +30,7 @@ graph_to_plot = cbind(nodeList,
                       apply(data[,y$Stim != "Null"], 1, mean))
 
 subgraph_difference_plot(mnda.graph = graph_to_plot, node.importance = -log(Pval),
-                         n.var.nodes = 5, n.neigh = 10, diff.threshold = .1)
+                         n.var.nodes = 10, n.neigh = 10, diff.threshold = .1, edge.width = 5)
 
 
 
