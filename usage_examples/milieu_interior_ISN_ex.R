@@ -14,9 +14,8 @@ colnames(y) = c("ID", "Stim", "Sex")
 sex = y[duplicated(y$ID), "Sex"]
 
 ## Run the algorithm
-graph_data = cbind(nodeList, data)
-
 ## 1. Embed nodes
+graph_data = cbind(nodeList, data)
 embeddingSpaceList = mnda_embedding(graph_data, outcome = y$Stim, indv.index = y$ID,
                                     train.rep=50, walk.rep=10, epochs=10, batch.size=50,
                                     random.walk=FALSE)
