@@ -46,6 +46,5 @@ edge.weight = graphData[,3:4]
 XY = ednn_IOprepare(edge.list, edge.weight)
 X = XY[["X"]]
 Y = XY[["Y"]]
-embeddingSpace = EDNN(X = X, Y = Y, Xtest = X)
 
 }

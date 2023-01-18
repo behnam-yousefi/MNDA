@@ -6,6 +6,7 @@
 #' @param epochs maximum number of pocks. An early stopping callback with a patience of 5 has been set inside the function (default = 10).
 #' @param batch_size batch size for learning (default = 5).
 #' @param l2reg the coefficient of L2 regularization for the input layer (default = 0).
+#' @param demo a boolian vector to indicate this is a demo example or not
 #'
 #' @return The embedding space for Xtest.
 #' @export
@@ -20,13 +21,15 @@
 #' Y = XY[["Y"]]
 #' embeddingSpace = EDNN(X = X, Y = Y, Xtest = X)
 #'
-EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0){
-
-  # library(keras)
+EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0, demo = TRUE){
 
   Nnode = ncol(X)
   inputSize = ncol(X)
   outputSize = ncol(Y)
+
+  if (demo){
+    return(Y[,1:embedding_size])
+  }else{
 
   # Define Encoder
   enc_input = keras::layer_input(shape = inputSize)
@@ -65,7 +68,7 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 
   # Final embeding
   embeddingSpace = stats::predict(encoder, Xtest)
-  return(embeddingSpace)
+  return(embeddingSpace)}
 }
 
 #' Preparing the input and output of the EDNN for a multiplex graph
@@ -90,7 +93,6 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 #' XY = ednn_IOprepare(edge.list, edge.weight)
 #' X = XY[["X"]]
 #' Y = XY[["Y"]]
-#' embeddingSpace = EDNN(X = X, Y = Y, Xtest = X)
 #'
 ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, indv.index = NULL,
                           edge.threshold=0, walk.rep=10, n.steps=5,

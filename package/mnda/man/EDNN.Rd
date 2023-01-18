@@ -4,7 +4,16 @@
 \alias{EDNN}
 \title{Encoder decoder neural network (EDNN) function}
 \usage{
-EDNN(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0)
+EDNN(
+  X,
+  Y,
+  Xtest,
+  embedding_size = 2,
+  epochs = 10,
+  batch_size = 5,
+  l2reg = 0,
+  demo = TRUE
+)
 }
 \arguments{
 \item{X}{concatenated adjacency matrices for different layers containing the nodes in training phase}
@@ -20,6 +29,8 @@ EDNN(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0)
 \item{batch_size}{batch size for learning (default = 5).}
 
 \item{l2reg}{the coefficient of L2 regularization for the input layer (default = 0).}
+
+\item{demo}{a boolian vector to indicate this is a demo example or not}
 }
 \value{
 The embedding space for Xtest.
