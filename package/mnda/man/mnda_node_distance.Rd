@@ -27,7 +27,8 @@ be used for the null distribution.
 \examples{
 myNet = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
 graph_data = myNet[["data_graph"]]
-embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2), indv.index=c(1,1), train.rep=2, random.walk=FALSE)
+embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2),
+indv.index=c(1,1), train.rep=2, random.walk=FALSE)
 Dist = mnda_node_distance(embeddingSpaceList)
 
 }

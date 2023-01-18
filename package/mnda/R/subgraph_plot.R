@@ -78,6 +78,8 @@ subgraph_plot = function(graph, node_set, labels=NULL, node.importance = NULL, n
   a = floor(180 / (360 / N_nodes))
   b = N_nodes - a
 
+  x = 1
+  y = 1
   # final plot
   # requireNamespace("ggplot2")
   # requireNamespace("ggraph")
@@ -124,7 +126,7 @@ subgraph_plot = function(graph, node_set, labels=NULL, node.importance = NULL, n
 #' names(node_importance_dummy) = 1:100
 #' subgraph_difference_plot(graph_data, node.importance = node_importance_dummy)
 #'
-subgraph_difference_plot = function(mnda.graph = graph_data, node.importance,
+subgraph_difference_plot = function(mnda.graph, node.importance,
                                     n.var.nodes = 5, n.neigh = 10,
                                     diff.threshold=0, edge.width=c(.5,4)){
 

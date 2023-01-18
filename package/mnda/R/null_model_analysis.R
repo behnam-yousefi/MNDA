@@ -51,14 +51,14 @@ p_val_rank = function(x, null.pdf, alternative = "two.sided"){
 p_val_norm = function(x, null.pdf, alternative = "two.sided"){
 
   mu = mean(null.pdf)
-  std = sd(null.pdf)
+  std = stats::sd(null.pdf)
 
   if(alternative == "less")
-    p.val = pnorm(x, mu, std, lower.tail = TRUE)
+    p.val = stats::pnorm(x, mu, std, lower.tail = TRUE)
   else if(alternative == "greater")
-    p.val = pnorm(x, mu, std, lower.tail = FALSE)
+    p.val = stats::pnorm(x, mu, std, lower.tail = FALSE)
   else if(alternative == "two.sided")
-    p.val = 2 * pnorm(abs(x), mu, std, lower.tail = FALSE)
+    p.val = 2 * stats::pnorm(abs(x), mu, std, lower.tail = FALSE)
 
   return(p.val)
 }

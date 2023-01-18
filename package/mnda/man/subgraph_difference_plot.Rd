@@ -5,7 +5,7 @@
 \title{Visualization of a difference subgroup using a circular graph}
 \usage{
 subgraph_difference_plot(
-  mnda.graph = graph_data,
+  mnda.graph,
   node.importance,
   n.var.nodes = 5,
   n.neigh = 10,
