@@ -39,7 +39,7 @@ the input and output required to train the EDNN
 Preparing the input and output of the EDNN for a multiplex graph
 }
 \examples{
-myNet = network_gen(N_nodes = 100)
+myNet = network_gen(N_nodes = 50)
 graphData = myNet[["data_graph"]]
 edge.list = graphData[,1:2]
 edge.weight = graphData[,3:4]

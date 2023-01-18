@@ -39,7 +39,7 @@ The embedding space for Xtest.
 Encoder decoder neural network (EDNN) function
 }
 \examples{
-myNet = network_gen(N_nodes = 100)
+myNet = network_gen(N_nodes = 50)
 graphData = myNet[["data_graph"]]
 edge.list = graphData[,1:2]
 edge.weight = graphData[,3:4]
