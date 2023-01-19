@@ -10,7 +10,7 @@ Multiplex network differential analysis (MNDA) is a computational tool implement
 
 The EDNN is composed of shallow encoder-decoder neural networks with the number of inputs and outputs being equal to the number of nodes in one layer (the nodes are the same from one layer to the other). For each node, the encoder input is a vector of its connection weights with the other nodes. If no link exists between two nodes, the corresponding input is set to zero. The decoder output for each node is a vector of node visit probabilities calculated based on a *repeated fixed-length weighted random walk algorithm* (see below). The bottleneck layer is finally used as the embedding space for all the nodes in both layers.
 
-*Repeated fixed-length weighted random walk algorithm.* We define the node visit probabilities for the decoder output as the probability of a random walker passing node $j$ starting from node $i$, $P(i|j)$. This enables us to characterise the local structures of the networks. The implemented random walker has two properties: It is weighted and fixed-length. A weighted random walker considered the edge weights to choose each step. The probability of moving from node $i$ to node $j$ is proportional to the edge weight $w_{ij}$ linking node $i$ to node $j$:
+*Repeated fixed-length weighted random walk algorithm.* We define the node visit probabilities for the decoder output as the probability of a random walker passing node $j$ starting from node $i$, $P(i|j)$. This enables us to characterize the local structures of the networks. The implemented random walker has two properties: It is weighted and fixed-length. A weighted random walker considered the edge weights to choose each step. The probability of moving from node $i$ to node $j$ is proportional to the edge weight $w_{ij}$ linking node $i$ to node $j$:
 
 $$ P(i\xrightarrow{}j)=\frac{w_{ij}}{\Sigma_{j\in{}\mathcal{N}_i}|w_{ij}|} $$
 
@@ -25,15 +25,15 @@ For two vectors of $A$ and $B$. The distance between the corresponding node pair
 The final step is to assess the significance of the calculated distances. The current implementation of the MNDA considers two conditions: 
 a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease); \
 b. multi-layer network case (e.g. individual specific networks – ISNs) with two matched groups (e.g. before treatment-after treatment). \
-In the two-layer network case, each node pair corresponds to a distance measure and its significance is assessed on the basis of a null distribution. On the other hand, each node pair in the multi-layer network case corresponds to a set of distances across all the individuals, that are classified into two groups. Therefore, for each node pair, the distances can be classified into two sets and a two sample test (e.g. t-test of Wilcoxon-test) can be used for significance assessment. 
+In the two-layer network case, each node pair corresponds to a distance measure and its significance is assessed on the basis of a null distribution. On the other hand, each node pair in the multi-layer network case corresponds to a set of distances across all the individuals that are classified into two groups. Therefore, for each node pair, the distances can be classified into two sets and a two sample test (e.g. t-test of Wilcoxon-test) can be used for significance assessment. 
 
 ## 2. Implementation in R
 ### 2.1. Installation
-Inatall from CRAN
+Install from CRAN
 `````{R}
 install.packages("mnda")
 `````
-Inatall the latest version from GitHub
+Install the latest version from GitHub
 `````{R}
 devtools::install_github("behnam-yousefi/MNDA/package/mnda")
 `````
@@ -61,24 +61,24 @@ The generated multiplex network and the set of the randomly selected nodes are a
 graph_data = myNet$data_graph
 var_nodes = myNet$var_nodes
 `````
-We then feed ```graph_data``` to the MNDA pipleline specialized for a two-layer multiplex network (condition *"a"*), which is composed of two commands:
+We then feed ```graph_data``` to the MNDA pipeline specialized for a two-layer multiplex network (condition *"a"*), which is composed of two commands:
 `````{R}
 embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50)
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList)
 print(mnda_output$high_var_nodes_index)
 `````
-the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` duncrion calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/network_generation_ex.R).
+the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` function calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/network_generation_ex.R).
 
 ## 2.3. Usage Example 1: drug response  
 *MNDA pipeline for condition "a"*
 
-In this example, we construct gene coexpression netwerks (GCNs) for drug responders and non-responders. To this end, we use PRISM dataset (Corsello et al., 2020), which is a cell line-based drug screening dataset. To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y``` can be loaded accordingly:
+In this example, we construct gene coexpression networks (GCNs) for drug responders and non-responders. To this end, we use the PRISM dataset (Corsello et al., 2020), which is a cell line-based drug screening dataset. To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y``` can be loaded accordingly:
 `````{R}
 data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
 X = data[[1]]
 y = data[[2]]
 `````
-Next, we construc adjacency matrices of GCN for each condition,
+Next, we construct adjacency matrices of GCN for each condition,
 `````{R}
 adj_res = abs(cor(X[y=="res",]))
 adj_nonres = abs(cor(X[y=="non_res",]))
@@ -106,12 +106,12 @@ The source code available at [usage_examples/drug_response_ex.R](https://github.
 ## 2.4. Usage Example 2: application on individual specific networks
 *MNDA pipeline for condition "b"*
 
-In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral-induced blood samples in an age- and sex-balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighbourhood variation, between the two condition stimulated and non-stimulated, is associated with sex. Following the MNDA pipeline, we first construct a set of paired ISNs for the two conditions, i.e before stimulation and after treatment using the *lionessR* R package (Marieke Lydia Kuijjer et al., 2019; Marieke L. Kuijjer et al., 2019). In each network, nodes represent genes and the edge weights demostrated the correlation of gene expressi. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
+In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral-induced blood samples in an age- and sex-balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighborhood variation, between the two conditions stimulated and unstimulated, is associated with sex. Following the MNDA pipeline, we first construct a set of paired ISNs for the two conditions, i.e before stimulation and after treatment using the *lionessR* R package (Marieke Lydia Kuijjer et al., 2019; Marieke L. Kuijjer et al., 2019). In each network, nodes represent genes and the edge weights demonstrate the correlation of gene expression. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
 `````{R}
 data = data.frame(readRDS("Data/ISN_net.rds"))
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
 `````
-Next, we creat the individual variabele data frame with three columns: Individual IDs (indecis), stimulation condition, sex (F,M).
+Next, we create the individual variable data frame with three columns: Individual IDs (indecis), stimulation condition, sex (F,M).
 `````{R}
 y = colnames(data)
 y = data.frame(t(data.frame(strsplit(y, "_"))))
