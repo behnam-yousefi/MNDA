@@ -23,11 +23,11 @@ d. multi-layer network case each layer with different condition (e.g. temporal n
 Reference: [to be added]
 
 ## Installation
-Inatall from CRAN
+Install from CRAN
 `````{R}
 install.packages("mnda")
 `````
-Inatall the latest version from GitHub
+Install the latest version from GitHub
 `````{R}
 devtools::install_github("behnam-yousefi/MNDA/package/mnda")
 `````
@@ -55,24 +55,24 @@ The generated multiplex network and the set of the randomly selected nodes are a
 graph_data = myNet$data_graph
 var_nodes = myNet$var_nodes
 `````
-We then feed ```graph_data``` to the MNDA pipleline specialized for a two-layer multiplex network (condition *"a"*), which is composed of two commands:
+We then feed ```graph_data``` to the MNDA pipeline specialized for a two-layer multiplex network (condition *"a"*), which is composed of two commands:
 `````{R}
 embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50)
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList)
 print(mnda_output$high_var_nodes_index)
 `````
-the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` duncrion calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness.
+the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` function calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness.
 
 ## Usage Example 1: drug response  
 *MNDA pipeline for condition "a"*
 
-In this example, we construct gene coexpression netwerks (GCNs) for drug responders and non-responders. We load gene expression profile of cell lines of lung cancer as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y```.
+In this example, we construct gene coexpression networks (GCNs) for drug responders and non-responders. We load gene expression profiles of cell lines of lung cancer as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y```.
 `````{R}
 data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
 X = data[[1]]
 y = data[[2]]
 `````
-Next, we construc adjacency matrices of GCN for each condition,
+Next, we construct adjacency matrices of GCN for each condition,
 `````{R}
 adj_res = abs(cor(X[y=="res",]))
 adj_nonres = abs(cor(X[y=="non_res",]))
@@ -98,14 +98,14 @@ Nodes = mnda_output$high_var_nodes
 ## Usage Example 2: application on individual specific networks
 *MNDA pipeline for condition "b"*
 
-In this analysis we consider a set of paired ISNs for two conditions (e.g. before treatment-after treatment) and a set of external variables for each individual (e.g. drug response and sex). The aim is to find nodes whose neighbourhood variation between the two conditions is associated with the external variables.
+In this analysis we consider a set of paired ISNs for two conditions (e.g. before treatment-after treatment) and a set of external variables for each individual (e.g. drug response and sex). The aim is to find nodes whose neighborhood variation between the two conditions is associated with the external variables.
 
-In our example, we use the gene expression profile of blood samples before and after being stimulated with BCG vaccine and Ecoli. We then find genes whose neighbourhood changes (dynamics) has a significant association with their sex. To impute ISNs, we use *lionessR* R package. We first read the ISN data creat the node list.
+In our example, we use the gene expression profile of blood samples before and after being stimulated with BCG vaccine and E coli. We then find genes whose neighborhood changes (dynamics) have a significant association with their sex. To impute ISNs, we use *lionessR* R package. We first read the ISN data to create the node list.
 `````{R}
 data = data.frame(readRDS("Data/ISN_net.rds"))
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
 `````
-Next, we creat the individual variabele data frame with three columns: Individual IDs (indecis), stimulation condition, sex (F,M).
+Next, we create the individual variable data frame with three columns: Individual IDs (indecis), stimulation condition, sex (F,M).
 `````{R}
 y = colnames(data)
 y = data.frame(t(data.frame(strsplit(y, "_"))))
