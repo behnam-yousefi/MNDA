@@ -12,7 +12,8 @@ The EDNN is composed of shallow encoder-decoder neural networks with the number 
 
 a. comparison of two groups of independent samples (e.g. network for healthy and disease populations); \
 b. comparison of multiple matched samples (e.g. multiple individual-specific networks, matched according to pre- and post-treatment administration). \
-In the two-layer network case, each node pair corresponds to a distance measure and its significance is assessed on the basis of a null distribution. On the other hand, each node pair in the multi-layer network case corresponds to a set of distances across all the individuals that are classified into two groups. Therefore, for each node pair, the distances can be classified into two sets and a two sample test (e.g. t-test of Wilcoxon-test) can be used for significance assessment. 
+
+In scenario *a*, each node pair corresponds to a distance measure and its significance is assessed on the basis of a null distribution. On the other hand, In scenario *b*, each node pair in the multi-layer network case corresponds to a set of distances across all the individuals that are classified into two groups. Therefore, for each node pair, the distances can be classified into two sets and a two sample test (e.g. t-test of Wilcoxon-test) can be used for significance assessment. 
 
 ## 2. Implementation in R
 ### 2.1. Installation
