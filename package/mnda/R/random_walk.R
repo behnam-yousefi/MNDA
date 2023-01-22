@@ -3,7 +3,7 @@
 #' @param graph an igraph object
 #' @param startNode the starting node (i.e. a node name or a node index)
 #' @param maxStep maximum number steps (default:5)
-#' @param node_names ???
+#' @param node_names a list of names for nodes
 #'
 #' @return The set of nodes passed by the random walker.
 #' @export
@@ -44,6 +44,7 @@ WeightdRandomWalk = function(graph, startNode, maxStep = 5, node_names = FALSE){
 #' @param Nrep number of repeats (default:100)
 #' @param Nstep maximum number steps (default:5)
 #' @param weighted_walk choose the \emph{weighted walk} algorithm if \emph{TRUE} and \emph{simple random} walk if \emph{FALSE}. (default: \emph{TRUE})
+#' @param verbose if \emph{TRUE} a progress bar is shown.
 #'
 #' @return
 #' Steps (S): The total number of times a node is visited starting from the corresponding node in the row.
@@ -56,12 +57,14 @@ WeightdRandomWalk = function(graph, startNode, maxStep = 5, node_names = FALSE){
 #' Steps = RW[["Steps"]]
 #' Probabilities = RW[["Probabilities"]]
 #'
-RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE){
+RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE, verbose = TRUE){
 
   N = length(igraph::V(graph))
   S = matrix(0, N, N)
-  print("Limmited length random walk algorithm ...")
-  pb = utils::txtProgressBar(min = 0, max = N, style = 3)
+  if (verbose){
+    message("Limmited length random walk algorithm ...")
+    pb = utils::txtProgressBar(min = 0, max = N, style = 3)
+  }
 
   i = 0
   for (node in igraph::V(graph)){
@@ -85,10 +88,12 @@ RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE){
     }
 
     S[i,] = apply(WalkRep, 2, sum)
-    utils::setTxtProgressBar(pb, i)
+    if (verbose)
+      utils::setTxtProgressBar(pb, i)
   }
 
-  close(pb)
+  if (verbose)
+    close(pb)
 
   P = S / Nrep
   P[P>1] = 1

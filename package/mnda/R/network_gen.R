@@ -6,7 +6,7 @@
 #' @param N_var_nei number of neighbors that should be changing from layer 1 to 2
 #' @param noise_sd the standard deviation of the noise added to the edge weights
 #'
-#' @return
+#' @return No return value, called to plot subgraphs
 #' @export
 #'
 #' @details In this script we generate random pairs of gene co-expression networks,

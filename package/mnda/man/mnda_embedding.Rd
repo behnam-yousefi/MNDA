@@ -16,7 +16,9 @@ mnda_embedding(
   l2reg = 0,
   walk.rep = 100,
   n.steps = 5,
-  random.walk = TRUE
+  random.walk = TRUE,
+  demo = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -45,6 +47,10 @@ column 3 and 4 consisting the edge weights corresponding to each graph, respecti
 \item{n.steps}{number of the random walk steps (default: 5).}
 
 \item{random.walk}{boolean value to enable the random walk algorithm (default: TRUE).}
+
+\item{demo}{a boolean vector to indicate this is a demo example or not}
+
+\item{verbose}{if \emph{TRUE} a progress bar is shown.}
 }
 \value{
 a list of embedding spaces for each node.

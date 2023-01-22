@@ -25,6 +25,8 @@
 #' @param walk.rep number of repeats for the random walk (default: 100).
 #' @param n.steps number of the random walk steps (default: 5).
 #' @param random.walk boolean value to enable the random walk algorithm (default: TRUE).
+#' @param demo a boolean vector to indicate this is a demo example or not
+#' @param verbose if \emph{TRUE} a progress bar is shown.
 #'
 #' @return a list of embedding spaces for each node.
 #' @export
@@ -38,7 +40,7 @@
 mnda_embedding = function(graph.data, outcome, indv.index = NULL,
                           edge.threshold=0, train.rep=50,
                           embedding.size=2, epochs=10, batch.size=5, l2reg=0,
-                          walk.rep=100, n.steps=5, random.walk=TRUE){
+                          walk.rep=100, n.steps=5, random.walk=TRUE, demo = TRUE, verbose=TRUE){
 
   assertthat::assert_that(train.rep >= 2)
 
@@ -54,7 +56,7 @@ mnda_embedding = function(graph.data, outcome, indv.index = NULL,
   ### Step2) Preparing the input and output of the EDNN for all the graphs ###
   XY = ednn_IOprepare(edge.list = EdgeList, edge.weight = EdgeWeights, indv.index = indv.index,
                       walk.rep = walk.rep, n.steps = n.steps, random.walk = random.walk,
-                      outcome = outcome, edge.threshold = edge.threshold)
+                      outcome = outcome, edge.threshold = edge.threshold, verbose = verbose)
   X = XY[["X"]]
   Y = XY[["Y"]]
   outcome_node = XY[["outcome_node"]]
@@ -70,7 +72,8 @@ mnda_embedding = function(graph.data, outcome, indv.index = NULL,
   embeddingSpaceList = list()
   for (rep in 1:train.rep)
     embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X,
-                                     embedding.size, epochs, batch.size, l2reg)
+                                     embedding.size, epochs, batch.size, l2reg,
+                                     demo = demo, verbose = verbose)
 
   embeddingSpaceList[["outcome_node"]] = outcome_node
   embeddingSpaceList[["individual_node"]] = individual_node
@@ -187,8 +190,7 @@ mnda_distance_test_isn  = function(Distance, y,
       else if (stat.test == "t.test")
         p.val = stats::t.test(x1, x2)$p.val
       else
-        # error("Not a valid stat.test value. Possible values: wilcox.test, t.test")
-        print("Not a valid stat.test value. Possible values: wilcox.test, t.test")
+        message("error: Not a valid stat.test value. Possible values: wilcox.test, t.test")
 
       P_value[rep, i] = p.val
     }

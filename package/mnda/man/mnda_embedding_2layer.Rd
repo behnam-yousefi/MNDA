@@ -15,7 +15,9 @@ mnda_embedding_2layer(
   walk.rep = 100,
   n.steps = 5,
   random.walk = TRUE,
-  null.perm = TRUE
+  null.perm = TRUE,
+  demo = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -42,6 +44,10 @@ column 3 and 4 consisting the edge weights corresponding to each graph, respecti
 \item{random.walk}{boolean value to enable the random walk algorithm (default: TRUE).}
 
 \item{null.perm}{boolean to enable permuting two random graphs and embed them, along with the main two graphs, for the null distribution (default: TRUE).}
+
+\item{demo}{a boolean vector to indicate this is a demo example or not}
+
+\item{verbose}{if \emph{TRUE} a progress bar is shown.}
 }
 \value{
 a list of embedding spaces for each node.

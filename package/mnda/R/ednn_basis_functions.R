@@ -6,7 +6,8 @@
 #' @param epochs maximum number of pocks. An early stopping callback with a patience of 5 has been set inside the function (default = 10).
 #' @param batch_size batch size for learning (default = 5).
 #' @param l2reg the coefficient of L2 regularization for the input layer (default = 0).
-#' @param demo a boolian vector to indicate this is a demo example or not
+#' @param demo a boolean vector to indicate this is a demo example or not
+#' @param verbose if \emph{TRUE} a progress bar is shown.
 #'
 #' @return The embedding space for Xtest.
 #' @export
@@ -21,7 +22,7 @@
 #' Y = XY[["Y"]]
 #' embeddingSpace = EDNN(X = X, Y = Y, Xtest = X)
 #'
-EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0, demo = TRUE){
+EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0, demo = TRUE, verbose = TRUE){
 
   Nnode = ncol(X)
   inputSize = ncol(X)
@@ -63,7 +64,8 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
   # Fit the model and save in history
   history <- # autoencoder %>%
     keras::fit(autoencoder, X, Y, validation_data = list(X, Y), loss = "mse",
-                                 epochs = epochs, batch_size = batch_size, callbacks = list(checkpoint, early_stopping))
+               epochs = epochs, batch_size = batch_size, callbacks = list(checkpoint, early_stopping),
+               verbose = ifelse(verbose,2,0), view_metrics = ifelse(verbose,"auto",0))
 
 
   # Final embeding
@@ -81,6 +83,7 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 #' @param walk.rep number of repeats for the random walk (default: 100).
 #' @param n.steps number of the random walk steps (default: 5).
 #' @param random.walk boolean value to enable the random walk algorithm (default: TRUE).
+#' @param verbose if \emph{TRUE} a progress bar is shown.
 #'
 #' @return the input and output required to train the EDNN
 #' @export
@@ -96,7 +99,7 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 #'
 ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, indv.index = NULL,
                           edge.threshold=0, walk.rep=10, n.steps=5,
-                          random.walk = TRUE){
+                          random.walk = TRUE, verbose = TRUE){
 
   if (is.null(outcome))
     outcome = colnames(edge.weight)
@@ -131,7 +134,7 @@ ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, indv.index = NUL
     # 1.repetitive simple random walks
     # 2.repetitive weighted random walks (specific to weighted graphs)
     if (random.walk){
-      RW = RepRandomWalk (graph_i, Nrep = walk.rep, Nstep = n.steps, weighted_walk = TRUE)
+      RW = RepRandomWalk (graph_i, Nrep = walk.rep, Nstep = n.steps, weighted_walk = TRUE, verbose = verbose)
 
       ## Step 3) Make it multilayer for EDNN
       X = rbind(X, Adj_i)

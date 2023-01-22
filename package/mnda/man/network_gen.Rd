@@ -15,6 +15,9 @@ network_gen(N_nodes = 100, N_var_nodes = 5, N_var_nei = 90, noise_sd = 0.1)
 
 \item{noise_sd}{the standard deviation of the noise added to the edge weights}
 }
+\value{
+No return value, called to plot subgraphs
+}
 \description{
 Multiplex Network Generation
 }

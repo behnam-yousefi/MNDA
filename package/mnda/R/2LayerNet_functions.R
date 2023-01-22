@@ -3,7 +3,7 @@
 ## Perform MNDA on two networks with different outcomes
 ## (e.g. case-control, time point1-time point2, etc.)
 ## and test whether the distances are significant.
-## Example of the usage is provided in ???
+## Example of the usage is provided in the GitHub
 
 # Null hypothesis (H0): The pairwise distances are not significantly larger than that of
 ## a random two-layer network.
@@ -25,6 +25,8 @@
 #' @param n.steps number of the random walk steps (default: 5).
 #' @param random.walk boolean value to enable the random walk algorithm (default: TRUE).
 #' @param null.perm boolean to enable permuting two random graphs and embed them, along with the main two graphs, for the null distribution (default: TRUE).
+#' @param demo a boolean vector to indicate this is a demo example or not
+#' @param verbose if \emph{TRUE} a progress bar is shown.
 #'
 #' @return a list of embedding spaces for each node.
 #' @export
@@ -36,7 +38,7 @@
 #'
 mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
                        embedding.size=2, epochs=10, batch.size=5, l2reg=0,
-                       walk.rep=100, n.steps=5, random.walk=TRUE, null.perm=TRUE){
+                       walk.rep=100, n.steps=5, random.walk=TRUE, null.perm=TRUE, demo = TRUE, verbose=TRUE){
 
   assertthat::assert_that(train.rep >= 2)
 
@@ -59,7 +61,7 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
   ### Step2) Preparing the input and output of the EDNN for all the graphs ###
   XY = ednn_IOprepare(edge.list = EdgeList, edge.weight = EdgeWeights,
                       walk.rep = walk.rep, n.steps = n.steps, random.walk = random.walk,
-                      outcome = outcome, edge.threshold = edge.threshold)
+                      outcome = outcome, edge.threshold = edge.threshold, verbose = verbose)
   X = XY[["X"]]
   Y = XY[["Y"]]
   outcome_node = XY[["outcome_node"]]
@@ -74,7 +76,8 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
   embeddingSpaceList = list()
   for (rep in 1:train.rep)
     embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X,
-                                     embedding.size, epochs, batch.size, l2reg)
+                                     embedding.size, epochs, batch.size, l2reg,
+                                     demo = demo, verbose = verbose)
 
   embeddingSpaceList[["outcome_node"]] = outcome_node
   embeddingSpaceList[["label_node"]] = colnames(X)

@@ -13,7 +13,7 @@ WeightdRandomWalk(graph, startNode, maxStep = 5, node_names = FALSE)
 
 \item{maxStep}{maximum number steps (default:5)}
 
-\item{node_names}{???}
+\item{node_names}{a list of names for nodes}
 }
 \value{
 The set of nodes passed by the random walker.

@@ -12,7 +12,8 @@ ednn_IOprepare(
   edge.threshold = 0,
   walk.rep = 10,
   n.steps = 5,
-  random.walk = TRUE
+  random.walk = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ ednn_IOprepare(
 \item{n.steps}{number of the random walk steps (default: 5).}
 
 \item{random.walk}{boolean value to enable the random walk algorithm (default: TRUE).}
+
+\item{verbose}{if \emph{TRUE} a progress bar is shown.}
 }
 \value{
 the input and output required to train the EDNN

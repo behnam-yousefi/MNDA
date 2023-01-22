@@ -12,7 +12,8 @@ EDNN(
   epochs = 10,
   batch_size = 5,
   l2reg = 0,
-  demo = TRUE
+  demo = TRUE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -30,7 +31,9 @@ EDNN(
 
 \item{l2reg}{the coefficient of L2 regularization for the input layer (default = 0).}
 
-\item{demo}{a boolian vector to indicate this is a demo example or not}
+\item{demo}{a boolean vector to indicate this is a demo example or not}
+
+\item{verbose}{if \emph{TRUE} a progress bar is shown.}
 }
 \value{
 The embedding space for Xtest.

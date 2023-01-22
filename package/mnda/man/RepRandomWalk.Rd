@@ -4,7 +4,13 @@
 \alias{RepRandomWalk}
 \title{Repetitive Fixed-length (weighted) random walk algorithm}
 \usage{
-RepRandomWalk(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE)
+RepRandomWalk(
+  graph,
+  Nrep = 100,
+  Nstep = 5,
+  weighted_walk = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{graph}{an igraph object}
@@ -14,6 +20,8 @@ RepRandomWalk(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE)
 \item{Nstep}{maximum number steps (default:5)}
 
 \item{weighted_walk}{choose the \emph{weighted walk} algorithm if \emph{TRUE} and \emph{simple random} walk if \emph{FALSE}. (default: \emph{TRUE})}
+
+\item{verbose}{if \emph{TRUE} a progress bar is shown.}
 }
 \value{
 Steps (S): The total number of times a node is visited starting from the corresponding node in the row.
