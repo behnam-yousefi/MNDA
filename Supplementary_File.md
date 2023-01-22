@@ -8,23 +8,10 @@ Multiplex network differential analysis (MNDA) is a computational tool implement
 2. calculate the distance between the nodes corresponding to the same element (e.g. gene);
 3. detect the nodes whose neighborhood varies significantly based on statistical testing (using permuted graphs). 
 
-The EDNN is composed of shallow encoder-decoder neural networks with the number of inputs and outputs being equal to the number of nodes in one layer (the nodes are the same from one layer to the other). For each node, the encoder input is a vector of its connection weights with the other nodes. If no link exists between two nodes, the corresponding input is set to zero. The decoder output for each node is a vector of node visit probabilities calculated based on a *repeated fixed-length weighted random walk algorithm* (see below). The bottleneck layer is finally used as the embedding space of dimension $k$ for all the nodes in both layes.
+The EDNN is composed of shallow encoder-decoder neural networks with the number of inputs and outputs being equal to the number of nodes in one layer (the nodes are the same from one layer to the other). For each node, the encoder input is a vector of its connection weights with the other nodes. If no link exists between two nodes, the corresponding input is set to zero. The decoder output for each node is a vector of node visit probabilities calculated based on a *repeated fixed-length weighted random walk algorithm* (Yousefi et al.). The bottleneck layer serves as an embedding space in which dissimilarity between corresponding nodes are computed. The default dissimilarity measure implemented in the MNDA R package is the cosine-distance. For technical details and motivations for parameter settings related to steps 1 and 2, we refer to (Yousefi et al.). Step 3. involves assessing the significance of the calculated dissimilarities between corresponding nodes. Currently, the MNDA package considers two  scenarios: 
 
-*Repeated fixed-length weighted random walk algorithm.* We define the node visit probabilities for the decoder output as the probability of a random walker passing node $j$ starting from node $i$, $P(i|j)$. This enables us to characterize the local structures of the networks. The implemented random walker has two properties: It is weighted and fixed-length. A weighted random walker considered the edge weights to choose each step. The probability of moving from node $i$ to node $j$ is proportional to the edge weight $w_{ij}$ linking node $i$ to node $j$:
-
-$$ P(i\xrightarrow{}j)=\frac{w_{ij}}{\Sigma_{j\in{}\mathcal{N}_i}|w_{ij}|} $$
-
-The walk length is also set to a constant value to keep it local around the node queried node. The random walk process is repeated for several times to calculate the node visit probabilities. Although the idea of weighted random walks is not new, to our knowledge, no customized code was available for their use in our framework. Our implementation of the random walk algorithm is available for the users in the package. 
-
-After the EDNN is trained, the nodes are embedded into a low dimensional vector space, based on which we then calculate the distance between the corresponding node pairs, i.e nodes that correspond to the same element in two networks. By default, we use the *cosine* distance which is defined as
-
-$$ d_{cos}(A,B)=1-\frac{A.B}{|A|.|B|} $$
-
-For two vectors of $A$ and $B$. The distance between the corresponding node pairs is a measure of the variation of the local neighborhood in the networks.
-
-The final step is to assess the significance of the calculated distances. The current implementation of the MNDA considers two conditions: 
-a. two-layer network case corresponding to two (paired/unpaired) conditions (e.g. healthy-disease); \
-b. multi-layer network case (e.g. individual specific networks – ISNs) with two matched groups (e.g. before treatment-after treatment). \
+a. comparison of two groups of independent samples (e.g. network for healthy and disease populations); \
+b. comparison of multiple matched samples (e.g. multiple individual-specific networks, matched according to pre- and post-treatment administration). \
 In the two-layer network case, each node pair corresponds to a distance measure and its significance is assessed on the basis of a null distribution. On the other hand, each node pair in the multi-layer network case corresponds to a set of distances across all the individuals that are classified into two groups. Therefore, for each node pair, the distances can be classified into two sets and a two sample test (e.g. t-test of Wilcoxon-test) can be used for significance assessment. 
 
 ## 2. Implementation in R
