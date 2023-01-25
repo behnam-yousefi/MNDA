@@ -2,11 +2,11 @@
 
 ## 1. Methods overview
 
-Multiplex network differential analysis (MNDA) is a computational tool implemented for multiplex networks to detect nodes whose neighborhoods have significant variations. The core of the MNDA tool consists of three steps:
+MNDA+ is a computational tool for Multiplex Network Differential Analysis that operates on multiplex networks to detect nodes whose neighborhoods have significant variations across plexes. The core of the tool consists of three steps:
 
-1. representing the nodes of all networks layers into a common embedding space (using EDNN);
-2. calculate the distance between the nodes corresponding to the same element (e.g. gene);
-3. detect the nodes whose neighborhood varies significantly based on statistical testing (using permuted graphs). 
+1.	representing the nodes of all network layers into a common embedding space (using an encoder decoder neural network - EDNN);
+2.	calculating the distance between multiplex corresponding nodes (e.g. genes in biological networks);
+3.	detecting the nodes whose neighborhoods vary significantly based on statistical testing (using permuted graphs).
 
 The EDNN is composed of shallow encoder-decoder neural networks with the number of inputs and outputs being equal to the number of nodes in one layer (the nodes are the same from one layer to the other). For each node, the encoder input is a vector of its connection weights with the other nodes. If no link exists between two nodes, the corresponding input is set to zero. The decoder output for each node is a vector of node visit probabilities calculated based on a repeated fixed-length weighted random walk algorithm (Yousefi et al., 2023). The bottleneck layer serves as an embedding space in which dissimilarity between corresponding nodes are computed. The default dissimilarity measure implemented in the MNDA R package is the cosine-distance. For technical details and motivations for parameter settings related to steps 1 and 2, we refer to (Yousefi et al., 2023). 
 
