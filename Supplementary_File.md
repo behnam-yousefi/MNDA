@@ -33,7 +33,7 @@ MNDA+ will also install TensorFlow and Keras for R, which need to be activated b
 library(keras)
 install_keras()
 `````
-This is only required once for the installation.
+This is required only once for the installation.
 
 ## 2.2. Apply on simulated networks
 *MNDA+ pipeline for condition "a"*
@@ -43,9 +43,9 @@ To test the ```mnda``` package, a toy example multilayer network can be generate
 myNet = network_gen(N_nodes = 100, N_var_nodes = 5, N_var_nei = 90, noise_sd = .01)
 `````
 The process is described as the following:
-1. two identical fully connected networks with ```N_nodes``` number of nodes and uniform random edge weights is generated.
+1. two fully connected networks with ```N_nodes``` number of matching nodes and uniform random edge weights is generated.
 2. a number of ```N_var_nodes``` nodes are randomly selected to have different edge weights with ```N_var_nei``` number of nodes (```N_var_nei``` $<$ ```N_nodes``` $- 1$) between the two networks.
-3. a set of random Gaussian noise with zero mean and sd = ```noise_sd``` is generated and added to all of the edge weights.
+3. a set of random *Gaussian* noise with zero mean and sd = ```noise_sd``` is generated and added to all of the edge weights.
 
 The generated multiplex network and the set of the randomly selected nodes are accessible by the following lines, respectively.
 `````{R}
