@@ -123,7 +123,16 @@ mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "
 `````
 
 2. Project nodes of all the ISNs in the same embedding space and find significant genes in context *b.*
-In this analysis, the ISNs of pre- and post- stimulation should be paired. Therefore, for each individual-gene, we have two points in the embedding space: one correspond to pre-stimulation and the other correspond to post-stimulation. Calculating the distance between these pairs, we will have a matrix of distances of size $N_{individual}\cross N_{gene}$
+In this analysis, the ISNs of pre- and post- stimulation should be paired. Therefore, for each individual-gene, we have two points in the embedding space: one correspond to pre-stimulation and the other correspond to post-stimulation. Calculating the distance between these pairs, we will have a matrix of distances of size $N_{individual} \times N_{gene}$.
+
+To implement this, we use ```mnda_embedding()``` and ```mnda_node_distance``` commands, respectively.
+`````{R}
+graph_data = cbind(nodeList, data)
+embeddingSpaceList = mnda_embedding(graph_data, outcome = y$Stim, indv.index = y$ID,
+                                    train.rep=50, walk.rep=10, epochs=10, batch.size=50,
+                                    random.walk=FALSE)
+Dist = mnda_node_distance(embeddingSpaceList)
+`````
 
 
 for each individual we will have a set of distances  
