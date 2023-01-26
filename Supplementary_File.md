@@ -136,7 +136,7 @@ Pval = mnda_distance_test_isn(Dist, p.adjust.method = "bonferroni")
 `````
 
 
-The source code available at [usage_examples/](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/)
+The source code is available at [usage_examples/](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/)
 
 ## References
 Corsello,S.M. et al. (2020) Discovering the anticancer potential of non-oncology drugs by systematic viability profiling. Nature Cancer, 1, 235–248.\
