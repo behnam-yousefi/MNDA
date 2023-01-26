@@ -110,7 +110,24 @@ y = data.frame(t(data.frame(strsplit(y, "_"))))
 Now that we have all the ISNs with their phenotypes, we can perform two types of analysis on the population level:
 
 1. Aggregate ISNs (by averaging) into two groups (i.e. pre/post stimulation) and find genes with significant neighbourhood variation.
-This will be similar to *Usage Example 1* in context *a.*. We first obtain the two networks of 
+This will be similar to *Usage Example 1* in context *a.*. We first obtain the two aggregated networks of pre- and post- stimulation; and then perform the two-layer MNDA+ pipeline.
+`````{R}
+data_agg = cbind(apply(data[,y$Stim=="Null"], 1, mean),
+                 apply(data[,y$Stim=="BCG"], 1, mean))
+graph_data = cbind(nodeList, data_agg)
+
+embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1,
+                                           train.rep = 50, epochs = 25, batch.size = 10,
+                                           random.walk = FALSE, null.perm = FALSE)
+mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)
+`````
+
+2. Project nodes of all the ISNs in the same embedding space and find significant genes in context *b.*
+In this analysis, the ISNs of pre- and post- stimulation should be paired. Therefore, for each individual-gene, we have two points in the embedding space: one correspond to pre-stimulation and the other correspond to post-stimulation. Calculating the distance between these pairs, we will have a matrix of distances of size $N_{individual}\cross N_{gene}$
+
+
+for each individual we will have a set of distances  
+
 
 
 
