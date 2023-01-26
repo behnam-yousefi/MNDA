@@ -36,7 +36,6 @@ install_keras()
 This is required only once for the installation.
 
 ## 2.2. Apply on simulated networks
-*MNDA+ pipeline for condition "a"*
 
 To test the ```mnda``` package, a toy example multilayer network can be generated using the ```network_gen()``` function:
 `````{R}
@@ -58,11 +57,11 @@ embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50)
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList)
 print(mnda_output$high_var_nodes_index)
 `````
-the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` function calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/network_generation_ex.R).
+the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` function calculates the node-pair distances and asignes a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/network_generation_ex.R).
 
 ## 2.3. Usage Example 1: drug response  
 
-In this example, which is a showcase for condition *a*, we construct gene coexpression networks (GCNs) for drug responders and non-responders. To this end, we use the PRISM dataset (Corsello et al., 2020), which is a cell line-based drug screening dataset. To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y``` can be loaded accordingly:
+In this example, which is a showcase for condition *a*, we construct gene coexpression networks (GCNs) for drug responders and non-responders. To this end, we use the PRISM dataset (Corsello et al., 2020), which is a cell line-based drug screening dataset. To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the *Tamoxifen* drug as ```y``` can be loaded accordingly:
 `````{R}
 data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
 X = data[[1]]
@@ -87,13 +86,13 @@ mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "
 Nodes = mnda_output$high_var_nodes
 `````
 **hints for large networks:** 
-* the random walk algorithm can be disabled by ```random.walk = FALSE``` for the sake of running time;
-* the network permutation and representation can be disabled by ```null.perm = FALSE``` for the sake of running time;
+* the random walk algorithm can be disabled by ```random.walk = FALSE``` to decrease the running time;
+* the network permutation and representation can be disabled by ```null.perm = FALSE``` to decrease the running time;
 * the calculated p-values can be adjusted by setting a method in the ```p.adjust.method``` argument.
 
 ## 2.4. Usage Example 2: application on individual specific networks
 
-In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral-induced blood samples in an age- and sex-balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighborhood significantly varies between the two conditions of stimulated and unstimulated. Following the MNDA+ pipeline, we first construct a set of paired ISNs for the two conditions, i.e before stimulation and after treatment using the *lionessR* R package (Marieke Lydia Kuijjer et al., 2019; Marieke L. Kuijjer et al., 2019). In each network, nodes represent genes and the edge weights demonstrate the correlation of gene expression. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
+In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral- induced blood samples in an age- and sex- balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighborhood significantly varies between the two conditions of stimulated and unstimulated. Following the MNDA+ pipeline, we first construct a set of paired ISNs for the two conditions, i.e. before and after stimulation, using the *lionessR* R package (Kuijjer et al., 2019 a; Kuijjer et al., 2019 b). In each network, nodes represent genes and the edge weights demonstrate the correlation of gene expression. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
 `````{R}
 data = data.frame(readRDS("Data/ISN_net.rds"))
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
@@ -141,8 +140,8 @@ The source code available at [usage_examples/](https://github.com/behnam-yousefi
 
 ## References
 Corsello,S.M. et al. (2020) Discovering the anticancer potential of non-oncology drugs by systematic viability profiling. Nature Cancer, 1, 235–248.\
-Kuijjer,M.L. et al. (2019) Estimating Sample-Specific Regulatory Networks. iScience, 14, 226–240.\
-Kuijjer,M.L. et al. (2019) lionessR: single sample network inference in R. BMC Cancer, 19, 1003.\
+Kuijjer,M.L. et al. (2019 a) Estimating Sample-Specific Regulatory Networks. iScience, 14, 226–240.\
+Kuijjer,M.L. et al. (2019 b) lionessR: single sample network inference in R. BMC Cancer, 19, 1003.\
 Piasecka,B. et al. (2018) Distinctive roles of age, sex, and genetics in shaping transcriptional variation of human immune responses to microbial challenges. Proc. Natl. Acad. Sci. U. S. A., 115, E488–E497.\
 Thomas,S. et al. (2015) The Milieu Intérieur study—an integrative approach for study of human immunological variance. Clin. Immunol., 157, 277–293.\
 Yousefi,B. et al. (2023) Capturing the dynamics of microbiomes using individual-specific networks. bioRxiv 2023.01.22.525058.
