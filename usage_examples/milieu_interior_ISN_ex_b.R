@@ -4,7 +4,7 @@ library(mnda)
 setwd("~/Desktop/R_Root/MNDA/usage_examples/")
 
 ## Read ISN data and construct the node list
-data = readRDS("Data/ISN_S.Aureus.rds")
+data = readRDS("Data/ISN_BCG.rds")
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
 
 ## Construct the phenotype data
