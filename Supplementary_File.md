@@ -92,12 +92,12 @@ Nodes = mnda_output$high_var_nodes
 
 ## 2.4. Usage Example 2: application on individual specific networks
 
-In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral- induced blood samples in an age- and sex- balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighborhood significantly varies between the two conditions of stimulated and unstimulated. Following the MNDA+ pipeline, we first construct a set of paired ISNs for the two conditions, i.e. before and after stimulation, using the *lionessR* R package (Kuijjer et al., 2019 a; Kuijjer et al., 2019 b). In each network, nodes represent genes and the edge weights demonstrate the correlation of gene expression. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
+In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral- induced blood samples in an age- and sex- balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighborhood significantly varies between the two conditions of stimulated and unstimulated. Following the MNDA+ pipeline, we first construct a set of paired ISNs for the two conditions, i.e. before and after stimulation, using the *lionessR* R package (Kuijjer et al., 2019 a; Kuijjer et al., 2019 b). In each network, nodes and edge weights represent genes and the correlation of their expressions, respectively. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data and create the node list.
 `````{R}
-data = data.frame(readRDS("Data/ISN_net.rds"))
+data = data.frame(readRDS("Data/ISN_BCG.rds"))
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
 `````
-Next, we create the individual variable data frame with three columns: Individual IDs (indecis), stimulation condition, sex (F,M).
+Next, we create the individual variable *data.frame* with three columns of *Individual IDs* (indecis), *stimulation condition*, and *sex* (F,M).
 `````{R}
 y = colnames(data)
 y = data.frame(t(data.frame(strsplit(y, "_"))))
@@ -106,7 +106,7 @@ colnames(y) = c("ID", "Stim", "Sex")
 Now that we have all the ISNs with their phenotypes, we can perform two types of analysis on the population level:
 
 1. Aggregate ISNs (by averaging) into two groups (i.e. pre/post stimulation) and find genes with significant neighbourhood variation.
-This will be similar to *Usage Example 1* in context *a.*. We first obtain the two aggregated networks of pre- and post- stimulation; and then perform the two-layer MNDA+ pipeline.
+This will be similar to *Usage Example 1* in context *"a"* (see above). We first obtain the two aggregated networks of pre- and post- stimulation; and then perform the two-layer MNDA+ pipeline.
 `````{R}
 data_agg = cbind(apply(data[,y$Stim=="Null"], 1, mean),
                  apply(data[,y$Stim=="BCG"], 1, mean))
@@ -118,7 +118,7 @@ embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1,
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)
 `````
 
-2. Project nodes of all the ISNs in the same embedding space and find significant genes in context *b.*
+2. Project nodes of all the ISNs in the same embedding space and find significant genes in context *"b"* (see above).
 In this analysis, the ISNs of pre- and post- stimulation should be paired. Therefore, for each individual-gene, we have two points in the embedding space: one correspond to pre-stimulation and the other correspond to post-stimulation. Calculating the distance between these pairs, we will have a matrix of distances of size $N_{individual} \times N_{gene}$.
 
 To implement this, we use ```mnda_embedding()``` and ```mnda_node_distance()``` commands, respectively.
