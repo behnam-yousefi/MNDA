@@ -11,7 +11,6 @@ nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
 y = colnames(data)
 y = data.frame(t(data.frame(strsplit(y, "_"))))
 colnames(y) = c("ID", "Stim", "Sex")
-sex = y[duplicated(y$ID), "Sex"]
 
 ## Run the algorithm
 ## 1. Embed nodes
@@ -25,9 +24,10 @@ embeddingSpaceList = mnda_embedding(graph_data, outcome = y$Stim, indv.index = y
 
 ## 2. Calculate distances
 Dist = mnda_node_distance(embeddingSpaceList)
+# Dist[[1]]: indv x node
 
 ## 3. Calculate p.valus
-Pval = mnda_distance_test_isn(Dist, sex, p.adjust.method = "bonferroni")
+Pval = mnda_distance_test1_isn(Dist, p.adjust.method = "bonferroni")
 # sum(Pval<.01)
 # Pval = sort(Pval, decreasing = FALSE)
 # TopVarGenes = names(Pval[1:10])

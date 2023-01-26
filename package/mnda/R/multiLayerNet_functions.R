@@ -40,7 +40,7 @@
 mnda_embedding = function(graph.data, outcome, indv.index = NULL,
                           edge.threshold=0, train.rep=50,
                           embedding.size=2, epochs=10, batch.size=5, l2reg=0,
-                          walk.rep=100, n.steps=5, random.walk=TRUE, demo = TRUE, verbose=TRUE){
+                          walk.rep=100, n.steps=5, random.walk=TRUE, demo = FALSE, verbose=TRUE){
 
   assertthat::assert_that(train.rep >= 2)
 
@@ -193,6 +193,53 @@ mnda_distance_test_isn  = function(Distance, y,
         message("error: Not a valid stat.test value. Possible values: wilcox.test, t.test")
 
       P_value[rep, i] = p.val
+    }
+  }
+
+  P_value_aggr = apply(P_value, 2, aggregation::fisher)
+  Q_value_aggr = stats::p.adjust(P_value_aggr, method = p.adjust.method)
+
+  names(Q_value_aggr) = colnames(Distance[[1]])
+  return(Q_value_aggr)
+}
+
+#' Test the extremeness of embedding distances of local neighbors.
+#'
+#' @param Distance a distance list obtained by the \code{mnda_node_distance()} function.
+#' @param p.adjust.method method for adjusting p-value (including methods on \code{p.adjust.methods}).
+#' If set to "none" (default), no adjustment will be performed.
+#'
+#' @return The adjusted pvalues for each node.
+#' @export
+#'
+#' @details
+#' The adjusted p-values for each node is calculated based on their distance.
+#'
+#' @examples
+#' ISN1 = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+#' ISN2 = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+#' graph_data = cbind(ISN1[["data_graph"]], ISN1[["data_graph"]][,3:4])
+#' embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2,1,2),
+#' indv.index=c(1,1,2,2), train.rep=2, random.walk=FALSE)
+#' Dist = mnda_node_distance(embeddingSpaceList)
+#' Result = mnda_distance_test1_isn(Dist)
+#'
+mnda_distance_test1_isn  = function(Distance, p.adjust.method = "none"){
+
+  Rep = length(Distance)
+  N_nodes = ncol(Distance[[1]])
+
+  P_value = matrix(0, Rep, N_nodes)
+
+  for (rep in 1:Rep){
+    Dist = Distance[[rep]]
+
+    dist_avg = apply(Dist, 2, mean)
+
+    for (i in 1:N_nodes){
+
+      P_value[rep, i] = p_val_rank(dist_avg[i], dist_avg, alternative = "greater")
+
     }
   }
 

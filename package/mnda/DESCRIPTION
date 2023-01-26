@@ -1,7 +1,7 @@
 Package: mnda
 Type: Package
 Title: Multiplex Network Differential Analysis (MNDA)
-Version: 1.0.9
+Version: 1.1.0
 Authors@R: c(person("Behnam", "Yousefi", role = c("aut", "cre","cph"),
             email = "yousefi.bme@gmail.com"),
             person("Farzaneh", "Firoozbakht", role = "aut"))
@@ -11,7 +11,7 @@ Description: Interactions between different biological entities are crucial for 
     However, such variations often occur locally and do not concern the whole network. 
     To capture local variations of such networks, we propose multiplex network differential analysis (MNDA). 
     MNDA allows to quantify the variations in the local neighborhood of each node (e.g. gene) between the two given clinical states, and to test for statistical significance of such variation.
-    Yousefi et al. (2023) <arXiv:https://doi.org/10.1101/2023.01.22.525058>.
+    Yousefi et al. (2023) <doi:10.1101/2023.01.22.525058>.
 License: GPL (>=3)
 Encoding: UTF-8
 RoxygenNote: 7.2.3
