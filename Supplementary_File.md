@@ -18,8 +18,6 @@ b.	Given a single group of samples, for which two states are available $S_1$ and
 
 Whereas in context *a.* only one vector of dissimilarities is created with a length corresponding to the number of nodes in the group-level biological networks, in context *b.* – the scenario of sample-specific or individual-specific networks - multiple such vectors are created, one for each sample. In both contexts, an empirical null distribution of the chosen dissimilarity statistic is computed by reshuffling edges in the available networks (2 in scenario *a.* and 2 times the number of matched sample pairs in scenario *b.*). The user can specify whether to keep the node degree distribution intact for each network. Raw *P-values* thus obtained for each node annotation (corresponding nodes in a node pair have the same annotation) can or cannot be adjusted for multiple testing. For scenario *a.* as many tests as the cardinality of $V_{C1}$  ( $V_{C2}$ ) are carried out. In context *b.* the number of tests corresponds to the total number of nodes across samples for a single state. *Bonferroni* correction is the default option and the user can opt for less conservative correction methods.
 
-An extra feature of the MNDA+ builds on scenario *b.* and allows testing differences between vectors of node dissimilarities (one vector for each sample) according to an extraneous factor (for instance, male/female). Although a multivariate  (non-parametric) ANOVA is theoretically possible, it is not to be recommended as the multiplicity in the multivariate response is driven by the number of nodes in a sample-level network. This number often runs in the tens of thousands. Therefore MNDA+ implements a two-group comparison test per node annotation. Hence, a multiple-testing correction involves adjusting raw *P-values* to as many tests as there are nodes in a sample-specific network. 
-
 ## 2. Implementation in R
 ### 2.1. Installation
 Install from CRAN
@@ -93,8 +91,6 @@ Nodes = mnda_output$high_var_nodes
 * the network permutation and representation can be disabled by ```null.perm = FALSE``` for the sake of running time;
 * the calculated p-values can be adjusted by setting a method in the ```p.adjust.method``` argument.
 
-The source code available at [usage_examples/drug_response_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/drug_response_ex.R)
-
 ## 2.4. Usage Example 2: application on individual specific networks
 
 In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral-induced blood samples in an age- and sex-balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighborhood significantly varies between the two conditions of stimulated and unstimulated. Following the MNDA+ pipeline, we first construct a set of paired ISNs for the two conditions, i.e before stimulation and after treatment using the *lionessR* R package (Marieke Lydia Kuijjer et al., 2019; Marieke L. Kuijjer et al., 2019). In each network, nodes represent genes and the edge weights demonstrate the correlation of gene expression. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
@@ -106,6 +102,7 @@ Next, we create the individual variable data frame with three columns: Individua
 `````{R}
 y = colnames(data)
 y = data.frame(t(data.frame(strsplit(y, "_"))))
+colnames(y) = c("ID", "Stim", "Sex")
 `````
 Now that we have all the ISNs with their phenotypes, we can perform two types of analysis on the population level:
 
@@ -125,7 +122,7 @@ mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "
 2. Project nodes of all the ISNs in the same embedding space and find significant genes in context *b.*
 In this analysis, the ISNs of pre- and post- stimulation should be paired. Therefore, for each individual-gene, we have two points in the embedding space: one correspond to pre-stimulation and the other correspond to post-stimulation. Calculating the distance between these pairs, we will have a matrix of distances of size $N_{individual} \times N_{gene}$.
 
-To implement this, we use ```mnda_embedding()``` and ```mnda_node_distance``` commands, respectively.
+To implement this, we use ```mnda_embedding()``` and ```mnda_node_distance()``` commands, respectively.
 `````{R}
 graph_data = cbind(nodeList, data)
 embeddingSpaceList = mnda_embedding(graph_data, outcome = y$Stim, indv.index = y$ID,
@@ -133,26 +130,14 @@ embeddingSpaceList = mnda_embedding(graph_data, outcome = y$Stim, indv.index = y
                                     random.walk=FALSE)
 Dist = mnda_node_distance(embeddingSpaceList)
 `````
-
-
-for each individual we will have a set of distances  
-
-
-
-
-We then form the ```graph_data``` and call ```mnda_embedding()``` function to embed genes into the embedding space.
+Having the distance matrix, one can find extreme distances, i.e. highly variable/constant gene neighbourhoods, or find association of any variable with them, i.e. genes whose neighbourhoods are significantly associated with a variable such as sex:
 `````{R}
-graph_data = cbind(nodeList, data)
-embeddingSpaceList = mnda_embedding(graph_data, outcome = y[,2], indv.index = y[,1],train.rep=2, walk.rep=10, epochs=5, batch.size=100,random.walk=FALSE)
-`````
-For each individual-gene pair, we calculate the embedding distance between the nodes corresponding to before and after stimulation using ```mnda_node_distance()```. This results in distance matrices of *individual-by-gene*. Finally, we test the association of sex with the distance of each gene using ```mnda_distance_test_isn()```.
-`````{R}
-Dist = mnda_node_distance(embeddingSpaceList)
-Pval = mnda_distance_test_isn(Dist, rep(c(1,2),25))
+sex = y[duplicated(y$ID), "Sex"]
+Pval = mnda_distance_test_isn(Dist, p.adjust.method = "bonferroni")
 `````
 
-The source code available at [usage_examples/ISN_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/ISN_ex.R)
 
+The source code available at [usage_examples/](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/)
 
 ## References
 Corsello,S.M. et al. (2020) Discovering the anticancer potential of non-oncology drugs by systematic viability profiling. Nature Cancer, 1, 235–248.\
