@@ -63,9 +63,8 @@ print(mnda_output$high_var_nodes_index)
 the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` function calculates the node-pair distances and assines a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/network_generation_ex.R).
 
 ## 2.3. Usage Example 1: drug response  
-*MNDA+ pipeline for condition "a"*
 
-In this example, we construct gene coexpression networks (GCNs) for drug responders and non-responders. To this end, we use the PRISM dataset (Corsello et al., 2020), which is a cell line-based drug screening dataset. To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y``` can be loaded accordingly:
+In this example, which is a showcase for condition *a*, we construct gene coexpression networks (GCNs) for drug responders and non-responders. To this end, we use the PRISM dataset (Corsello et al., 2020), which is a cell line-based drug screening dataset. To reduce the dimensionality, 2000 genes that are highly variant across all the cell lines are selected and reposited. The gene expression profile of lung cancer cell lines as ```X``` and a binary vector of their response to the Tamoxifen drug as ```y``` can be loaded accordingly:
 `````{R}
 data = readRDS("Data/GCN2Layer_data_lung_tamoxifen_2000genes.rds")
 X = data[[1]]
@@ -97,7 +96,6 @@ Nodes = mnda_output$high_var_nodes
 The source code available at [usage_examples/drug_response_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/drug_response_ex.R)
 
 ## 2.4. Usage Example 2: application on individual specific networks
-*MNDA+ pipeline for condition "b"*
 
 In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral-induced blood samples in an age- and sex-balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighborhood significantly varies between the two conditions of stimulated and unstimulated. Following the MNDA+ pipeline, we first construct a set of paired ISNs for the two conditions, i.e before stimulation and after treatment using the *lionessR* R package (Marieke Lydia Kuijjer et al., 2019; Marieke L. Kuijjer et al., 2019). In each network, nodes represent genes and the edge weights demonstrate the correlation of gene expression. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data creat the node list.
 `````{R}
@@ -109,6 +107,13 @@ Next, we create the individual variable data frame with three columns: Individua
 y = colnames(data)
 y = data.frame(t(data.frame(strsplit(y, "_"))))
 `````
+Now that we have all the ISNs with their phenotypes, we can perform two types of analysis on the population level:
+
+1. Aggregate ISNs (by averaging) into two groups (i.e. pre/post stimulation) and find genes with significant neighbourhood variation.
+This will be similar to *Usage Example 1* in context *a.*. We first obtain the two networks of 
+
+
+
 We then form the ```graph_data``` and call ```mnda_embedding()``` function to embed genes into the embedding space.
 `````{R}
 graph_data = cbind(nodeList, data)
