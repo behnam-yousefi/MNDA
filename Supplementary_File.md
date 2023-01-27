@@ -106,12 +106,15 @@ colnames(y) = c("ID", "Stim", "Sex")
 Now that we have all the ISNs with their phenotypes, we can perform two types of analysis on the population level:
 
 1. Aggregate ISNs (by averaging) into two groups (i.e. pre/post stimulation) and find genes with significant neighbourhood variation.
-This will be similar to *Usage Example 1* in context *"a"* (see above). We first obtain the two aggregated networks of pre- and post- stimulation; and then perform the two-layer MNDA+ pipeline.
+This will be similar to *Usage Example 1* in context *"a"* (see above). We first obtain the two aggregated networks of pre- and post- stimulation;
 `````{R}
 data_agg = cbind(apply(data[,y$Stim=="Null"], 1, mean),
                  apply(data[,y$Stim=="BCG"], 1, mean))
 graph_data = cbind(nodeList, data_agg)
-
+colnames(graph_data) = c("V1", "V2", "Null", "Stim")
+`````
+and then perform the two-layer MNDA+ pipeline.
+`````{R}
 embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1,
                                            train.rep = 50, epochs = 25, batch.size = 10,
                                            random.walk = FALSE, null.perm = FALSE)
