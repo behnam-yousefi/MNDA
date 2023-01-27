@@ -4,7 +4,7 @@ library(mnda)
 setwd("~/Desktop/R_Root/MNDA/usage_examples/")
 
 ## Read ISN data and construct the node list
-data = readRDS("Data/ISN_BCG.rds")
+data = readRDS("Data/ISN_S.Aureus.rds")
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
 
 ## Construct the phenotype data
@@ -14,17 +14,20 @@ colnames(y) = c("ID", "Stim", "Sex")
 
 ## Construct the two aggregated networks
 data_agg = cbind(apply(data[,y$Stim=="Null"], 1, mean),
-                 apply(data[,y$Stim=="BCG"], 1, mean))
+                 apply(data[,y$Stim=="S.Aureus"], 1, mean))
+
+# data_agg = data[,]
 
 ## Run the algorithm
 ## 1. Embed nodes
 graph_data = cbind(nodeList, data_agg)
+colnames(graph_data) = c("V1", "V2", "Null", "Stim")
 embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1,
                                            train.rep = 50, epochs = 25, batch.size = 10,
                                            random.walk = FALSE, null.perm = FALSE)
 
-# saveRDS(embeddingSpaceList, file = "Data/Embeddings/embeddingSpaceList_BCG_a.rds")
-# embeddingSpaceList = readRDS("Data/Embeddings/embeddingSpaceList_S.Aureus.rds")
+# saveRDS(embeddingSpaceList, file = "Data/Embeddings/embeddingSpaceLis_S.Aureus_a.rds")
+embeddingSpaceList = readRDS("Data/Embeddings/embeddingSpaceList_Ecoli_a.rds")
 
 ## 2. Calculate distances and p.values
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)

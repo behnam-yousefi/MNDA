@@ -27,7 +27,7 @@ embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1,
                                            random.walk = FALSE, null.perm = FALSE)
 
 # saveRDS(embeddingSpaceList, file = "Data/Embeddings/embeddingSpaceList_drug.rds")
-# embeddingSpaceList = readRDS("Data/Embeddings/embeddingSpaceList_drug.rds")
+embeddingSpaceList = readRDS("Data/Embeddings/embeddingSpaceList_drug.rds")
 
 ## 2. Calculate distances and p.values
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)

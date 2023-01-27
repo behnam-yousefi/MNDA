@@ -12,7 +12,7 @@ EDNN(
   epochs = 10,
   batch_size = 5,
   l2reg = 0,
-  demo = TRUE,
+  demo = FALSE,
   verbose = TRUE
 )
 }

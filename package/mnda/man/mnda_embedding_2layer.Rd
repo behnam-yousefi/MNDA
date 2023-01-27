@@ -16,7 +16,7 @@ mnda_embedding_2layer(
   n.steps = 5,
   random.walk = TRUE,
   null.perm = TRUE,
-  demo = TRUE,
+  demo = FALSE,
   verbose = TRUE
 )
 }

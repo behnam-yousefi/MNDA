@@ -17,7 +17,7 @@ mnda_embedding(
   walk.rep = 100,
   n.steps = 5,
   random.walk = TRUE,
-  demo = TRUE,
+  demo = FALSE,
   verbose = TRUE
 )
 }
