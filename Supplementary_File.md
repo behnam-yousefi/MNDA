@@ -16,7 +16,7 @@ a.	Given two groups of samples corresponding to two conditions (e.g. independent
 
 b.	Given a single group of samples, for which two states are available $S_1$ and $S_2$ (e.g. matched case-control pairs, pre-post treatment for the same sample) and sample-level biological networks $N_{k,S_1}$ and $N_{k,S_2}$ for each state and individual $k$, form pairs of corresponding nodes ( $n_{k,1j}$ , $n_{k,2j}$ ); $n_{k,ij}$ is a node of $N_{k,S_i}$ , $i=1,2$ and $j$ runs from $1$ to the cardinality of each network (all networks are assumed to have the same node cardinality). 
 
-Whereas in context *a.* only one vector of dissimilarities is created with a length corresponding to the number of nodes in the group-level biological networks, in context *b.* – the scenario of sample-specific or individual-specific networks - multiple such vectors are created, one for each sample. In both contexts, an empirical null distribution of the chosen dissimilarity statistic is computed by reshuffling edges in the available networks (2 in scenario *a.* and 2 times the number of matched sample pairs in scenario *b.*). The user can specify whether to keep the node degree distribution intact for each network. Raw P-values thus obtained for each node annotation (corresponding nodes in a node pair have the same annotation) can or cannot be adjusted for multiple testing. For scenario *a.* as many tests as the cardinality of $V_{C1}$  ( $V_{C2}$ ) are carried out. In context *b.* the number of tests corresponds to the total number of nodes across samples for a single state. *Bonferroni* correction is the default option and the user can opt for less conservative correction methods.
+Whereas in context *a* only one vector of dissimilarities is created with a length corresponding to the number of nodes in the group-level biological networks, in context *b* – the scenario of sample-specific or individual-specific networks - multiple such vectors are created, one for each sample. In both contexts, an empirical null distribution of the chosen dissimilarity statistic is computed by reshuffling edges in the available networks (2 in scenario *a* and 2 times the number of matched sample pairs in scenario *b*). The user can specify whether to keep the node degree distribution intact for each network. Raw P-values thus obtained for each node annotation (corresponding nodes in a node pair have the same annotation) can or cannot be adjusted for multiple testing. For scenario *a* as many tests as the cardinality of $V_{C1}$  ( $V_{C2}$ ) are carried out. In context *b* the number of tests corresponds to the total number of nodes across samples for a single state. *Bonferroni* correction is the default option and the user can opt for less conservative correction methods.
 
 ## 2. Implementation in R
 ### 2.1. Installation
@@ -106,7 +106,7 @@ colnames(y) = c("ID", "Stim", "Sex")
 Now that we have all the ISNs with their phenotypes, we can perform two types of analysis on the population level:
 
 1. Aggregate ISNs (by averaging) into two groups (i.e. pre/post stimulation) and find genes with significant neighbourhood variation.
-This will be similar to *Usage Example 1* in context *"a"* (see above). We first obtain the two aggregated networks of pre- and post- stimulation;
+This will be similar to *Usage Example 1* in context *a* (see above). We first obtain the two aggregated networks of pre- and post- stimulation;
 `````{R}
 data_agg = cbind(apply(data[,y$Stim=="Null"], 1, mean),
                  apply(data[,y$Stim=="BCG"], 1, mean))
@@ -121,7 +121,7 @@ embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1,
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)
 `````
 
-2. Project nodes of all the ISNs in the same embedding space and find significant genes in context *"b"* (see above).
+2. Project nodes of all the ISNs in the same embedding space and find significant genes in context *b* (see above).
 In this analysis, the ISNs of pre- and post- stimulation should be paired. Therefore, for each individual-gene, we have two points in the embedding space: one correspond to pre-stimulation and the other correspond to post-stimulation. Calculating the distance between these pairs, we will have a matrix of distances of size $N_{individual} \times N_{gene}$.
 
 To implement this, we use ```mnda_embedding()``` and ```mnda_node_distance()``` commands, respectively.
