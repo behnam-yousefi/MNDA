@@ -105,7 +105,7 @@ colnames(y) = c("ID", "Stim", "Sex")
 `````
 Now that we have all the ISNs with their phenotypes, we can perform two types of analysis on the population level:
 
-1. Aggregate ISNs (by averaging) into two groups (i.e. pre/post stimulation) and find genes with significant neighbourhood variation.
+1- Aggregate ISNs (by averaging) into two groups (i.e. pre/post stimulation) and find genes with significant neighbourhood variation.
 This will be similar to *Usage Example 1* in context *a* (see above). We first obtain the two aggregated networks of pre- and post- stimulation;
 `````{R}
 data_agg = cbind(apply(data[,y$Stim=="Null"], 1, mean),
@@ -121,7 +121,7 @@ embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1,
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni", alpha = .01)
 `````
 
-2. Project nodes of all the ISNs in the same embedding space and find significant genes in context *b* (see above).
+2- Project nodes of all the ISNs in the same embedding space and find significant genes in context *b* (see above).
 In this analysis, the ISNs of pre- and post- stimulation should be paired. Therefore, for each individual-gene, we have two points in the embedding space: one correspond to pre-stimulation and the other correspond to post-stimulation. Calculating the distance between these pairs, we will have a matrix of distances of size $N_{individual} \times N_{gene}$.
 
 To implement this, we use ```mnda_embedding()``` and ```mnda_node_distance()``` commands, respectively.
