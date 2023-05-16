@@ -2,7 +2,7 @@
 
 ## 1. Methods overview
 
-MNDA+ is a computational tool for Multiplex Network Differential Analysis that operates on multiplex networks to detect nodes whose neighborhoods have significant variations across plexes. The core of the tool consists of three steps:
+MNDA+ is a computational tool for Multiplex Network Differential Analysis that operates on multiplex networks to detect nodes whose neighborhoods have significant variations across layers. The core of the tool consists of three steps:
 
 1.	representing the nodes of all network layers into a common embedding space (using an encoder-decoder neural network - EDNN);
 2.	calculating the distance between multiplex corresponding nodes (e.g. genes in biological networks);
