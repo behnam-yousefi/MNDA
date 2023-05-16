@@ -4,7 +4,7 @@
 
 MNDA+ is a computational tool for Multiplex Network Differential Analysis that operates on multiplex networks to detect nodes whose neighborhoods have significant variations across plexes. The core of the tool consists of three steps:
 
-1.	representing the nodes of all network layers into a common embedding space (using an encoder decoder neural network - EDNN);
+1.	representing the nodes of all network layers into a common embedding space (using an encoder-decoder neural network - EDNN);
 2.	calculating the distance between multiplex corresponding nodes (e.g. genes in biological networks);
 3.	detecting the nodes whose neighborhoods vary significantly based on statistical testing (using permuted graphs).
 
@@ -16,7 +16,7 @@ a.	Given two groups of samples corresponding to two conditions (e.g. independent
 
 b.	Given a single group of samples, for which two states are available $S_1$ and $S_2$ (e.g. matched case-control pairs, pre-post treatment for the same sample) and sample-level biological networks $N_{k,S_1}$ and $N_{k,S_2}$ for each state and individual $k$, form pairs of corresponding nodes ( $n_{k,1j}$ , $n_{k,2j}$ ); $n_{k,ij}$ is a node of $N_{k,S_i}$ , $i=1,2$ and $j$ runs from $1$ to the cardinality of each network (all networks are assumed to have the same node cardinality). 
 
-Whereas in context *a.* only one vector of dissimilarities is created with a length corresponding to the number of nodes in the group-level biological networks, in context *b.* – the scenario of sample-specific or individual-specific networks - multiple such vectors are created, one for each sample. In both contexts, an empirical null distribution of the chosen dissimilarity statistic is computed by reshuffling edges in the available networks (2 in scenario *a.* and 2 times the number of matched sample pairs in scenario *b.*). The user can specify whether to keep the node degree distribution intact for each network. Raw *P-values* thus obtained for each node annotation (corresponding nodes in a node pair have the same annotation) can or cannot be adjusted for multiple testing. For scenario *a.* as many tests as the cardinality of $V_{C1}$  ( $V_{C2}$ ) are carried out. In context *b.* the number of tests corresponds to the total number of nodes across samples for a single state. *Bonferroni* correction is the default option and the user can opt for less conservative correction methods.
+Whereas in context *a.* only one vector of dissimilarities is created with a length corresponding to the number of nodes in the group-level biological networks, in context *b.* – the scenario of sample-specific or individual-specific networks - multiple such vectors are created, one for each sample. In both contexts, an empirical null distribution of the chosen dissimilarity statistic is computed by reshuffling edges in the available networks (2 in scenario *a.* and 2 times the number of matched sample pairs in scenario *b.*). The user can specify whether to keep the node degree distribution intact for each network. Raw P-values thus obtained for each node annotation (corresponding nodes in a node pair have the same annotation) can or cannot be adjusted for multiple testing. For scenario *a.* as many tests as the cardinality of $V_{C1}$  ( $V_{C2}$ ) are carried out. In context *b.* the number of tests corresponds to the total number of nodes across samples for a single state. *Bonferroni* correction is the default option and the user can opt for less conservative correction methods.
 
 ## 2. Implementation in R
 ### 2.1. Installation
@@ -57,7 +57,7 @@ embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50)
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList)
 print(mnda_output$high_var_nodes_index)
 `````
-the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` function calculates the node-pair distances and asignes a p-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/network_generation_ex.R).
+the ```mnda_embedding_2layer()``` function represents all the nodes in a common embedding space (step 1); and the ```mnda_node_detection_2layer()``` function calculates the node-pair distances and asignes a P-value to each node-pair (step 2 and 3). This process is repeated ```train.rep``` times to improve the robustness. The source code available at [usage_examples/network_generation_ex.R](https://github.com/behnam-yousefi/MNDA/blob/master/usage_examples/network_generation_ex.R).
 
 ## 2.3. Usage Example 1: drug response  
 
@@ -88,7 +88,7 @@ Nodes = mnda_output$high_var_nodes
 **hints for large networks:** 
 * the random walk algorithm can be disabled by ```random.walk = FALSE``` to decrease the running time;
 * the network permutation and representation can be disabled by ```null.perm = FALSE``` to decrease the running time;
-* the calculated p-values can be adjusted by setting a method in the ```p.adjust.method``` argument.
+* the calculated P-values can be adjusted by setting a method in the ```p.adjust.method``` argument.
 
 ## 2.4. Usage Example 2: application on individual specific networks
 
