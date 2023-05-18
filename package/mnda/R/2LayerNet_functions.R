@@ -145,20 +145,20 @@ mnda_node_detection_2layer = function(embeddingSpaceList, p.adjust.method = "non
     embeddingSpace_1 = embeddingSpace[outcome_node==outcome[1], ]
     embeddingSpace_2 = embeddingSpace[outcome_node==outcome[2], ]
     for (i in 1:N_nodes)
-      Dist[rep,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
+      Dist[rep,i] = distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
 
     ## Null distribution:
     if (mode == "null_perm"){
       embeddingSpace_1 = embeddingSpace[outcome_node==outcome[3], ]
       embeddingSpace_2 = embeddingSpace[outcome_node==outcome[4], ]
       for (i in 1:N_nodes)
-        Dist_null[rep,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
+        Dist_null[rep,i] = distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
     }else if (mode == "null_simple"){
       embeddingSpace_1 = embeddingSpace[outcome_node==outcome[1], ]
       embeddingSpace_2 = embeddingSpace[outcome_node==outcome[2], ]
       for (i in 1:N_nodes){
         ii = sample(1:N_nodes, 2, replace = FALSE)
-        Dist_null[rep,i] = Distance(embeddingSpace_1[ii[1],], embeddingSpace_2[ii[2],], method = "cosine")
+        Dist_null[rep,i] = distance(embeddingSpace_1[ii[1],], embeddingSpace_2[ii[2],], method = "cosine")
       }
     }
     for (i in 1:N_nodes)

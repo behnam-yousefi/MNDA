@@ -13,9 +13,9 @@
 #' @examples
 #' x = c(1,2,3)
 #' y = c(6,4,6)
-#' Distance(x,y)
+#' distance(x,y)
 #'
-Distance = function(x, y, method = "cosine"){
+distance = function(x, y, method = "cosine"){
   dist = switch(method,
                 "cosine" = 1- ((x %*% y) / sqrt((sum(x^2))*(sum(y^2)) + .000000001)),
                 "dot.prod" = 1/(x %*% y),

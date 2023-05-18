@@ -135,7 +135,7 @@ mnda_node_distance = function(embedding.space.list){
       embeddingSpace_1 = embeddingSpace[individual_node==individual[indv] & outcome_node==outcome[1], ]
       embeddingSpace_2 = embeddingSpace[individual_node==individual[indv] & outcome_node==outcome[2], ]
       for (i in 1:N_nodes)
-        Dist[indv,i] = Distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
+        Dist[indv,i] = distance(embeddingSpace_1[i,], embeddingSpace_2[i,], method = "cosine")
     }
     Dist_list[[rep]] = Dist
   }
