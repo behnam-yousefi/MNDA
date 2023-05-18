@@ -9,20 +9,20 @@ X = data[[1]]
 y = data[[2]]
 
 ## Construct the phenotype data
-adj_res = abs(cor(X[y=="res",]))
-adj_nonres = abs(cor(X[y=="non_res",]))
+adjRes = abs(cor(X[y=="res",]))
+adjNonres = abs(cor(X[y=="non_res",]))
 
 ## Construct adjacency matrices of gene coexpression network
-diag(adj_res) = 0
-diag(adj_nonres) = 0
+diag(adjRes) = 0
+diag(adjNonres) = 0
 
 ## Construct multiplex network
-adj_list = list(adj_res, adj_nonres)
-graph_data = as.mnda.graph(adj_list, outcome = c("res","non_res"))
+adjList = list(adjRes, adjNonres)
+graphData = as_mnda_graph(adjList, outcome = c("res","non_res"))
 
 ## Run the algorithm
 ## 1. Embed nodes
-embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1,
+embeddingSpaceList = mnda_embedding_2layer(graphData, edge.threshold = .1,
                                            train.rep = 50, epochs = 25, batch.size = 10,
                                            random.walk = FALSE, null.perm = FALSE)
 
@@ -36,7 +36,7 @@ mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "
 # write.table(Nodes, "Data/nodes_drug.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
 
 ## Plot the difference sub-graph
-plt = subgraph_difference_plot(mnda.graph = graph_data, node.importance = mnda_output$rank_sum_dist,
+plt = subgraph_difference_plot(mnda.graph = graphData, node.importance = mnda_output$rank_sum_dist,
                          n.var.nodes = 10, n.neigh = 10, diff.threshold = .2, edge.width = 3)
 plt
 
@@ -45,9 +45,9 @@ plt
 # dev.off()
 
 ## Expression test
-P_val_expr = apply(X, 2, FUN = function(x){
+pValExpr = apply(X, 2, FUN = function(x){
   p.val = t.test(x[y=="res"], x[y=="non_res"])$p.value
   return(p.val)
 })
 
-hist(P_val_expr,100)
+hist(pValExpr,100)

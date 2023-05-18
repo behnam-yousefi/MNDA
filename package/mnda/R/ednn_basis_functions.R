@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @examples
-#' myNet = network_gen(N_nodes = 50)
+#' myNet = network_gen(n.nodes = 50)
 #' graphData = myNet[["data_graph"]]
 #' edge.list = graphData[,1:2]
 #' edge.weight = graphData[,3:4]
@@ -89,7 +89,7 @@ ednn = function(x, y, x.test, embedding.size = 2, epochs = 10, batch.size = 5, l
 #' @export
 #'
 #' @examples
-#' myNet = network_gen(N_nodes = 50)
+#' myNet = network_gen(n.nodes = 50)
 #' graphData = myNet[["data_graph"]]
 #' edge.list = graphData[,1:2]
 #' edge.weight = graphData[,3:4]

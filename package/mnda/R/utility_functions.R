@@ -74,9 +74,9 @@ Rank = function(x, decreasing = FALSE) {
 #' @examples
 #' data = example_data()
 #' adj.list = list(data[["adj_mat_example"]], data[["adj_mat_example"]])
-#' graph.data = as.mnda.graph(adj.list)
+#' graph.data = as_mnda_graph(adj.list)
 #'
-as.mnda.graph = function(adj.list, outcome = NULL){
+as_mnda_graph = function(adj.list, outcome = NULL){
 
   N_graphs = length(adj.list)
   N_nodes = ncol(adj.list[[1]])
@@ -114,9 +114,9 @@ as.mnda.graph = function(adj.list, outcome = NULL){
 #'
 #' @examples
 #' data = example_data()
-#' graph = as.igraph(mnda.graph = data[["mnda_graph_example"]])
+#' graph = as_igraph(mnda.graph = data[["mnda_graph_example"]])
 #'
-as.igraph = function(mnda.graph, edge.threshold=0){
+as_igraph = function(mnda.graph, edge.threshold=0){
 
   EdgeList = mnda.graph[,1:2]
   EdgeWeights = as.numeric(mnda.graph[,3])
