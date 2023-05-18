@@ -15,4 +15,5 @@ Embeddings/
 *.RDATA
 *.rds
 *.pdf
+*.txt
 .Rproj.user

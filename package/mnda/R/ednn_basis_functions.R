@@ -17,12 +17,12 @@
 #' graphData = myNet[["data_graph"]]
 #' edge.list = graphData[,1:2]
 #' edge.weight = graphData[,3:4]
-#' XY = ednn_IOprepare(edge.list, edge.weight)
+#' XY = ednn_io_prepare(edge.list, edge.weight)
 #' X = XY[["X"]]
 #' Y = XY[["Y"]]
-#' embeddingSpace = EDNN(X = X, Y = Y, Xtest = X)
+#' embeddingSpace = ednn(X = X, Y = Y, Xtest = X)
 #'
-EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0, demo = FALSE, verbose = TRUE){
+ednn = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0, demo = FALSE, verbose = TRUE){
 
   Nnode = ncol(X)
   inputSize = ncol(X)
@@ -93,11 +93,11 @@ EDNN = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 #' graphData = myNet[["data_graph"]]
 #' edge.list = graphData[,1:2]
 #' edge.weight = graphData[,3:4]
-#' XY = ednn_IOprepare(edge.list, edge.weight)
+#' XY = ednn_io_prepare(edge.list, edge.weight)
 #' X = XY[["X"]]
 #' Y = XY[["Y"]]
 #'
-ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, indv.index = NULL,
+ednn_io_prepare = function(edge.list, edge.weight, outcome=NULL, indv.index = NULL,
                           edge.threshold=0, walk.rep=10, n.steps=5,
                           random.walk = TRUE, verbose = TRUE){
 
@@ -134,7 +134,7 @@ ednn_IOprepare = function(edge.list, edge.weight, outcome=NULL, indv.index = NUL
     # 1.repetitive simple random walks
     # 2.repetitive weighted random walks (specific to weighted graphs)
     if (random.walk){
-      RW = RepRandomWalk (graph_i, Nrep = walk.rep, Nstep = n.steps, weighted_walk = TRUE, verbose = verbose)
+      RW = rep_random_walk (graph_i, Nrep = walk.rep, Nstep = n.steps, weighted_walk = TRUE, verbose = verbose)
 
       ## Step 3) Make it multilayer for EDNN
       X = rbind(X, Adj_i)

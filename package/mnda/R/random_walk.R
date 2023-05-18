@@ -10,9 +10,9 @@
 #'
 #' @examples
 #' data = example_data()
-#' nodePath = WeightdRandomWalk(graph = data[["igraph_example"]], startNode = 1)
+#' nodePath = weightd_random_walk(graph = data[["igraph_example"]], startNode = 1)
 #'
-WeightdRandomWalk = function(graph, startNode, maxStep = 5, node_names = FALSE){
+weightd_random_walk = function(graph, startNode, maxStep = 5, node_names = FALSE){
 
   A = as.matrix(igraph::as_adj(graph, attr = "weight"))
   N_node = ncol(A)
@@ -53,11 +53,11 @@ WeightdRandomWalk = function(graph, startNode, maxStep = 5, node_names = FALSE){
 #'
 #' @examples
 #' data = example_data()
-#' RW = RepRandomWalk(graph = data[["igraph_example"]])
+#' RW = rep_random_walk(graph = data[["igraph_example"]])
 #' Steps = RW[["Steps"]]
 #' Probabilities = RW[["Probabilities"]]
 #'
-RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE, verbose = TRUE){
+rep_random_walk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE, verbose = TRUE){
 
   N = length(igraph::V(graph))
   S = matrix(0, N, N)
@@ -78,8 +78,8 @@ RepRandomWalk = function(graph, Nrep = 100, Nstep = 5, weighted_walk = TRUE, ver
     for (rep in 1:Nrep){
 
       if (weighted_walk)
-        # use WeightdRandomWalk() written in the current script.
-        RW_steps = WeightdRandomWalk(graph, startNode = node, maxStep = Nstep)
+        # use weightd_random_walk() written in the current script.
+        RW_steps = weightd_random_walk(graph, startNode = node, maxStep = Nstep)
       else
         # use igraph::random_walk
         RW_steps = igraph::random_walk(graph, start = node, steps = Nstep)

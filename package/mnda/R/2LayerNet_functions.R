@@ -59,7 +59,7 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
   }
 
   ### Step2) Preparing the input and output of the EDNN for all the graphs ###
-  XY = ednn_IOprepare(edge.list = EdgeList, edge.weight = EdgeWeights,
+  XY = ednn_io_prepare(edge.list = EdgeList, edge.weight = EdgeWeights,
                       walk.rep = walk.rep, n.steps = n.steps, random.walk = random.walk,
                       outcome = outcome, edge.threshold = edge.threshold, verbose = verbose)
   X = XY[["X"]]
@@ -75,7 +75,7 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
 
   embeddingSpaceList = list()
   for (rep in 1:train.rep)
-    embeddingSpaceList[[rep]] = EDNN(X ,Y, Xtest = X,
+    embeddingSpaceList[[rep]] = ednn(X ,Y, Xtest = X,
                                      embedding.size, epochs, batch.size, l2reg,
                                      demo = demo, verbose = verbose)
 
