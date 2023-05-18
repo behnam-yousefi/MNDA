@@ -1,15 +1,15 @@
 #' Encoder decoder neural network (EDNN) function
-#' @param X concatenated adjacency matrices for different layers containing the nodes in training phase
-#' @param Y concatenated random walk probability matrices for different layers containing the nodes in training phase
-#' @param Xtest concatenated adjacency matrices for different layers containing the nodes in test phase. Can be = \emph{X} for transductive inference.
-#' @param embedding_size the dimension of embedding space, equal to the number of the bottleneck hidden nodes.
+#' @param x concatenated adjacency matrices for different layers containing the nodes in training phase
+#' @param y concatenated random walk probability matrices for different layers containing the nodes in training phase
+#' @param x.test concatenated adjacency matrices for different layers containing the nodes in test phase. Can be = \emph{X} for transductive inference.
+#' @param embedding.size the dimension of embedding space, equal to the number of the bottleneck hidden nodes.
 #' @param epochs maximum number of pocks. An early stopping callback with a patience of 5 has been set inside the function (default = 10).
-#' @param batch_size batch size for learning (default = 5).
+#' @param batch.size batch size for learning (default = 5).
 #' @param l2reg the coefficient of L2 regularization for the input layer (default = 0).
 #' @param demo a boolean vector to indicate this is a demo example or not
 #' @param verbose if \emph{TRUE} a progress bar is shown.
 #'
-#' @return The embedding space for Xtest.
+#' @return The embedding space for x.test.
 #' @export
 #'
 #' @examples
@@ -20,28 +20,28 @@
 #' XY = ednn_io_prepare(edge.list, edge.weight)
 #' X = XY[["X"]]
 #' Y = XY[["Y"]]
-#' embeddingSpace = ednn(X = X, Y = Y, Xtest = X)
+#' embeddingSpace = ednn(x = X, y = Y, x.test = X)
 #'
-ednn = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2reg = 0, demo = FALSE, verbose = TRUE){
+ednn = function(x, y, x.test, embedding.size = 2, epochs = 10, batch.size = 5, l2reg = 0, demo = FALSE, verbose = TRUE){
 
-  Nnode = ncol(X)
-  inputSize = ncol(X)
-  outputSize = ncol(Y)
+  Nnode = ncol(x)
+  inputSize = ncol(x)
+  outputSize = ncol(y)
 
   if (demo){
-    return(Y[,1:embedding_size])
+    return(y[,1:embedding.size])
   }else{
 
   # Define Encoder
   enc_input = keras::layer_input(shape = inputSize)
   enc_output = # enc_input %>%
-    keras::layer_dense(enc_input, units=embedding_size, activation = "relu",
+    keras::layer_dense(enc_input, units=embedding.size, activation = "relu",
                 kernel_regularizer = keras::regularizer_l2(l2reg))
 
   encoder = keras::keras_model(enc_input, enc_output)
 
   # Define decoder
-  dec_input = keras::layer_input(shape = embedding_size)
+  dec_input = keras::layer_input(shape = embedding.size)
   dec_output = # dec_input %>%
     keras::layer_dense(dec_input, units = outputSize, activation = "sigmoid")
 
@@ -63,13 +63,13 @@ ednn = function(X, Y, Xtest, embedding_size = 2, epochs = 10, batch_size = 5, l2
 
   # Fit the model and save in history
   history <- # autoencoder %>%
-    keras::fit(autoencoder, X, Y, validation_data = list(X, Y), loss = "mse",
-               epochs = epochs, batch_size = batch_size, callbacks = list(checkpoint, early_stopping),
+    keras::fit(autoencoder, x, y, validation_data = list(x, y), loss = "mse",
+               epochs = epochs, batch_size = batch.size, callbacks = list(checkpoint, early_stopping),
                verbose = ifelse(verbose,2,0), view_metrics = ifelse(verbose,"auto",0))
 
 
   # Final embeding
-  embeddingSpace = stats::predict(encoder, Xtest)
+  embeddingSpace = stats::predict(encoder, x.test)
   return(embeddingSpace)}
 }
 

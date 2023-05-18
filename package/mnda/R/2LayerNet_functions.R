@@ -75,7 +75,7 @@ mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
 
   embeddingSpaceList = list()
   for (rep in 1:train.rep)
-    embeddingSpaceList[[rep]] = ednn(X ,Y, Xtest = X,
+    embeddingSpaceList[[rep]] = ednn(X ,Y , x.test = X,
                                      embedding.size, epochs, batch.size, l2reg,
                                      demo = demo, verbose = verbose)
 

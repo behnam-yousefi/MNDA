@@ -71,7 +71,7 @@ mnda_embedding = function(graph.data, outcome, indv.index = NULL,
 
   embeddingSpaceList = list()
   for (rep in 1:train.rep)
-    embeddingSpaceList[[rep]] = ednn(X ,Y, Xtest = X,
+    embeddingSpaceList[[rep]] = ednn(X ,Y, x.test = X,
                                      embedding.size, epochs, batch.size, l2reg,
                                      demo = demo, verbose = verbose)
 
@@ -84,7 +84,7 @@ mnda_embedding = function(graph.data, outcome, indv.index = NULL,
 
 #' Detecting the nodes whose local neighbors change between the two conditions for ISNs.
 #'
-#' @param embeddingSpaceList a list obtained by the \code{mnda_embedding_2layer()} function.
+#' @param embedding.space.list a list obtained by the \code{mnda_embedding_2layer()} function.
 
 #' @return the distances for each repeat
 #' @export
@@ -105,20 +105,20 @@ mnda_embedding = function(graph.data, outcome, indv.index = NULL,
 #' indv.index=c(1,1), train.rep=2, random.walk=FALSE)
 #' Dist = mnda_node_distance(embeddingSpaceList)
 #'
-mnda_node_distance = function(embeddingSpaceList){
+mnda_node_distance = function(embedding.space.list){
 
-  node_labels = embeddingSpaceList[["label_node"]]
+  node_labels = embedding.space.list[["label_node"]]
   N_nodes = length(node_labels)
 
-  outcome_node = embeddingSpaceList[["outcome_node"]]
+  outcome_node = embedding.space.list[["outcome_node"]]
   outcome = unique(outcome_node)
   assertthat::assert_that(length(outcome) == 2)
 
-  individual_node = embeddingSpaceList[["individual_node"]]
+  individual_node = embedding.space.list[["individual_node"]]
   individual = unique(individual_node)
   N_indv = length(individual)
 
-  Rep = length(embeddingSpaceList)-3     #the "embeddingSpaceList" consists of three extra elements
+  Rep = length(embedding.space.list)-3     #the "embeddingSpaceList" consists of three extra elements
   Dist_list = list()
 
   ### P-value analysis
@@ -129,7 +129,7 @@ mnda_node_distance = function(embeddingSpaceList){
     rownames(Dist) = individual
     colnames(Dist) = node_labels
 
-    embeddingSpace = embeddingSpaceList[[rep]]
+    embeddingSpace = embedding.space.list[[rep]]
 
     for (indv in 1:N_indv){
       embeddingSpace_1 = embeddingSpace[individual_node==individual[indv] & outcome_node==outcome[1], ]
@@ -145,7 +145,7 @@ mnda_node_distance = function(embeddingSpaceList){
 
 #' Test the embedding distances of local neighbors change between the two conditions for ISNs.
 #'
-#' @param Distance a distance list obtained by the \code{mnda_node_distance()} function.
+#' @param distance a distance list obtained by the \code{mnda_node_distance()} function.
 #' @param y vector with the length equal to the number of individuals.
 #' @param stat.test statistical test used to detect the nodes \code{c("t.test","wilcox.test")} (default: wilcox.test)
 #' @param p.adjust.method method for adjusting p-value (including methods on \code{p.adjust.methods}).
@@ -167,11 +167,11 @@ mnda_node_distance = function(embeddingSpaceList){
 #' Dist = mnda_node_distance(embeddingSpaceList)
 #' Result = mnda_distance_test_isn(Dist, y = c(1,2))
 #'
-mnda_distance_test_isn  = function(Distance, y,
+mnda_distance_test_isn  = function(distance, y,
                                stat.test = "wilcox.test", p.adjust.method = "none"){
 
-  Rep = length(Distance)
-  N_nodes = ncol(Distance[[1]])
+  Rep = length(distance)
+  N_nodes = ncol(distance[[1]])
 
   y_unique = unique(y)
   assertthat::assert_that(length(y_unique)==2)
@@ -179,7 +179,7 @@ mnda_distance_test_isn  = function(Distance, y,
   P_value = matrix(0, Rep, N_nodes)
 
   for (rep in 1:Rep){
-    Dist = Distance[[rep]]
+    Dist = distance[[rep]]
 
     for (i in 1:N_nodes){
       x1 = Dist[y == y_unique[1],i]
@@ -199,13 +199,13 @@ mnda_distance_test_isn  = function(Distance, y,
   P_value_aggr = apply(P_value, 2, aggregation::fisher)
   Q_value_aggr = stats::p.adjust(P_value_aggr, method = p.adjust.method)
 
-  names(Q_value_aggr) = colnames(Distance[[1]])
+  names(Q_value_aggr) = colnames(distance[[1]])
   return(Q_value_aggr)
 }
 
 #' Test the extremeness of embedding distances of local neighbors.
 #'
-#' @param Distance a distance list obtained by the \code{mnda_node_distance()} function.
+#' @param distance a distance list obtained by the \code{mnda_node_distance()} function.
 #' @param p.adjust.method method for adjusting p-value (including methods on \code{p.adjust.methods}).
 #' If set to "none" (default), no adjustment will be performed.
 #'
@@ -224,15 +224,15 @@ mnda_distance_test_isn  = function(Distance, y,
 #' Dist = mnda_node_distance(embeddingSpaceList)
 #' Result = mnda_distance_test1_isn(Dist)
 #'
-mnda_distance_test1_isn  = function(Distance, p.adjust.method = "none"){
+mnda_distance_test1_isn  = function(distance, p.adjust.method = "none"){
 
-  Rep = length(Distance)
-  N_nodes = ncol(Distance[[1]])
+  Rep = length(distance)
+  N_nodes = ncol(distance[[1]])
 
   P_value = matrix(0, Rep, N_nodes)
 
   for (rep in 1:Rep){
-    Dist = Distance[[rep]]
+    Dist = distance[[rep]]
 
     dist_avg = apply(Dist, 2, mean)
 
@@ -246,6 +246,6 @@ mnda_distance_test1_isn  = function(Distance, p.adjust.method = "none"){
   P_value_aggr = apply(P_value, 2, aggregation::fisher)
   Q_value_aggr = stats::p.adjust(P_value_aggr, method = p.adjust.method)
 
-  names(Q_value_aggr) = colnames(Distance[[1]])
+  names(Q_value_aggr) = colnames(distance[[1]])
   return(Q_value_aggr)
 }
