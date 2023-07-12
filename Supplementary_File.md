@@ -2,7 +2,7 @@
 
 ## 1. Methods overview
 
-MNDA+ is a computational tool for Multiplex Network Differential Analysis that operates on multiplex networks to detect nodes whose neighborhoods have significant variations across layers. The core of the tool consists of three steps:
+MNDA is a computational tool for Multiplex Network Differential Analysis that operates on multiplex networks to detect nodes whose neighborhoods have significant variations across layers. The core of the tool consists of three steps:
 
 1.	representing the nodes of all network layers into a common embedding space (using an encoder-decoder neural network - EDNN);
 2.	calculating the distance between multiplex corresponding nodes (e.g. genes in biological networks);
@@ -10,7 +10,7 @@ MNDA+ is a computational tool for Multiplex Network Differential Analysis that o
 
 The EDNN is composed of shallow encoder-decoder neural networks with the number of inputs and outputs being equal to the number of nodes in one layer (the nodes are the same from one layer to the other). For each node, the encoder input is a vector of its connection weights with the other nodes. If no link exists between two nodes, the corresponding input is set to zero. The decoder output for each node is a vector of node visit probabilities calculated based on a repeated fixed-length weighted random walk algorithm (Yousefi et al., 2023). The bottleneck layer serves as an embedding space in which dissimilarity between corresponding nodes are computed. The default dissimilarity measure implemented in the *mnda* R package is the cosine-distance. For technical details and motivations for parameter settings related to steps 1 and 2, we refer to (Yousefi et al., 2023). 
 
-Step 3. involves assessing the significance of the calculated dissimilarities between corresponding nodes. Currently, the MNDA+ accommodates the following biological network analysis scenarios:
+Step 3. involves assessing the significance of the calculated dissimilarities between corresponding nodes. Currently, the MNDA accommodates the following biological network analysis scenarios:
 
 a.	Given two groups of samples corresponding to two conditions (e.g. independent healthy-diseased, male-female) and group-level biological networks $N_{C1}(V_{C1}, E_{C1})$ and $N_{C2}(V_{C2}, E_{C2})$ for each condition, form pairs of corresponding nodes ( $n_{1j}$ , $n_{2j}$ ); $n_{ij}$ is a node of $N_{Ci}$ , $i=1,2$ and $j$ runs from $1$ to the cardinality of $V_{Ci}$. 
 
@@ -28,7 +28,7 @@ Install the latest version from GitHub
 `````{R}
 devtools::install_github("behnam-yousefi/MNDA/package/mnda")
 `````
-MNDA+ will also install TensorFlow and Keras for R, which need to be activated by installation of Miniconda. For this, according to the installation guidline of Keras ([here](https://cran.r-project.org/web/packages/keras/vignettes/index.html)):
+MNDA will also install TensorFlow and Keras for R, which need to be activated by installation of Miniconda. For this, according to the installation guidline of Keras ([here](https://cran.r-project.org/web/packages/keras/vignettes/index.html)):
 `````{R}
 library(keras)
 install_keras()
@@ -51,7 +51,7 @@ The generated multiplex network and the set of the randomly selected nodes are a
 graph_data = myNet$data_graph
 var_nodes = myNet$var_nodes
 `````
-We then feed ```graph_data``` to the MNDA+ pipeline specialized for a two-layer multiplex network (condition *"a"*), which is composed of two commands:
+We then feed ```graph_data``` to the MNDA pipeline specialized for a two-layer multiplex network (condition *"a"*), which is composed of two commands:
 `````{R}
 embeddingSpaceList = mnda_embedding_2layer(graph_data, train.rep = 50)
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList)
@@ -79,7 +79,7 @@ and convert them to the ```mnda``` multiplex network format.
 adj_list = list(adj_res, adj_nonres)
 graph_data = as.mnda.graph(adj_list, outcome = c("res","non_res"))
 `````
-Now we can call the MNDA+ pipeline as in the previous example
+Now we can call the MNDA pipeline as in the previous example
 `````{R}
 embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1, train.rep = 50, epochs = 20, batch.size = 10, random.walk = FALSE, null.perm = FALSE)
 mnda_output = mnda_node_detection_2layer(embeddingSpaceList, p.adjust.method = "bonferroni")
@@ -92,7 +92,7 @@ Nodes = mnda_output$high_var_nodes
 
 ### 2.4. Usage Example 2: application on individual specific networks
 
-In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral- induced blood samples in an age- and sex- balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighborhood significantly varies between the two conditions of stimulated and unstimulated. Following the MNDA+ pipeline, we first construct a set of paired ISNs for the two conditions, i.e. before and after stimulation, using the *lionessR* R package (Kuijjer et al., 2019 a; Kuijjer et al., 2019 b). In each network, nodes and edge weights represent genes and the correlation of their expressions, respectively. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data and create the node list.
+In this example we use the data of Milieu Interieur project (Thomas et al., 2015; Piasecka et al., 2018), where immune transcriptional profiles of bacterial-, fungal-, and viral- induced blood samples in an age- and sex- balanced cohort of 1,000 healthy individuals are generated. Here, the aim would be to find genes whose neighborhood significantly varies between the two conditions of stimulated and unstimulated. Following the MNDA pipeline, we first construct a set of paired ISNs for the two conditions, i.e. before and after stimulation, using the *lionessR* R package (Kuijjer et al., 2019 a; Kuijjer et al., 2019 b). In each network, nodes and edge weights represent genes and the correlation of their expressions, respectively. The imputed ISNs are reposited in ```"usage_examples/Data/ISN_net.rds"```. We first read the ISN data and create the node list.
 `````{R}
 data = data.frame(readRDS("Data/ISN_BCG.rds"))
 nodeList = t(sapply(rownames(data), function(x) strsplit(x,"_")[[1]]))
@@ -113,7 +113,7 @@ data_agg = cbind(apply(data[,y$Stim=="Null"], 1, mean),
 graph_data = cbind(nodeList, data_agg)
 colnames(graph_data) = c("V1", "V2", "Null", "Stim")
 `````
-and then perform the two-layer MNDA+ pipeline.
+and then perform the two-layer MNDA pipeline.
 `````{R}
 embeddingSpaceList = mnda_embedding_2layer(graph_data, edge.threshold = .1,
                                            train.rep = 50, epochs = 25, batch.size = 10,
