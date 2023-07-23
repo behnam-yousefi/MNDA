@@ -162,7 +162,7 @@ mnda_node_detection_2layer = function(embeddingSpaceList, p.adjust.method = "non
       }
     }
     for (i in 1:N_nodes)
-      P_value[rep,i] = p_val_rank(x = Dist[rep,i], null.pdf = Dist_null[rep,],
+      P_value[rep,i] = p_val_rank(x = Dist[rep,i], null.values = Dist_null[rep,],
                                   alternative = "greater")
   }
 
