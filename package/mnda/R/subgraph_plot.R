@@ -135,7 +135,7 @@ subgraph_difference_plot = function(mnda.graph, node.importance,
 
   graph_to_plot = cbind(mnda.graph[,1:2],
                         W = as.numeric(mnda.graph[,3]) - as.numeric(mnda.graph[,4]))
-  G = mnda::as.igraph(graph_to_plot, diff.threshold)
+  G = mnda::as_igraph(graph_to_plot, diff.threshold)
 
   # hist(graph_to_plot$W)
   # hist(E(G)$weight)
