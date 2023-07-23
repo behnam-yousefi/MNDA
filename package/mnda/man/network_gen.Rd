@@ -4,16 +4,16 @@
 \alias{network_gen}
 \title{Multiplex Network Generation}
 \usage{
-network_gen(N_nodes = 100, N_var_nodes = 5, N_var_nei = 90, noise_sd = 0.1)
+network_gen(n.nodes = 100, n.var.nodes = 5, n.var.nei = 90, noise.sd = 0.1)
 }
 \arguments{
-\item{N_nodes}{number of nodes in the graph}
+\item{n.nodes}{number of nodes in the graph}
 
-\item{N_var_nodes}{number of nodes whose neighborhood should change from layer 1 to 2}
+\item{n.var.nodes}{number of nodes whose neighborhood should change from layer 1 to 2}
 
-\item{N_var_nei}{number of neighbors that should be changing from layer 1 to 2}
+\item{n.var.nei}{number of neighbors that should be changing from layer 1 to 2}
 
-\item{noise_sd}{the standard deviation of the noise added to the edge weights}
+\item{noise.sd}{the standard deviation of the noise added to the edge weights}
 }
 \value{
 No return value, called to plot subgraphs
@@ -26,7 +26,7 @@ In this script we generate random pairs of gene co-expression networks,
 which are different only in a few (pre-set) number of nodes.
 }
 \examples{
-myNet = network_gen(N_nodes = 100)
+myNet = network_gen(n.nodes = 100)
 graphData = myNet[["data_graph"]]
 varNodes = myNet[["var_node_set"]]
 

@@ -43,7 +43,7 @@ does not have the two randomly permuted graphs, thus the distances between all t
 be used for the null distribution.
 }
 \examples{
-myNet = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+myNet = network_gen(n.nodes = 50, n.var.nodes = 5, n.var.nei = 40, noise.sd = .01)
 graph_data = myNet[["data_graph"]]
 embeddingSpaceList = mnda_embedding_2layer(graph.data=graph_data, train.rep=5, walk.rep=5)
 Nodes = mnda_node_detection_2layer(embeddingSpaceList)

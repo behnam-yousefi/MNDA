@@ -4,10 +4,10 @@
 \alias{mnda_distance_test1_isn}
 \title{Test the extremeness of embedding distances of local neighbors.}
 \usage{
-mnda_distance_test1_isn(Distance, p.adjust.method = "none")
+mnda_distance_test1_isn(distance, p.adjust.method = "none")
 }
 \arguments{
-\item{Distance}{a distance list obtained by the \code{mnda_node_distance()} function.}
+\item{distance}{a distance list obtained by the \code{mnda_node_distance()} function.}
 
 \item{p.adjust.method}{method for adjusting p-value (including methods on \code{p.adjust.methods}).
 If set to "none" (default), no adjustment will be performed.}

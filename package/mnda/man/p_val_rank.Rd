@@ -2,14 +2,14 @@
 % Please edit documentation in R/null_model_analysis.R
 \name{p_val_rank}
 \alias{p_val_rank}
-\title{Calculate p.value for x given a null pdf using ranks}
+\title{Calculate p.value for x given a set of null values using ranks}
 \usage{
-p_val_rank(x, null.pdf, alternative = "two.sided")
+p_val_rank(x, null.values, alternative = "two.sided")
 }
 \arguments{
 \item{x}{numeric value}
 
-\item{null.pdf}{a numeric vector of null distribution samples}
+\item{null.values}{a numeric vector of null distribution samples}
 
 \item{alternative}{alterative test including: \code{"two.sided"} [default],
 \code{"greater"}, and  \code{"less"}}
@@ -18,7 +18,7 @@ p_val_rank(x, null.pdf, alternative = "two.sided")
 p.value
 }
 \description{
-Calculate p.value for x given a null pdf using ranks
+Calculate p.value for x given a set of null values using ranks
 }
 \examples{
 p.val = p_val_rank(1, 1:100)

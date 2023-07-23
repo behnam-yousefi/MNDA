@@ -5,14 +5,14 @@
 \title{Test the embedding distances of local neighbors change between the two conditions for ISNs.}
 \usage{
 mnda_distance_test_isn(
-  Distance,
+  distance,
   y,
   stat.test = "wilcox.test",
   p.adjust.method = "none"
 )
 }
 \arguments{
-\item{Distance}{a distance list obtained by the \code{mnda_node_distance()} function.}
+\item{distance}{a distance list obtained by the \code{mnda_node_distance()} function.}
 
 \item{y}{vector with the length equal to the number of individuals.}
 

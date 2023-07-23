@@ -35,7 +35,7 @@ nothing to return
 Visualization of a difference subgroup using a circular graph
 }
 \examples{
-myNet = network_gen(N_nodes = 100, N_var_nodes = 5, N_var_nei = 90, noise_sd = .01)
+myNet = network_gen(n.nodes = 100, n.var.nodes = 5, n.var.nei = 90, noise.sd = .01)
 graph_data = myNet[["data_graph"]]
 node_importance_dummy = 1:100
 names(node_importance_dummy) = 1:100

@@ -4,10 +4,10 @@
 \alias{mnda_node_distance}
 \title{Detecting the nodes whose local neighbors change between the two conditions for ISNs.}
 \usage{
-mnda_node_distance(embeddingSpaceList)
+mnda_node_distance(embedding.space.list)
 }
 \arguments{
-\item{embeddingSpaceList}{a list obtained by the \code{mnda_embedding_2layer()} function.}
+\item{embedding.space.list}{a list obtained by the \code{mnda_embedding_2layer()} function.}
 }
 \value{
 the distances for each repeat
