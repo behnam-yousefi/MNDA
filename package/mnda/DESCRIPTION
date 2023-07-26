@@ -30,5 +30,4 @@ Imports:
     magrittr,
     reticulate,
     tensorflow,
-    usethis,
-
+    usethis
