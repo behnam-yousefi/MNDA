@@ -18,16 +18,9 @@ RoxygenNote: 7.2.3
 Imports:
     assertthat,
     igraph,
-    Matrix,
     keras,
     ggraph,
     ggplot2,
     aggregation,
     stats,
-    graphics,
-    
-    MASS,
-    magrittr,
-    reticulate,
-    tensorflow,
-    usethis
+    graphics
