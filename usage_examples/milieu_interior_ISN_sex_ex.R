@@ -17,11 +17,11 @@ sex = y[duplicated(y$ID), "Sex"]
 ## 1. Embed nodes
 graph_data = cbind(nodeList, data)
 embeddingSpaceList = mnda_embedding(graph_data, outcome = y$Stim, indv.index = y$ID,
-                                    train.rep=50, walk.rep=10, epochs=10, batch.size=50,
+                                    train.rep=5, walk.rep=1, epochs=1, batch.size=50,
                                     random.walk=FALSE)
 
 # saveRDS(embeddingSpaceList, file = "Data/Embeddings/embeddingSpaceList_S.Aureus.rds")
-# embeddingSpaceList = readRDS("Data/Embeddings/embeddingSpaceList_S.Aureus.rds")
+embeddingSpaceList = readRDS("Data/Embeddings/embeddingSpaceList_S.Aureus.rds")
 
 ## 2. Calculate distances
 Dist = mnda_node_distance(embeddingSpaceList)

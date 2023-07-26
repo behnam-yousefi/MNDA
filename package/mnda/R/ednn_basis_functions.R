@@ -22,7 +22,7 @@
 #' Y = XY[["Y"]]
 #' embeddingSpace = ednn(x = X, y = Y, x.test = X)
 #'
-ednn = function(x, y, x.test, embedding.size = 2, epochs = 10, batch.size = 5, l2reg = 0, demo = FALSE, verbose = TRUE){
+ednn = function(x, y, x.test, embedding.size = 2, epochs = 10, batch.size = 5, l2reg = 0, demo = TRUE, verbose = FALSE){
 
   Nnode = ncol(x)
   inputSize = ncol(x)

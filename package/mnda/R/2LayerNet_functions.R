@@ -38,7 +38,7 @@
 #'
 mnda_embedding_2layer = function(graph.data, edge.threshold=0, train.rep=50,
                        embedding.size=2, epochs=10, batch.size=5, l2reg=0,
-                       walk.rep=100, n.steps=5, random.walk=TRUE, null.perm=TRUE, demo = FALSE, verbose=TRUE){
+                       walk.rep=100, n.steps=5, random.walk=TRUE, null.perm=TRUE, demo = TRUE, verbose=FALSE){
 
   assertthat::assert_that(train.rep >= 2)
 

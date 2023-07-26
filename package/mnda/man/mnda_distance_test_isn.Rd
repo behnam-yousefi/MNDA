@@ -32,8 +32,8 @@ The adjusted p-values for each node is calculated based on their distance variat
 the two conditions.
 }
 \examples{
-ISN1 = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
-ISN2 = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+ISN1 = network_gen(n.nodes = 50, n.var.nodes = 5, n.var.nei = 40, noise.sd = .01)
+ISN2 = network_gen(n.nodes = 50, n.var.nodes = 5, n.var.nei = 40, noise.sd = .01)
 graph_data = cbind(ISN1[["data_graph"]], ISN1[["data_graph"]][,3:4])
 embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2,1,2),
 indv.index=c(1,1,2,2), train.rep=2, random.walk=FALSE)

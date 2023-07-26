@@ -32,7 +32,7 @@
 #' @export
 #'
 #' @examples
-#' myNet = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+#' myNet = network_gen(n.nodes = 50, n.var.nodes = 5, n.var.nei = 40, noise.sd = .01)
 #' graph_data = myNet[["data_graph"]]
 #' embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2),
 #' train.rep=2, random.walk=FALSE)
@@ -40,7 +40,7 @@
 mnda_embedding = function(graph.data, outcome, indv.index = NULL,
                           edge.threshold=0, train.rep=50,
                           embedding.size=2, epochs=10, batch.size=5, l2reg=0,
-                          walk.rep=100, n.steps=5, random.walk=TRUE, demo = FALSE, verbose=TRUE){
+                          walk.rep=100, n.steps=5, random.walk=TRUE, demo = TRUE, verbose=FALSE){
 
   assertthat::assert_that(train.rep >= 2)
 
@@ -99,7 +99,7 @@ mnda_embedding = function(graph.data, outcome, indv.index = NULL,
 #' be used for the null distribution.
 #'
 #' @examples
-#' myNet = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+#' myNet = network_gen(n.nodes = 50, n.var.nodes = 5, n.var.nei = 40, noise.sd = .01)
 #' graph_data = myNet[["data_graph"]]
 #' embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2),
 #' indv.index=c(1,1), train.rep=2, random.walk=FALSE)
@@ -159,8 +159,8 @@ mnda_node_distance = function(embedding.space.list){
 #' the two conditions.
 #'
 #' @examples
-#' ISN1 = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
-#' ISN2 = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+#' ISN1 = network_gen(n.nodes = 50, n.var.nodes = 5, n.var.nei = 40, noise.sd = .01)
+#' ISN2 = network_gen(n.nodes = 50, n.var.nodes = 5, n.var.nei = 40, noise.sd = .01)
 #' graph_data = cbind(ISN1[["data_graph"]], ISN1[["data_graph"]][,3:4])
 #' embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2,1,2),
 #' indv.index=c(1,1,2,2), train.rep=2, random.walk=FALSE)
@@ -216,8 +216,8 @@ mnda_distance_test_isn  = function(distance, y,
 #' The adjusted p-values for each node is calculated based on their distance.
 #'
 #' @examples
-#' ISN1 = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
-#' ISN2 = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+#' ISN1 = network_gen(n.nodes = 50, n.var.nodes = 5, n.var.nei = 40, noise.sd = .01)
+#' ISN2 = network_gen(n.nodes = 50, n.var.nodes = 5, n.var.nei = 40, noise.sd = .01)
 #' graph_data = cbind(ISN1[["data_graph"]], ISN1[["data_graph"]][,3:4])
 #' embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2,1,2),
 #' indv.index=c(1,1,2,2), train.rep=2, random.walk=FALSE)

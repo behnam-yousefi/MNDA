@@ -17,8 +17,8 @@ mnda_embedding(
   walk.rep = 100,
   n.steps = 5,
   random.walk = TRUE,
-  demo = FALSE,
-  verbose = TRUE
+  demo = TRUE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -59,7 +59,7 @@ a list of embedding spaces for each node.
 Calculate the embedding space for a multiplex network
 }
 \examples{
-myNet = network_gen(N_nodes = 50, N_var_nodes = 5, N_var_nei = 40, noise_sd = .01)
+myNet = network_gen(n.nodes = 50, n.var.nodes = 5, n.var.nei = 40, noise.sd = .01)
 graph_data = myNet[["data_graph"]]
 embeddingSpaceList = mnda_embedding(graph.data=graph_data, outcome=c(1,2),
 train.rep=2, random.walk=FALSE)

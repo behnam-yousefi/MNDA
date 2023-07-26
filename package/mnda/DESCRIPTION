@@ -1,7 +1,7 @@
 Package: mnda
 Type: Package
 Title: Multiplex Network Differential Analysis (MNDA)
-Version: 1.2.0
+Version: 1.2.5
 Authors@R: c(person("Behnam", "Yousefi", role = c("aut", "cre","cph"),
             email = "yousefi.bme@gmail.com"),
             person("Farzaneh", "Firoozbakht", role = "aut"))
@@ -20,13 +20,15 @@ Imports:
     igraph,
     Matrix,
     keras,
-    tensorflow,
-    reticulate,
-    MASS,
     ggraph,
     ggplot2,
     aggregation,
-    usethis,
-    magrittr,
     stats,
-    graphics
+    graphics,
+    
+    MASS,
+    magrittr,
+    reticulate,
+    tensorflow,
+    usethis,
+
