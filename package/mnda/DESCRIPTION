@@ -1,7 +1,7 @@
 Package: mnda
 Type: Package
 Title: Multiplex Network Differential Analysis (MNDA)
-Version: 1.2.5
+Version: 1.3.0
 Authors@R: c(person("Behnam", "Yousefi", role = c("aut", "cre","cph"),
             email = "yousefi.bme@gmail.com"),
             person("Farzaneh", "Firoozbakht", role = "aut"))

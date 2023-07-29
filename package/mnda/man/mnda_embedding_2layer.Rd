@@ -16,8 +16,8 @@ mnda_embedding_2layer(
   n.steps = 5,
   random.walk = TRUE,
   null.perm = TRUE,
-  demo = TRUE,
-  verbose = FALSE
+  demo = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{

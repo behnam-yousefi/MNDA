@@ -40,7 +40,7 @@
 mnda_embedding = function(graph.data, outcome, indv.index = NULL,
                           edge.threshold=0, train.rep=50,
                           embedding.size=2, epochs=10, batch.size=5, l2reg=0,
-                          walk.rep=100, n.steps=5, random.walk=TRUE, demo = TRUE, verbose=FALSE){
+                          walk.rep=100, n.steps=5, random.walk=TRUE, demo = FALSE, verbose=TRUE){
 
   assertthat::assert_that(train.rep >= 2)
 

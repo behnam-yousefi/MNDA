@@ -17,8 +17,8 @@ mnda_embedding(
   walk.rep = 100,
   n.steps = 5,
   random.walk = TRUE,
-  demo = TRUE,
-  verbose = FALSE
+  demo = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{

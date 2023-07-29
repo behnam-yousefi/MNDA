@@ -12,8 +12,8 @@ ednn(
   epochs = 10,
   batch.size = 5,
   l2reg = 0,
-  demo = TRUE,
-  verbose = FALSE
+  demo = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{
