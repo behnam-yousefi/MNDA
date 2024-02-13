@@ -15,6 +15,7 @@ Description: Interactions between different biological entities are crucial for 
 License: GPL (>=3)
 Encoding: UTF-8
 RoxygenNote: 7.2.3
+BugReports: https://github.com/behnam-yousefi/MNDA/issues
 Imports:
     assertthat,
     igraph,
